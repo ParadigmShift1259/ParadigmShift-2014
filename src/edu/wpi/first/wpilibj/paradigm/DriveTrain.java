@@ -6,6 +6,7 @@
 package edu.wpi.first.wpilibj.paradigm;
 
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Solenoid;
 
 /**
  *
@@ -20,6 +21,7 @@ public class DriveTrain {
 
     private Talon leftTalons = new Talon(LEFT_PORT);
     private Talon rightTalons = new Talon(RIGHT_PORT);
+    private Solenoid gearShift = new Solenoid(1);
 
     double joyStickX;
     double joyStickY;
