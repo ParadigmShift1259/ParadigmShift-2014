@@ -19,8 +19,8 @@ public class DriveTrain {
     final int LEFT_PORT = 1;
     final int RIGHT_PORT = 2;
 
-    private Talon leftTalons = new Talon(LEFT_PORT);
-    private Talon rightTalons = new Talon(RIGHT_PORT);
+    private Talon leftTalons;
+    private Talon rightTalons;
     private Solenoid gearShift = new Solenoid(1);
 
     double joyStickX;
@@ -31,9 +31,19 @@ public class DriveTrain {
 
     double speedMult = 1;
     double fixNum;
+    
+    boolean isHighGear = false;
+    
+    boolean previousTriggerPressed;
 
     public DriveTrain(DriverControls _operatorInputs) {
         this.operatorInputs = _operatorInputs;
+        this.previousTriggerPressed = this.operatorInputs.joystickTriggerPressed();
+        this.leftTalons = new Talon(LEFT_PORT);
+        this.rightTalons = new Talon(RIGHT_PORT);
+        leftTalons.set(0);
+        rightTalons.set(0);
+        
     }
 
     public double fix(double v) {
@@ -56,7 +66,9 @@ public class DriveTrain {
 
     public void setPower() {
         joyStickX = operatorInputs.joystickX();
+        //System.out.println("joyStickX " +joyStickX);
         joyStickY = operatorInputs.joystickY();
+        //System.out.println("joyStickY " +joyStickY);
         if (joyStickX == 0 || joyStickY == 0) {
             fixNum = 1;
         } else {
@@ -68,10 +80,20 @@ public class DriveTrain {
                 fixNum = Math.abs(joyStickX) * fixNumMult + 1; //1 = math.abs(joyStickY)*fixnum 1
             }
         }
-        leftPow = -joyStickY - joyStickX;
-        rightPow = -joyStickY + joyStickX;
+        leftPow = -joyStickY + joyStickX;
+        rightPow = -joyStickY - joyStickX;
         leftTalons.set(LeftMotor());
         rightTalons.set(RightMotor());
+    }
+    
+    public void shift() {
+        boolean triggerPressed = operatorInputs.joystickTriggerPressed();
+        if(triggerPressed == true && previousTriggerPressed == false) {
+            isHighGear = !isHighGear;
+            gearShift.set(isHighGear);
+        }
+        previousTriggerPressed = triggerPressed;
+        
     }
 
 }
