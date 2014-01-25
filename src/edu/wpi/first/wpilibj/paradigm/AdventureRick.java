@@ -22,8 +22,9 @@ public class AdventureRick extends IterativeRobot {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
+    DriveTrain drive;
     public void robotInit() {
-
+        
     }
 
     /**
@@ -37,7 +38,7 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        
+        drive.setPower();
     }
     
     /**
