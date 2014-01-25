@@ -46,8 +46,9 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        drive.setPower();
+        //drive.setPower();
         compressor.start();
+        drive.shift();
     }
 
     /**
