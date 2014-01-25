@@ -16,7 +16,7 @@ public class DriverControls {
 
     private Joystick joystick = new Joystick(1); //Created and initialized the joystick controller
     private Joystick xBox = new Joystick(2); //Created and initialized the xbox controller
-    final double DEADZONE = .04;
+    final double DEADZONE = .1;
 
     public double joystickX() {
         return deadzoneFilter(this.joystick.getX()); //return the value of the x-axis of the joystick controller
@@ -36,6 +36,10 @@ public class DriverControls {
         }
         return joyStickValue;
 
+    }
+    
+    public boolean joystickTriggerPressed() {
+        return this.joystick.getTrigger();
     }
 
 }
