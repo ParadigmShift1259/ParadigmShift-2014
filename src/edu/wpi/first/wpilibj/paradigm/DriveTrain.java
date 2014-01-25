@@ -13,29 +13,34 @@ import edu.wpi.first.wpilibj.Talon;
  */
 public class DriveTrain {
 
-    DriverControls OI;
+    
+    DriverControls operatorInputs;
 
-    final int LP = 1;
-    final int RP = 2;
+    final int LEFT_PORT = 1;
+    final int RIGHT_PORT = 2;
 
-    private Talon Left = new Talon(LP);
-    private Talon Right = new Talon(RP);
+    private Talon leftTalons = new Talon(LEFT_PORT);
+    private Talon rightTalons = new Talon(RIGHT_PORT);
 
-    double joyStickX  = OI.joystickX();
-    double joyStickY  = OI.joystickY();
+    double joyStickX;
+    double joyStickY;
 
-    double leftPow = joyStickY + joyStickX;
-    double rightPow = joyStickX - joyStickY;
+    double leftPow;
+    double rightPow;
 
-    double speedMult = 6;
-
+    double speedMult = 1;
+    double fixNum;
+    
+    public DriveTrain(DriverControls _operatorInputs){
+        this.operatorInputs = _operatorInputs;
+    }
     public double fix(double v) {
         if (v > 1.0) {
-            return -((v - 1.0) * speedMult);
+            return ((v - 1.0) * speedMult);
         } else if (v < -1.0) {
-            return -((v + 1.0) * speedMult);
+            return ((v + 1.0) * speedMult);
         }
-        return 0;
+        return v;
     }
 
     public double LeftMotor() {
@@ -48,8 +53,23 @@ public class DriveTrain {
     //fix(),RightMotor(),and LeftMotor() are all used for the tank drive algorithm to correct the value differences of the axis
    
     public void setPower() {
-        Left.set(LeftMotor());
-        Right.set(RightMotor());
+        joyStickX = operatorInputs.joystickX();
+        joyStickY = operatorInputs.joystickY();
+        if (joyStickX==0 || joyStickY==0){
+            fixNum = 1;
+        } else{
+            if (Math.abs(joyStickX)>Math.abs(joyStickY)){
+                double fixNumMult = 1/Math.abs(joyStickX);
+                fixNum = Math.abs(joyStickY)*fixNumMult + 1; //1 = math.abs(joyStickX)*fixnum 1
+            } else {
+                 double fixNumMult = 1/Math.abs(joyStickY);
+                fixNum = Math.abs(joyStickX)*fixNumMult + 1; //1 = math.abs(joyStickY)*fixnum 1
+            }
+        }
+        leftPow = -joyStickY - joyStickX;
+        rightPow = -joyStickY + joyStickX;
+        leftTalons.set(LeftMotor());
+        rightTalons.set(RightMotor());
     }
 
 }
