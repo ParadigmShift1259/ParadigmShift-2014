@@ -7,6 +7,7 @@
 package edu.wpi.first.wpilibj.paradigm;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Compressor;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -16,18 +17,22 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * file in the resource directory.
  */
 public class AdventureRick extends IterativeRobot {
-
+    //electromagic!
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     DriveTrain drive;
     DriverControls controls;
+    Compressor compressor;
 
     public void robotInit() {
         controls = new DriverControls();
         drive = new DriveTrain(controls);
-
+        compressor = new Compressor(1, 1);
+        //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
+        //compressorRelayChannel - The relay channel that the compressor relay is attached to.
+        compressor.start();
     }
 
     /**
