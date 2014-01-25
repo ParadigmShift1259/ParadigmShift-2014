@@ -32,7 +32,7 @@ public class AdventureRick extends IterativeRobot {
         compressor = new Compressor(1, 1);
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
-        compressor.start();
+        
     }
 
     /**
@@ -47,6 +47,7 @@ public class AdventureRick extends IterativeRobot {
      */
     public void teleopPeriodic() {
         drive.setPower();
+        compressor.start();
     }
 
     /**
