@@ -12,5 +12,6 @@ import edu.wpi.first.wpilibj.Talon;
  * @author Programming
  */
 public class Picker {
+    //need to figure out moveable parts on the picker in order to assign functions
     
 }
