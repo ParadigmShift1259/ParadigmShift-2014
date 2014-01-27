@@ -5,6 +5,7 @@
  */
 
 package edu.wpi.first.wpilibj.paradigm;
+import edu.wpi.first.wpilibj.Talon;
 
 /**
  *
