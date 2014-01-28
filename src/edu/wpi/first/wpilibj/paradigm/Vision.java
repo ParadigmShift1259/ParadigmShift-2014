@@ -8,7 +8,7 @@ package edu.wpi.first.wpilibj.paradigm;
 
 /**
  *
- * @author Tux_n_Duke
+ * @author Programming
  */
 public class Vision {
     
