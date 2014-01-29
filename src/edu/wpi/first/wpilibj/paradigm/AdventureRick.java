@@ -25,6 +25,8 @@ public class AdventureRick extends IterativeRobot {
     DriveTrain drive;
     DriverControls controls;
     Compressor compressor;
+    Shooter shoot;
+    Picker pick;
 
     public void robotInit() {
         controls = new DriverControls();
@@ -32,14 +34,14 @@ public class AdventureRick extends IterativeRobot {
         compressor = new Compressor(1, 1);
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
-        
+
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-
+        compressor.start();
     }
 
     /**
@@ -47,7 +49,7 @@ public class AdventureRick extends IterativeRobot {
      */
     public void teleopPeriodic() {
         //drive.setPower();
-        compressor.start();
+        //compressor.start();
         drive.shift();
     }
 
