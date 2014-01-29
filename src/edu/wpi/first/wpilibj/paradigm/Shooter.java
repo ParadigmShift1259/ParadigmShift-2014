@@ -12,5 +12,6 @@ import edu.wpi.first.wpilibj.Talon;
  * @author Programming
  */
 public class Shooter {
+    
    //need to figure out moveable parts on the shooting mechanism before adding buttons/functions 
 }
