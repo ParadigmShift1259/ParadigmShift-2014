@@ -36,13 +36,14 @@ public class AdventureRick extends IterativeRobot {
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         shoot = new Shooter();//add parameters as needed
         pick = new Picker();//add parameters as needed
+        compressor.start();
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-        compressor.start();
+        
     }
 
     /**
