@@ -34,7 +34,8 @@ public class AdventureRick extends IterativeRobot {
         compressor = new Compressor(1, 1);
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
-
+        shoot = new Shooter();//add parameters as needed
+        pick = new Picker();//add parameters as needed
     }
 
     /**
