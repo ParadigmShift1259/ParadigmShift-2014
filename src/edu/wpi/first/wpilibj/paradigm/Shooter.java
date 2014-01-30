@@ -13,5 +13,11 @@ import edu.wpi.first.wpilibj.Talon;
  */
 public class Shooter {
     
+    DriverControls operatorInputs;
+    
+    public Shooter(DriverControls _operatorInputs) {
+        this.operatorInputs = _operatorInputs;
+    }
+    
    //need to figure out moveable parts on the shooting mechanism before adding buttons/functions 
 }
