@@ -22,7 +22,7 @@ public class DriveTrain {
 
     private Talon leftTalons; //has to motors and motor controllers 
     private Talon rightTalons;
-    private Solenoid gearShift = new Solenoid(CHANNEL_ONE); // and a gear shifter
+    private Solenoid gearShift; // and a gear shifter
 
     double joyStickX; //controlled with a joystick on the x and y axis
     double joyStickY;
@@ -33,7 +33,8 @@ public class DriveTrain {
     double speedMult = 1;
     double fixNum;
     
-    boolean isHighGear = false; //will start in low gear
+    //high gear = high speed (and low torque)
+    boolean isHighGear = true; //will start in high gear (low torque)
     
     boolean previousTriggerPressed; //what the trigger was before it changed
 
@@ -42,8 +43,10 @@ public class DriveTrain {
         this.previousTriggerPressed = this.operatorInputs.joystickTriggerPressed();
         this.leftTalons = new Talon(LEFT_PORT);
         this.rightTalons = new Talon(RIGHT_PORT);
+        this.gearShift = new Solenoid(CHANNEL_ONE);
         leftTalons.set(0);
         rightTalons.set(0);
+        gearShift.set(isHighGear);
         
     }
 
@@ -70,6 +73,7 @@ public class DriveTrain {
         //System.out.println("joyStickX " +joyStickX);
         joyStickY = operatorInputs.joystickY();
         //System.out.println("joyStickY " +joyStickY);
+        //set fixnum = the maxiumum value for this angle on the joystick
         if (joyStickX == 0 || joyStickY == 0) {
             fixNum = 1;
         } else {
