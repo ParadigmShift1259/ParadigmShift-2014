@@ -16,7 +16,7 @@ public class DriverControls {
 
     private Joystick joystick = new Joystick(1); //Created and initialized the joystick controller
     private Joystick xBox = new Joystick(2); //Created and initialized the xbox controller
-    final double DEADZONE = .1;
+    final double DEADZONE = 0.05;
 
     public double joystickX() {
         return deadzoneFilter(this.joystick.getX()); //return the value of the x-axis of the joystick controller
@@ -30,6 +30,12 @@ public class DriverControls {
         return deadzoneFilter(this.joystick.getZ()); //return the value of the z-axis of the joystick controller
     }
 
+    /**
+     * returns a value 0 if the joystick value is within the dead zone
+     * (if the joystick is outside of the dead zone it returns the joystick value)
+     * @param joyStickValue
+     * @return 
+     */
     private double deadzoneFilter(double joyStickValue) {
         if (Math.abs(joyStickValue) <= DEADZONE) {
             return 0;
@@ -39,7 +45,7 @@ public class DriverControls {
     }
     
     public boolean joystickTriggerPressed() {
-        return this.joystick.getTrigger();
+        return this.joystick.getTrigger();  //return the value of the joystick trigger
     }
 
 }
