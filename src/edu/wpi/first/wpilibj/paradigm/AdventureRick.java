@@ -18,29 +18,32 @@ import edu.wpi.first.wpilibj.Compressor;
  */
 public class AdventureRick extends IterativeRobot {
     //electromagic!
-    /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     */
+    
     DriveTrain drive;
-    DriverControls controls;
+    DriverControls operatorInputs;
     Compressor compressor;
     Shooter shoot;
     Picker pick;
+    
+    final int PRESSURE_SWITCH_CHANNEL = 1;
+    final int COMPRESSOR_RELAY_CHANNEL = 1;
 
+    /**
+     * Initializes when the robot first starts, (only once at power-up).
+     */
     public void robotInit() {
-        controls = new DriverControls();
-        drive = new DriveTrain(controls);
-        compressor = new Compressor(1, 1);
+        operatorInputs = new DriverControls();
+        drive = new DriveTrain(operatorInputs);
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
-        shoot = new Shooter();//add parameters as needed
-        pick = new Picker();//add parameters as needed
+        compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
+        shoot = new Shooter(operatorInputs);//add parameters as needed
+        pick = new Picker(operatorInputs);//add parameters as needed
         compressor.start();
     }
 
     /**
-     * This function is called periodically during autonomous
+     * This function is called periodically (every 20-25 ms) during autonomous
      */
     public void autonomousPeriodic() {
         
@@ -50,9 +53,10 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        //drive.setPower();
+        drive.setPower();
+        //remove if not needed
         //compressor.start();
-        drive.shift();
+        drive.shift();  //shift when the trigger is pressed
     }
 
     /**
