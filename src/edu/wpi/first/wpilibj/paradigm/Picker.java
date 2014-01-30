@@ -13,6 +13,11 @@ import edu.wpi.first.wpilibj.Talon;
  */
 public class Picker {
     
+    DriverControls operatorInputs;
+    
+    public Picker(DriverControls _operatorInputs) {
+        this.operatorInputs = _operatorInputs;
+    }
     //need to figure out moveable parts on the picker in order to assign functions
     
 }
