@@ -16,14 +16,15 @@ public class DriveTrain {
 
     DriverControls operatorInputs;
 
-    final int LEFT_PORT = 1;
+    final int LEFT_PORT = 1; //attributes  defining the class
     final int RIGHT_PORT = 2;
+    final int CHANNEL_ONE = 1;
 
-    private Talon leftTalons;
+    private Talon leftTalons; //has to motors and motor controllers 
     private Talon rightTalons;
-    private Solenoid gearShift = new Solenoid(1);
+    private Solenoid gearShift = new Solenoid(CHANNEL_ONE); // and a gear shifter
 
-    double joyStickX;
+    double joyStickX; //controlled with a joystick on the x and y axis
     double joyStickY;
 
     double leftPow;
@@ -32,9 +33,9 @@ public class DriveTrain {
     double speedMult = 1;
     double fixNum;
     
-    boolean isHighGear = false;
+    boolean isHighGear = false; //will start in low gear
     
-    boolean previousTriggerPressed;
+    boolean previousTriggerPressed; //what the trigger was before it changed
 
     public DriveTrain(DriverControls _operatorInputs) {
         this.operatorInputs = _operatorInputs;
@@ -80,7 +81,7 @@ public class DriveTrain {
                 fixNum = Math.abs(joyStickX) * fixNumMult + 1; //1 = math.abs(joyStickY)*fixnum 1
             }
         }
-        leftPow = -joyStickY + joyStickX;
+        leftPow = -joyStickY + joyStickX; // what is does when joystick is put all the way to the right or left
         rightPow = -joyStickY - joyStickX;
         leftTalons.set(LeftMotor());
         rightTalons.set(RightMotor());
@@ -88,11 +89,11 @@ public class DriveTrain {
     
     public void shift() {
         boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-        if(triggerPressed == true && previousTriggerPressed == false) {
-            isHighGear = !isHighGear;
-            gearShift.set(isHighGear);
+        if(triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
+            isHighGear = !isHighGear; // high gear becomes not high gear
+            gearShift.set(isHighGear); // the gear shifts
         }
-        previousTriggerPressed = triggerPressed;
+        previousTriggerPressed = triggerPressed; //
         
     }
 
