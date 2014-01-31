@@ -55,11 +55,11 @@ public class AdventureRick extends IterativeRobot {
     public void teleopPeriodic() {
         drive.setPower();
         //remove if not needed
-        //compressor.start();
+        compressor.start(); 
         drive.shift();  //shift when the trigger is pressed
     }
 
-    /**
+    /**f
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
