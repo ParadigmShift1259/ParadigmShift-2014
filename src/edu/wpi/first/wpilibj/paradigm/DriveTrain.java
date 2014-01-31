@@ -94,14 +94,17 @@ public class DriveTrain {
         rightTalons.set(RightMotor());
     }
     
-    public void shift() {
+    public void shiftToLow() {//current setting is start in high gear
         boolean triggerPressed = operatorInputs.joystickTriggerPressed();
         if(triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
             isHighGear = !isHighGear; // high gear becomes not high gear
             gearShift.set(isHighGear); // the gear shifts
             gearShift2.set(!isHighGear);
         }
-        previousTriggerPressed = triggerPressed; //
+        previousTriggerPressed = triggerPressed;
+    }
+    
+    public void shiftToHigh(){
         
     }
 
