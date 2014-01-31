@@ -12,4 +12,7 @@ package edu.wpi.first.wpilibj.paradigm;
  */
 public class Vision {
     
+   
+    
+    
 }
