@@ -19,10 +19,12 @@ public class DriveTrain {
     final int LEFT_PORT = 1; //attributes  defining the class
     final int RIGHT_PORT = 2;
     final int CHANNEL_ONE = 1;
+    final int CHANNEL_TWO = 2;
 
     private Talon leftTalons; //has to motors and motor controllers 
     private Talon rightTalons;
     private Solenoid gearShift; // and a gear shifter
+    private Solenoid gearShift2;
 
     double joyStickX; //controlled with a joystick on the x and y axis
     double joyStickY;
@@ -44,6 +46,7 @@ public class DriveTrain {
         this.leftTalons = new Talon(LEFT_PORT);
         this.rightTalons = new Talon(RIGHT_PORT);
         this.gearShift = new Solenoid(CHANNEL_ONE);
+        this.gearShift2 = new Solenoid(CHANNEL_TWO);
         leftTalons.set(0);
         rightTalons.set(0);
         gearShift.set(isHighGear);
@@ -87,7 +90,7 @@ public class DriveTrain {
         }
         leftPow = -joyStickY + joyStickX; // what is does when joystick is put all the way to the right or left
         rightPow = -joyStickY - joyStickX;
-        leftTalons.set(LeftMotor());
+        leftTalons.set(-LeftMotor());
         rightTalons.set(RightMotor());
     }
     
@@ -96,6 +99,7 @@ public class DriveTrain {
         if(triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
             isHighGear = !isHighGear; // high gear becomes not high gear
             gearShift.set(isHighGear); // the gear shifts
+            gearShift2.set(!isHighGear);
         }
         previousTriggerPressed = triggerPressed; //
         
