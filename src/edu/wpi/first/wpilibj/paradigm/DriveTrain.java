@@ -34,20 +34,21 @@ public class DriveTrain {
 
     double speedMult = 1;
     double fixNum;
-    
+
     int mod = 3;
     //high gear = high speed (and low torque)
     boolean isHighGear = true; //will start in high gear (low torque)
-    
+    int shiftItLikeItsHot = 0;
+
     boolean previousTriggerPressed; //what the trigger was before it changed
-    
+
     public DriveTrain(DriverControls _operatorInputs) {
         this.operatorInputs = _operatorInputs;
         this.previousTriggerPressed = this.operatorInputs.joystickTriggerPressed();
         this.leftTalons = new Talon(LEFT_PORT);
         this.rightTalons = new Talon(RIGHT_PORT);
-        this.gearShift = new Solenoid(1,1);
-        this.gearShift2 = new Solenoid(1,2);
+        this.gearShift = new Solenoid(1, 1);
+        this.gearShift2 = new Solenoid(1, 2);
         leftTalons.set(0);
         rightTalons.set(0);
         gearShift.set(isHighGear);
@@ -94,23 +95,25 @@ public class DriveTrain {
         leftTalons.set(-LeftMotor());
         rightTalons.set(RightMotor());
     }
-    
+
     public void shift() {//current setting is start in high gear
         boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-            if(triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
-                isHighGear = !isHighGear; // high gear becomes not high gear
-               gearShift.set(isHighGear); // the gear shifts
-               gearShift2.set(!isHighGear);
-            }
-            previousTriggerPressed = triggerPressed;
+        if (triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
+            isHighGear = !isHighGear; // high gear becomes not high gear
+            gearShift.set(isHighGear); // the gear shifts
+            gearShift2.set(!isHighGear);
+        }
+        previousTriggerPressed = triggerPressed;
     }
-    
-    public void shiftHigh(){
-          boolean pressed = operatorInputs.shiftHigh();
-          if(pressed){
-              gearShift.set(!isHighGear);
-              gearShift2.set(isHighGear);
-          }
+
+    public void shiftHigh() {
+        boolean pressed = operatorInputs.shiftHigh();
+        shiftItLikeItsHot = 0;
+        if (pressed) {
+            gearShift.set(!isHighGear);
+            gearShift2.set(isHighGear);
+            shiftItLikeItsHot = 1;
+        }
 //        boolean triggerPressed = operatorInputs.joystickTriggerPressed();
 //        if(!isHighGear && triggerPressed ){
 //            isHighGear = !isHighGear; // high gear becomes not high gear
@@ -119,13 +122,15 @@ public class DriveTrain {
 //            previousTriggerPressed = !triggerPressed;
 //        }
     }
-    
-    public void shiftLow(){
+
+    public void shiftLow() {
         boolean pressed = operatorInputs.shiftLow();
-            if(pressed){
-              gearShift.set(isHighGear);
-              gearShift2.set(!isHighGear);
-          }
+        shiftItLikeItsHot = 1;
+        if (pressed) {
+            gearShift.set(isHighGear);
+            gearShift2.set(!isHighGear);
+            shiftItLikeItsHot = 0;
+        }
 //        boolean triggerPressed = operatorInputs.joystickTriggerPressed();
 //        if(isHighGear && triggerPressed){
 //            isHighGear = !isHighGear; // high gear becomes not high gear
@@ -134,5 +139,15 @@ public class DriveTrain {
 //            previousTriggerPressed = !triggerPressed;
 //        }
     }
+//
+//    public void engageShifter() {
+//        if (operatorInputs.joystickTriggerPressed()) {
+//            shiftItLikeItsHot = 1;
+//        }
+//        if (operatorInputs.joystickTriggerPressedAgain()) {
+//            shiftItLikeItsHot = 0;
+//
+//        }
 
+    }
 }

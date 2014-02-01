@@ -18,10 +18,6 @@ public class DriverControls {
     final double DEADZONE = 0.05;
     //boolean shiftUp;
 
-    public DriverControls() {
-        this.shiftUp = true;
-    }
-
     public double joystickX() {
         return deadzoneFilter(this.joystick.getX()); //return the value of the x-axis of the joystick controller
     }
@@ -54,6 +50,11 @@ public class DriverControls {
 
     }
 
+    public boolean joystickTriggerPressedAgain() {
+        return this.joystick.getTrigger();  //return the value of the joystick trigger
+
+    }
+
     public boolean shiftLow() {
         return this.joystick.getRawButton(3);
     }
@@ -61,4 +62,6 @@ public class DriverControls {
     public boolean shiftHigh() {
         return this.joystick.getRawButton(4);
     }
+
+   
 }
