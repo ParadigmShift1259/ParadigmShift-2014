@@ -16,7 +16,7 @@ public class DriverControls {
     private Joystick joystick = new Joystick(1); //Created and initialized the joystick controller
     private Joystick xBox = new Joystick(2); //Created and initialized the xbox controller
     final double DEADZONE_Y = 0.05;
-    final double DEADZONE_X = 0.08;
+    final double DEADZONE_X = 0.15;
     //boolean shiftUp;
 
 //    public DriverControls() {
@@ -24,7 +24,7 @@ public class DriverControls {
 //    }
 
     public double joystickX() {
-        return deadzoneFilterY(this.joystick.getX()); //return the value of the x-axis of the joystick controller
+        return deadzoneFilterX(this.joystick.getX()); //return the value of the x-axis of the joystick controller
     }
 
     public double joystickY() {
@@ -32,7 +32,7 @@ public class DriverControls {
     }
 
     public double joystickZ() {
-        return deadzoneFilterY(this.joystick.getZ()); //return the value of the z-axis of the joystick controller
+        return deadzoneFilterX(this.joystick.getZ()); //return the value of the z-axis of the joystick controller
     }
 
     /**
