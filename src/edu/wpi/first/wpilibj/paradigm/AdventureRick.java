@@ -40,7 +40,7 @@ public class AdventureRick extends IterativeRobot {
         shoot = new Shooter(operatorInputs);//add parameters as needed
         pick = new Picker(operatorInputs);//add parameters as needed
         compressor.start();
-        operatorInputs.shiftUp = false;
+        //operatorInputs.shiftHigh = false;
     }
 
     /**
