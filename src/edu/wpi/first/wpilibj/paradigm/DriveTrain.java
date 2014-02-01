@@ -7,6 +7,7 @@ package edu.wpi.first.wpilibj.paradigm;
 
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Encoder;
 
 /**
  *
@@ -18,13 +19,16 @@ public class DriveTrain {
 
     final int LEFT_PORT = 1; //attributes  defining the class
     final int RIGHT_PORT = 2;
-    final int CHANNEL1_ONE = 1;
-    final int CHANNEL_TWO = 2;
+    final int SHIFT_PORT_LOW = 1;
+    final int SHIFT_PORT_HIGH = 2;
+    final int SHIFT_MODULE = 1;
 
     private Talon leftTalons; //has to motors and motor controllers 
     private Talon rightTalons;
-    private Solenoid gearShift; // and a gear shifter
-    private Solenoid gearShift2;
+    private Solenoid gearShiftLow; // and a gear shifter
+    private Solenoid gearShiftHigh;
+    Encoder leftEncoder;
+    Encoder rightEncoder;
 
     double joyStickX; //controlled with a joystick on the x and y axis
     double joyStickY;
@@ -34,8 +38,9 @@ public class DriveTrain {
 
     double speedMult = 1;
     double fixNum;
+    double maxLeftEncoderRate;
+    //double currentLeftRate;
 
-    int mod = 3;
     //high gear = high speed (and low torque)
     boolean isHighGear = true; //will start in high gear (low torque)
     int shiftItLikeItsHot = 0;
@@ -47,12 +52,15 @@ public class DriveTrain {
         this.previousTriggerPressed = this.operatorInputs.joystickTriggerPressed();
         this.leftTalons = new Talon(LEFT_PORT);
         this.rightTalons = new Talon(RIGHT_PORT);
-        this.gearShift = new Solenoid(1, 1);
-        this.gearShift2 = new Solenoid(1, 2);
-        leftTalons.set(0);
-        rightTalons.set(0);
-        gearShift.set(isHighGear);
-        gearShift2.set(!isHighGear);
+        this.gearShiftLow = new Solenoid(SHIFT_MODULE, SHIFT_PORT_LOW);
+        this.gearShiftHigh = new Solenoid(SHIFT_MODULE, SHIFT_PORT_HIGH);
+        this.leftEncoder = new Encoder(3, 4);
+        this.rightEncoder = new Encoder(5, 6);
+        leftTalons.set(0);  //Make sure motor is off
+        rightTalons.set(0); //Make sure motor is off
+        gearShiftLow.set(isHighGear);
+        gearShiftHigh.set(!isHighGear);
+
     }
 
     public double fix(double v) {
@@ -65,11 +73,20 @@ public class DriveTrain {
     }
 
     public double LeftMotor() {
-        return fix(leftPow);
+        double leftSpeed = leftEncoder.getRate();
+        double fixLeftPow = fix(leftPow);
+        double rightSpeed = rightEncoder.getRate();
+        double fixRightPow = fix(rightPow);
+        leftEncoder.getRate()/leftPow = maxLeftEncoderRate;
+        return (fixLeftPow);
     }
 
     public double RightMotor() {
-        return fix(rightPow);
+        double leftSpeed = leftEncoder.getRate();
+        double fixLeftPow = fix(leftPow);
+        double rightSpeed = rightEncoder.getRate();
+        double fixRightPow = fix(rightPow);
+        return (fixRightPow);
     }
     //fix(),RightMotor(),and LeftMotor() are all used for the tank drive algorithm to correct the value differences of the axis
 
@@ -100,8 +117,8 @@ public class DriveTrain {
         boolean triggerPressed = operatorInputs.joystickTriggerPressed();
         if (triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
             isHighGear = !isHighGear; // high gear becomes not high gear
-            gearShift.set(isHighGear); // the gear shifts
-            gearShift2.set(!isHighGear);
+            gearShiftHigh.set(isHighGear); // the gear shifts
+            gearShiftLow.set(!isHighGear);
         }
         previousTriggerPressed = triggerPressed;
     }
@@ -110,8 +127,8 @@ public class DriveTrain {
         boolean pressed = operatorInputs.shiftHigh();
         shiftItLikeItsHot = 0;
         if (pressed) {
-            gearShift.set(!isHighGear);
-            gearShift2.set(isHighGear);
+            gearShiftLow.set(!isHighGear);
+            gearShiftHigh.set(isHighGear);
             shiftItLikeItsHot = 1;
         }
 //        boolean triggerPressed = operatorInputs.joystickTriggerPressed();
@@ -127,8 +144,8 @@ public class DriveTrain {
         boolean pressed = operatorInputs.shiftLow();
         shiftItLikeItsHot = 1;
         if (pressed) {
-            gearShift.set(isHighGear);
-            gearShift2.set(!isHighGear);
+            gearShiftLow.set(isHighGear);
+            gearShiftHigh.set(!isHighGear);
             shiftItLikeItsHot = 0;
         }
 //        boolean triggerPressed = operatorInputs.joystickTriggerPressed();
@@ -149,5 +166,4 @@ public class DriveTrain {
 //
 //        }
 
-    }
-
+}
