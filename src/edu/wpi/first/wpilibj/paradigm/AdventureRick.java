@@ -40,6 +40,7 @@ public class AdventureRick extends IterativeRobot {
         shoot = new Shooter(operatorInputs);//add parameters as needed
         pick = new Picker(operatorInputs);//add parameters as needed
         compressor.start();
+        operatorInputs.shiftUp = false;
     }
 
     /**
@@ -56,7 +57,10 @@ public class AdventureRick extends IterativeRobot {
         drive.setPower();
         //remove if not needed
         compressor.start(); 
-        drive.shift();  //shift when the trigger is pressed
+        //drive.shift();  //shift when the trigger is pressed
+        //drive.shift();
+        drive.shiftHigh();
+        drive.shiftLow();
     }
 
     /**f
