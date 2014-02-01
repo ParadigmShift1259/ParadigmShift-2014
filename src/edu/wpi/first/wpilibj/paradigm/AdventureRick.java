@@ -62,6 +62,7 @@ public class AdventureRick extends IterativeRobot {
         drive.shiftHigh();
         drive.shiftLow();
         //drive.engageShifter();
+        shoot.kick();
     }
 
     /**f
