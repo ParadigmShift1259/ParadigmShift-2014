@@ -24,6 +24,7 @@ public class AdventureRick extends IterativeRobot {
     Compressor compressor;
     Shooter shoot;
     Picker pick;
+    private boolean checkForKickerStop = false;
     
     final int PRESSURE_SWITCH_CHANNEL = 1;
     final int COMPRESSOR_RELAY_CHANNEL = 1;
@@ -65,6 +66,12 @@ public class AdventureRick extends IterativeRobot {
         drive.shiftLow();
         //drive.engageShifter();
         System.out.println("Trigger "+ operatorInputs.joystickTriggerPressed());
+        //
+        checkForKickerStop = shoot.checkToKick();
+        if (checkForKickerStop == true) {
+            shoot.isKickerStopped();
+        }
+        
     }
 
     /**f
