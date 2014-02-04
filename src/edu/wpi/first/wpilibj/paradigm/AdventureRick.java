@@ -66,7 +66,7 @@ public class AdventureRick extends IterativeRobot {
         drive.shiftLow();
         //drive.engageShifter();
         System.out.println("Trigger "+ operatorInputs.joystickTriggerPressed());
-        //
+        //After the robot has kicked, check to see if it has stopped
         checkForKickerStop = shoot.checkToKick();
         if (checkForKickerStop == true) {
             shoot.isKickerStopped();
