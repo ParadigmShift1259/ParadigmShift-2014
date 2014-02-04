@@ -18,7 +18,8 @@ public class Shooter {
     DriverControls operatorInputs;
     
     private final int PORT_5 = 5;
-    private final double ILLEGAL_VOLTAGE = -9999.9;
+    //the current value can not possibly be the previous value the first time through
+    private final double ILLEGAL_VOLTAGE = -9999.9; 
     
     private Joystick xBox = new Joystick(2);
     private Talon kickermotor = new Talon(PORT_5);
@@ -36,12 +37,12 @@ public class Shooter {
     }
     
     public boolean isKickerStopped() {
-        currentVoltage = analogChannel.getVoltage();
-        if (previousVoltage == currentVoltage) {
-            previousVoltage = ILLEGAL_VOLTAGE;
+        currentVoltage = analogChannel.getVoltage(); //Read current voltage
+        if (previousVoltage == currentVoltage) { 
+            previousVoltage = ILLEGAL_VOLTAGE; //Set back so it can run again 
             return true;
         } else {
-            previousVoltage = currentVoltage;
+            previousVoltage = currentVoltage; //current becomes previous
             return false;
         }
         
@@ -55,7 +56,7 @@ public class Shooter {
         } else {
             kickermotor.set(0);
         }
-        return buttonPressed;
+        return buttonPressed; //Return value of button to know whether the robot had just kicked.
     }
     
     
