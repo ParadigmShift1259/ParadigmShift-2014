@@ -8,6 +8,7 @@ package edu.wpi.first.wpilibj.paradigm;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  *
@@ -29,33 +30,39 @@ public class DriveTrain {
     private Solenoid gearShiftHigh;
     Encoder leftEncoder;
     Encoder rightEncoder;
+    Timer time;
 
     double joyStickX; //controlled with a joystick on the x and y axis
     double joyStickY;
 
     double leftPow;
     double rightPow;
+    long sleeptime = 0100;
 
     double speedMult = 1;
     double fixNum;
     double maxLeftEncoderRate;
+    double maxRightEncoderRate;
+    double ratio;
+    double rightEncoderFix;
     //double currentLeftRate;
-
+    long sleepTime = 0100;
     //high gear = high speed (and low torque)
     boolean isHighGear = true; //will start in high gear (low torque)
-    int shiftItLikeItsHot = 0;
+    boolean nemo = false;
 
     boolean previousTriggerPressed; //what the trigger was before it changed
 
     public DriveTrain(DriverControls _operatorInputs) {
         this.operatorInputs = _operatorInputs;
-        this.previousTriggerPressed = this.operatorInputs.joystickTriggerPressed();
+        //this.previousTriggerPressed = this.operatorInputs.joystickTriggerPressed();
         this.leftTalons = new Talon(LEFT_PORT);
         this.rightTalons = new Talon(RIGHT_PORT);
         this.gearShiftLow = new Solenoid(SHIFT_MODULE, SHIFT_PORT_LOW);
         this.gearShiftHigh = new Solenoid(SHIFT_MODULE, SHIFT_PORT_HIGH);
         this.leftEncoder = new Encoder(3, 4);
         this.rightEncoder = new Encoder(5, 6);
+        this.time = new Timer();
         leftTalons.set(0);  //Make sure motor is off
         rightTalons.set(0); //Make sure motor is off
         gearShiftLow.set(isHighGear);
@@ -77,7 +84,25 @@ public class DriveTrain {
         double fixLeftPow = fix(leftPow);
         double rightSpeed = rightEncoder.getRate();
         double fixRightPow = fix(rightPow);
-        leftEncoder.getRate()/leftPow = maxLeftEncoderRate;
+
+//        try {
+//            if (leftPow != 0 && rightPow != 0) {
+//                maxLeftEncoderRate = leftSpeed / leftPow;
+//                maxRightEncoderRate = rightSpeed / rightPow;
+//                compareEncoders();
+//                if (maxLeftEncoderRate > maxRightEncoderRate) {
+//                    ratio = maxRightEncoderRate / maxLeftEncoderRate;
+//                    fixLeftPow = ratio * fixLeftPow;
+//                    Thread.sleep(sleepTime);
+//                }
+//            }
+//        } catch (InterruptedException e) {
+//
+//        }
+        System.out.println("Left Speed = " + leftSpeed);
+        System.out.println("Left Power = " + leftPow);
+        System.out.println("Left Talon Value = " + leftTalons.getSpeed());
+
         return (fixLeftPow);
     }
 
@@ -86,7 +111,35 @@ public class DriveTrain {
         double fixLeftPow = fix(leftPow);
         double rightSpeed = rightEncoder.getRate();
         double fixRightPow = fix(rightPow);
-        return (fixRightPow);
+//        try {
+//            if (leftPow != 0 && rightPow != 0) {
+//                maxRightEncoderRate = rightSpeed / rightPow;
+//                maxLeftEncoderRate = leftSpeed / leftPow;
+//                compareEncoders();
+//                if (maxRightEncoderRate > maxLeftEncoderRate) {
+//                    fixRightPow = ratio * fixRightPow;
+//                    Thread.sleep(sleepTime);
+//                }
+//            }
+//        } catch (InterruptedException e) {
+//
+//        }
+        System.out.println("Right Speed = " + rightSpeed);
+        System.out.println("Right Power = " + rightPow);
+        System.out.println("Right Talon Value = " + rightTalons.getSpeed());
+        return (fixRightPow);//goes to the talon
+    }
+
+    public void compareEncoders() {
+        if (maxRightEncoderRate > maxLeftEncoderRate) {
+            ratio = maxLeftEncoderRate / maxRightEncoderRate;
+
+        } else if (maxLeftEncoderRate > maxRightEncoderRate) {
+            ratio = maxRightEncoderRate / maxLeftEncoderRate;
+            rightEncoderFix = maxLeftEncoderRate * ratio;
+
+        }
+
     }
     //fix(),RightMotor(),and LeftMotor() are all used for the tank drive algorithm to correct the value differences of the axis
 
@@ -124,12 +177,14 @@ public class DriveTrain {
     }
 
     public void shiftHigh() {
-        boolean pressed = operatorInputs.shiftHigh();
-        shiftItLikeItsHot = 0;
-        if (pressed) {
+        // boolean pressed = operatorInputs.shiftHigh();
+        boolean pressed = operatorInputs.shifter();
+
+        if (nemo == true && pressed) {
             gearShiftLow.set(!isHighGear);
             gearShiftHigh.set(isHighGear);
-            shiftItLikeItsHot = 1;
+            nemo = false;
+
         }
 //        boolean triggerPressed = operatorInputs.joystickTriggerPressed();
 //        if(!isHighGear && triggerPressed ){
@@ -141,12 +196,12 @@ public class DriveTrain {
     }
 
     public void shiftLow() {
-        boolean pressed = operatorInputs.shiftLow();
-        shiftItLikeItsHot = 1;
-        if (pressed) {
+        boolean pressed = operatorInputs.shifter();
+        if (nemo == false && pressed) {
             gearShiftLow.set(isHighGear);
             gearShiftHigh.set(!isHighGear);
-            shiftItLikeItsHot = 0;
+            nemo = true;
+
         }
 //        boolean triggerPressed = operatorInputs.joystickTriggerPressed();
 //        if(isHighGear && triggerPressed){

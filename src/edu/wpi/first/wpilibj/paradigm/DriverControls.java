@@ -57,7 +57,11 @@ public class DriverControls {
 
     }
 
-    public boolean joystickTriggerPressed() {
+    public boolean shifter() {
+        return this.joystick.getTrigger();  //return the value of the joystick trigger
+
+    }
+        public boolean joystickTriggerPressed() {
         return this.joystick.getTrigger();  //return the value of the joystick trigger
 
     }
