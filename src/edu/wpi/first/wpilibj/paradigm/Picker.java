@@ -25,7 +25,7 @@ public class Picker {
     private int selfDestruct = 0;
     private final int BUTTON_X = 3; //this is the x butt on the controller
     private boolean buttonPressed = false;
-    private Talon jaguar = new Talon(8); //used in the SpinGrabber method...
+    private Talon jaguar = new Talon(8); //used in the SpinGrabber method...also is a Talon
     
     public Picker(DriverControls _operatorInputs) {
         this.operatorInputs = _operatorInputs;
