@@ -29,11 +29,11 @@ public class Shooter {
     private AnalogChannel analogChannel = new AnalogChannel(1);
     private double previousVoltage = ILLEGAL_VOLTAGE;
     private double currentVoltage;
+    private double locationOfKicker;
     
     
     public Shooter(DriverControls _operatorInputs) {
-        this.operatorInputs = _operatorInputs;
-        
+        this.operatorInputs = _operatorInputs;       
     }
     
     public boolean isKickerStopped() {
@@ -59,6 +59,9 @@ public class Shooter {
         return buttonPressed; //Return value of button to know whether the robot had just kicked.
     }
     
-    
+    public double locateKicker() {
+        locationOfKicker = analogChannel.getVoltage();
+        return locationOfKicker;
+    }
    //need to figure out moveable parts on the shooting mechanism before adding buttons/functions 
 }
