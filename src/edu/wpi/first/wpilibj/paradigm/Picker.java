@@ -22,19 +22,45 @@ public class Picker {
     private int shootPos = 2136; //change value later, position while shooting/aiming
     private int autoPos = 2048; //change value later, position at the beginning of the auto/match
     private int currentPos; //the picker's current pos(ition)
-    private int selfDestruct = 0;
+    private boolean selfDestruct = false; //for the self-destruct feature
     private final int BUTTON_X = 3; //this is the x butt on the controller
+    private final int BUTTON_LB = 5; //this is is the poot butt
     private boolean buttonPressed = false;
     private Talon jaguar = new Talon(8); //used in the SpinGrabber method...also is a Talon
+    
+    /*
+    This is the constructor for the Picker class.
+    */
     
     public Picker(DriverControls _operatorInputs) {
         this.operatorInputs = _operatorInputs;
     }
     
+    /*
+    This method spins the picker wheels when the X button is pressed.
+    The wheels will load the ball into the picker.
+    */
+    
     public void spinGrabber() {
         buttonPressed = xBox.getRawButton(BUTTON_X);
         if (buttonPressed == true) {
             jaguar.set(0.2);
+        } else {
+            jaguar.set(0);
+        }
+    }
+    
+    /*
+    This method controls the "pooter". The pooter will make the wheels 
+    spin backwards in case the ball gets stuck inside of the picker.\
+    
+    Possible: May be used for a (weak) pass.
+    */
+    
+    public void spinPooter() {
+        buttonPressed = xBox.getRawButton(BUTTON_LB);
+        if (buttonPressed == true) {
+            jaguar.set(-0.3);
         } else {
             jaguar.set(0);
         }
