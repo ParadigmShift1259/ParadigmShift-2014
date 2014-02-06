@@ -8,6 +8,7 @@ package edu.wpi.first.wpilibj.paradigm;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.AnalogChannel;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  *
@@ -25,11 +26,18 @@ public class Shooter {
     private Talon kickermotor = new Talon(PORT_5);
     private boolean buttonPressed;
     private final int A_BUTTON = 1;
+    private final int SELECT_BUTTON = 9;
     private double motorSpeed = 1.0;
     private AnalogChannel analogChannel = new AnalogChannel(1);
+    private DigitalInput digitalInput = new DigitalInput(1);
     private double previousVoltage = ILLEGAL_VOLTAGE;
     private double currentVoltage;
-    private double locationOfKicker;
+    private boolean inPosition;
+    private boolean caliButtPressed = false;
+    private final double MAX_ENCODER_VOLTAGE = 2.0;
+    private double _clockwise;
+    private double clockwise;
+    private double _counterclockwise;
     
     
     public Shooter(DriverControls _operatorInputs) {
@@ -58,10 +66,35 @@ public class Shooter {
         }
         return buttonPressed; //Return value of button to know whether the robot had just kicked.
     }
-    
-    public double locateKicker() {
-        locationOfKicker = analogChannel.getVoltage();
-        return locationOfKicker;
+     
+    public void setKickingPosition() {
+        //clockwise = _clockwise.getKickerAngle();
     }
+    
+    public void calibrate() {
+        inPosition = digitalInput.get();
+        buttonPressed = xBox.getRawButton(SELECT_BUTTON);
+        if (buttonPressed == true) {
+            caliButtPressed = true;
+            buttonPressed = false;
+        }
+        if (caliButtPressed == true) {
+            if (inPosition == true) {
+                kickermotor.set(0);
+                caliButtPressed = false;
+            } else {
+                kickermotor.set(0.1);
+            }
+        }   
+    }
+    
+    public double getKickerAngle() {
+       double angle;
+       angle = analogChannel.getVoltage();
+       //This is the porportion to convert voltage into a degrees angle.
+       //There are 360 degree permax encoder voltage.
+       return angle * (360/MAX_ENCODER_VOLTAGE);
+    }
+    
    //need to figure out moveable parts on the shooting mechanism before adding buttons/functions 
 }
