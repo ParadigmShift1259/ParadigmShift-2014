@@ -35,7 +35,8 @@ public class Shooter {
     private boolean inPosition;
     private boolean caliButtPressed = false;
     private double constantPos;
-    private boolean found = false;
+    private boolean found;
+    private double angle;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
     private double _clockwise;
     private double clockwise;
@@ -68,10 +69,6 @@ public class Shooter {
         }
         return buttonPressed; //Return value of button to know whether the robot had just kicked.
     }
-     
-    public void setKickingPosition() {
-        //clockwise = _clockwise.getKickerAngle();
-    }
     
     public void calibrate() {
         inPosition = digitalInput.get();
@@ -91,12 +88,20 @@ public class Shooter {
         }   
     }
     
-    public double getKickerAngle() {
-       double angle;
-       angle = analogChannel.getVoltage();
-       //This is the porportion to convert voltage into a degrees angle.
-       //There are 360 degree permax encoder voltage.
-       return angle * (360/MAX_ENCODER_VOLTAGE);
+    public void getKickerAngle() {
+        angle = analogChannel.getVoltage();
+        //This is the porportion to convert voltage into a degrees angle.
+        //There are 360 degree permax encoder voltage.
+        angle = angle * (360/MAX_ENCODER_VOLTAGE);
+       
+        if (found == true) {
+            constantPos = angle;
+            found = false;
+        }
+    }
+    
+    public void setKickingPosition() {
+        //clockwise = _clockwise.getKickerAngle();
     }
     
    //need to figure out moveable parts on the shooting mechanism before adding buttons/functions 
