@@ -22,27 +22,25 @@ public class Shooter {
     //the current value can not possibly be the previous value the first time through
     private final double ILLEGAL_VOLTAGE = -9999.9; 
     
-    private Joystick xBox = new Joystick(2);
-    private Talon kickermotor = new Talon(PORT_5);
+    private final Joystick xBox = new Joystick(2);
+    private final Talon kickermotor = new Talon(PORT_5);
     private boolean buttonPressed;
     private final int A_BUTTON = 1;
     private final int SELECT_BUTTON = 9;
+    private final int RIGHT_BUMPER = 6;
     private double motorSpeed = 1.0;
-    private AnalogChannel analogChannel = new AnalogChannel(1);
-    private DigitalInput digitalInput = new DigitalInput(1);
+    private final AnalogChannel analogChannel = new AnalogChannel(1);
+    private final DigitalInput digitalInput = new DigitalInput(1);
     private double previousVoltage = ILLEGAL_VOLTAGE;
     private double currentVoltage;
     private boolean inPosition;
     private boolean caliButtPressed = false;
-    private double constantPos;
+    private boolean kicking;
+    private double kickingPos;
     private boolean found;
     private double angle;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
-    private double _clockwise;
-    private double clockwise;
-    private double _counterclockwise;
-    
-    
+
     public Shooter(DriverControls _operatorInputs) {
         this.operatorInputs = _operatorInputs;       
     }
@@ -58,13 +56,20 @@ public class Shooter {
         }
         
     }
-        
+    
+    /*
+    This method is used to kick.
+    
+    P.S. It has a dumb name that can go to suckySucky.
+    */
     
     public boolean checkToKick() {
         buttonPressed = xBox.getRawButton(A_BUTTON);
-        if (buttonPressed = true) {
+        if (buttonPressed) {
+            kicking = true;
             kickermotor.set(motorSpeed);
         } else {
+            kicking = false;
             kickermotor.set(0);
         }
         return buttonPressed; //Return value of button to know whether the robot had just kicked.
@@ -73,12 +78,12 @@ public class Shooter {
     public void calibrate() {
         inPosition = digitalInput.get();
         buttonPressed = xBox.getRawButton(SELECT_BUTTON);
-        if (buttonPressed == true) {
+        if (buttonPressed) {
             caliButtPressed = true;
             buttonPressed = false;
         }
-        if (caliButtPressed == true) {
-            if (inPosition == true) {
+        if (caliButtPressed) {
+            if (inPosition) {
                 kickermotor.set(0);
                 caliButtPressed = false;
                 found = true;
@@ -94,14 +99,21 @@ public class Shooter {
         //There are 360 degree permax encoder voltage.
         angle = angle * (360/MAX_ENCODER_VOLTAGE);
        
-        if (found == true) {
-            constantPos = angle;
+        if (found) {
+            kickingPos = angle;
             found = false;
         }
     }
     
     public void setKickingPosition() {
-        //clockwise = _clockwise.getKickerAngle();
+        boolean pressed;
+        buttonPressed = xBox.getRawButton(RIGHT_BUMPER);
+        if (buttonPressed){
+            pressed = true;
+            
+        } else if (!caliButtPressed && !kicking){
+            
+        }
     }
     
    //need to figure out moveable parts on the shooting mechanism before adding buttons/functions 
