@@ -110,8 +110,11 @@ public class Shooter {
         buttonPressed = xBox.getRawButton(RIGHT_BUMPER);
         if (buttonPressed){
             pressed = true;
+            buttonPressed = false;
+        }
+        if (buttonPressed = true){
             
-        } else if (!caliButtPressed && !kicking){
+        }else if (!caliButtPressed && !kicking){
             
         }
     }
