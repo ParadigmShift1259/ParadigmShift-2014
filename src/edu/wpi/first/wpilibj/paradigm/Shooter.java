@@ -34,6 +34,8 @@ public class Shooter {
     private double currentVoltage;
     private boolean inPosition;
     private boolean caliButtPressed = false;
+    private double constantPos;
+    private boolean found = false;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
     private double _clockwise;
     private double clockwise;
@@ -82,6 +84,7 @@ public class Shooter {
             if (inPosition == true) {
                 kickermotor.set(0);
                 caliButtPressed = false;
+                found = true;
             } else {
                 kickermotor.set(0.1);
             }
