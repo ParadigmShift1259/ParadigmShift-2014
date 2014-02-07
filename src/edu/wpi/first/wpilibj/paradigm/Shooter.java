@@ -38,6 +38,7 @@ public class Shooter {
     private boolean kicking;
     private double kickingPos;
     private boolean found;
+    private boolean pressed;
     private double angle;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
 
@@ -106,7 +107,6 @@ public class Shooter {
     }
     
     public void setKickingPosition() {
-        boolean pressed;
         buttonPressed = xBox.getRawButton(RIGHT_BUMPER);
         if (buttonPressed){
             pressed = true;
