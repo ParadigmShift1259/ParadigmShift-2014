@@ -112,8 +112,14 @@ public class Shooter {
             pressed = true;
             buttonPressed = false;
         }
-        if (buttonPressed = true){
-            
+        if (pressed){
+            inPosition = digitalInput.get();
+            if (inPosition) {
+                kickermotor.set(0);
+                pressed = false;
+            } else {
+                kickermotor.set(0.1);
+            }
         }else if (!caliButtPressed && !kicking){
             
         }
