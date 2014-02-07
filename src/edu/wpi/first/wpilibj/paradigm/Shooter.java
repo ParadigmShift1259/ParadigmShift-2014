@@ -20,7 +20,7 @@ public class Shooter {
     
     private final int PORT_5 = 5;
     //the current value can not possibly be the previous value the first time through
-    private final double ILLEGAL_VOLTAGE = -9999.9; 
+    private final double ILLEGAL_VOLTAGE = -9999.9; //can't be stopped when it hasn't started
     
     private final Joystick xBox = new Joystick(2);
     private final Talon kickermotor = new Talon(PORT_5);
@@ -34,7 +34,7 @@ public class Shooter {
     private double previousVoltage = ILLEGAL_VOLTAGE;
     private double currentVoltage;
     private boolean inPosition;
-    private boolean caliButtPressed = false;
+    private boolean caliButtPressed = true;
     private boolean kicking;
     private double kickingPos;
     private boolean found;
@@ -112,7 +112,7 @@ public class Shooter {
             pressed = true;
             buttonPressed = false;
         }
-        if (pressed){
+        if (pressed && !kicking && !caliButtPressed){
             inPosition = digitalInput.get();
             if (inPosition) {
                 kickermotor.set(0);
@@ -120,8 +120,6 @@ public class Shooter {
             } else {
                 kickermotor.set(0.1);
             }
-        }else if (!caliButtPressed && !kicking){
-            
         }
     }
     
