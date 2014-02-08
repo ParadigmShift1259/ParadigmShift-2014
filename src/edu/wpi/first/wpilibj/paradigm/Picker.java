@@ -19,16 +19,28 @@ public class Picker {
     
     DriverControls operatorInputs;
     private Joystick xBox = new Joystick(2);
-    private int loadPos = 757; //change value later, position while loading
-    private int shootPos = 2136; //change value later, position while shooting/aiming
-    private int autoPos = 2048; //change value later, position at the beginning of the auto/match
-    private int currentPos; //the picker's current pos(ition)
-    private final int BUTTON_X = 3; //this is the x butt on the controller
+    private int loadPos = 135; //change value later, position while loading
+    private int shootPos = 80; //change value later, position while shooting/aiming
+    private int autoPos = 45; //change value later, position at the beginning of the auto/match
+    private double currentAngle; //the picker's current pos(ition)
+    private final int RIGHT_BUMPER = 6; //this is the x butt on the controller
     private final int BUTTON_LB = 5; //this is is the poot butt
-    private boolean buttonPressed; //used to indicate if any button is pressed
+    private boolean buttonPressed = false; //used to indicate if any button is pressed
+    private boolean isGrabbing = false;
+    private boolean isPooting = false;
     private Talon wheelSpinner = new Talon(8); //used in the SpinGrabber method...also is a Talon
+    private Talon pickerMotor = new Talon(4);
     private final AnalogChannel analogChannel = new AnalogChannel(4);
-    private double angle = analogChannel.getVoltage();
+    private double pickerAngleVoltage;
+    private double pickerAngleDegree;
+    private double MAX_ENCODER_VOLTAGE = 2.0;
+    private boolean settingPos1 = false;
+    private boolean settingPos2 = false;
+    private boolean settingPos3 = false;
+    private final int A_BUTTON = 1;
+    private final int B_BUTTON = 2;
+    private final int Y_BUTTON = 4;
+    
     
     /*
     This is the constructor for the Picker class.
@@ -44,11 +56,13 @@ public class Picker {
     */
     
     public void spinGrabber() {
-        buttonPressed = xBox.getRawButton(BUTTON_X);
-        if (buttonPressed) {
+        buttonPressed = xBox.getRawButton(RIGHT_BUMPER);
+        if (buttonPressed && !isPooting) {
+            isGrabbing = true;
             wheelSpinner.set(0.2);
-        } else {
+        } else if (!buttonPressed && !isPooting){
             wheelSpinner.set(0);
+            isGrabbing = false;
         }
     }
     
@@ -61,14 +75,80 @@ public class Picker {
     
     public void spinPooter() {
         buttonPressed = xBox.getRawButton(BUTTON_LB);
-        if (buttonPressed) {
+        if (buttonPressed && !isGrabbing) {
+            isPooting = true;
             wheelSpinner.set(-0.3);
-        } else {
+        } else if (!buttonPressed && !isGrabbing){
             wheelSpinner.set(0);
+            isPooting = false;
         }
     }
     
-
+    public double getKickerAngle() {
+        pickerAngleVoltage = analogChannel.getVoltage();
+        pickerAngleDegree = pickerAngleVoltage * (360/MAX_ENCODER_VOLTAGE);
+        return pickerAngleDegree;
+    } 
+    
+    public void setPosLoading() {
+       buttonPressed = xBox.getRawButton(A_BUTTON);
+       currentAngle = getKickerAngle();
+       if(buttonPressed) {
+           settingPos1 = true;    
+       }
+       if(settingPos1 = true) {
+           if(currentAngle > 135) {
+               pickerMotor.set(-0.2);
+           }
+           if(currentAngle < 135) {
+               pickerMotor.set(0.2);
+           }
+           if(currentAngle == 135) {
+               pickerMotor.set(0);
+               settingPos1 = false;
+           }
+       }
+    }
+    
+    public void setPosKicking() {
+       buttonPressed = xBox.getRawButton(B_BUTTON);
+       currentAngle = getKickerAngle();
+       if(buttonPressed) {
+           settingPos2 = true;    
+       }
+       if(settingPos2 = true) {
+           if(currentAngle > 80) {
+               pickerMotor.set(-0.2);
+           }
+           if(currentAngle < 80) {
+               pickerMotor.set(0.2);
+           }
+           if(currentAngle == 80) {
+               pickerMotor.set(0);
+               settingPos2 = false;
+           }
+       }
+    }
+   
+    public void setPosAuto() {
+       buttonPressed = xBox.getRawButton(Y_BUTTON);
+       currentAngle = getKickerAngle();
+       if(buttonPressed) {
+           settingPos3 = true;    
+       }
+       if(settingPos3 = true) {
+           if(currentAngle > 45) {
+               pickerMotor.set(-0.2);
+           }
+           if(currentAngle < 45) {
+               pickerMotor.set(0.2);
+           }
+           if(currentAngle == 45) {
+               pickerMotor.set(0);
+               settingPos3 = false;
+           }
+       }
+    }
     //need to figure out moveable parts on the picker in order to assign functions
     
 }
