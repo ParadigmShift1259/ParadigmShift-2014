@@ -25,9 +25,10 @@ public class Shooter {
     private final Joystick xBox = new Joystick(2);
     private final Talon kickermotor = new Talon(PORT_5);
     private boolean buttonPressed;
-    private final int A_BUTTON = 1;
+    private double triggerPressed;
+    private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
     private final int SELECT_BUTTON = 9;
-    private final int X_BUTTON = 3;
+    private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
     private double motorSpeed = 1.0;
     private final AnalogChannel analogChannel = new AnalogChannel(1);
     private final DigitalInput digitalInput = new DigitalInput(9);
@@ -64,13 +65,14 @@ public class Shooter {
     */
     
     public boolean checkToKick() {
-        buttonPressed = xBox.getRawButton(A_BUTTON);
-        if (buttonPressed) {
+        triggerPressed = xBox.getAxis(RIGHT_TRIGGER);
+        inPosition = digitalInput.get();
+        if (triggerPressed == 0.5) {
             kicking = true;
             buttonPressed = false;
         }
         if (kicking) {
-            
+            kickermotor.set(0.7);
             if (inPosition) {
                 kicking = false;
                 kickermotor.set(0);
@@ -107,8 +109,8 @@ public class Shooter {
     
     
     public void setKickingPosition() {
-        buttonPressed = xBox.getRawButton(X_BUTTON);
-        if (buttonPressed){
+        triggerPressed = xBox.getAxis(LEFT_TRIGGER);
+        if (triggerPressed == 0.5){
             pressed = true;
             buttonPressed = false;
         }
