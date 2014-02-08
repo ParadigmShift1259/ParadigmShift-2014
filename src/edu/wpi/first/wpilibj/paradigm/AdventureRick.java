@@ -51,8 +51,8 @@ public class AdventureRick extends IterativeRobot {
         SmartDashboard.putBoolean("In Low Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
-        SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
-        SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
+//        SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
+//        SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
         //drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
 
         //operatorInputs.shiftHigh = false;
@@ -72,10 +72,10 @@ public class AdventureRick extends IterativeRobot {
         drive.setPower();
         //remove if not needed
         compressor.start();
-        //drive.shift();  //shift when the trigger is pressed
+//shift when the trigger is pressed
         drive.shift();
-        drive.shiftHigh();
-        drive.shiftLow();
+//        drive.shiftHigh();
+//        drive.shiftLow();
         //drive.engageShifter();
         System.out.println("Trigger " + operatorInputs.joystickTriggerPressed());
         //After the robot has kicked, check to see if it has stopped
@@ -86,13 +86,13 @@ public class AdventureRick extends IterativeRobot {
         SmartDashboard.putBoolean("In Low Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
-        SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
-        SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
+//        SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
+//        SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
 //        drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
     }
 
     /**
-     * f
+     * 
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
