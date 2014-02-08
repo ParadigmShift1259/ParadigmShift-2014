@@ -43,7 +43,7 @@ public class DriveTrain {
     double fixNum;
     double maxLeftEncoderRate;
     double maxRightEncoderRate;
-    double ratio;
+    double ratio = 1;
     double rightEncoderFix;
     double leftEncoderFix;
     //double currentLeftRate;
@@ -51,6 +51,9 @@ public class DriveTrain {
     //high gear = high speed (and low torque)
     boolean isHighGear = true; //will start in high gear (low torque)
     boolean nemo = false;
+    boolean isLeftHigher =true;
+    final double encoderDeadzone = 1000;
+    final double encoderWaitTime = 0250;
 
     boolean previousTriggerPressed; //what the trigger was before it changed
 
@@ -79,7 +82,7 @@ public class DriveTrain {
 //        }
         return v / fixNum;
     }
-
+    //see below
     public double LeftMotor() {
         double leftSpeed = leftEncoder.getRate();
         double fixLeftPow = fix(leftPow);
@@ -87,16 +90,19 @@ public class DriveTrain {
         double fixRightPow = fix(rightPow);
 
 //they see me rollin', and dey hatin'
-//        if (leftPow != 0 && rightPow != 0) {
-//            maxLeftEncoderRate = leftSpeed / leftPow;
-//            maxRightEncoderRate = rightSpeed / rightPow;
-//            compareEncoders();
-//            if (maxLeftEncoderRate > maxRightEncoderRate) {
-//                ratio = maxRightEncoderRate / maxLeftEncoderRate;
-//                fixLeftPow = ratio * fixLeftPow;
-//
-//            }
-//        }
+        if (leftPow != 0 && rightPow != 0) {
+            maxLeftEncoderRate = leftSpeed / leftPow;
+            maxRightEncoderRate = rightSpeed / rightPow;
+            if(Math.min(Math.abs(leftSpeed),Math.abs(rightSpeed))>encoderDeadzone)
+            {
+                breakTime();
+            }
+            if (isLeftHigher) {
+                //ratio = maxRightEncoderRate / maxLeftEncoderRate;
+                fixLeftPow = ratio * fixLeftPow;
+
+            }
+        }
         System.out.println("Left Speed = " + leftSpeed);
         System.out.println("Left Power = " + leftPow);
         System.out.println("Left Talon Value = " + leftTalons.getSpeed());
@@ -110,34 +116,47 @@ public class DriveTrain {
         double rightSpeed = rightEncoder.getRate();
         double fixRightPow = fix(rightPow);
 //they see me rollin', and dey hatin'
-//        if (leftPow != 0 && rightPow != 0) {
-//            maxRightEncoderRate = rightSpeed / rightPow;
-//            maxLeftEncoderRate = leftSpeed / leftPow;
-//            compareEncoders();
-//            if (maxRightEncoderRate > maxLeftEncoderRate) {
-//                fixRightPow = ratio * fixRightPow;
-//            }
-//        }
+        if (leftPow != 0 && rightPow != 0) {
+            maxRightEncoderRate = rightSpeed / rightPow;
+            maxLeftEncoderRate = leftSpeed / leftPow;
+            if(Math.min(Math.abs(leftSpeed),Math.abs(rightSpeed))>encoderDeadzone)
+            {
+                breakTime();
+            }
+            if (!isLeftHigher) {
+                fixRightPow = ratio * fixRightPow;
+            }
+        }
 
         System.out.println("Right Speed = " + rightSpeed);
         System.out.println("Right Power = " + rightPow);
         System.out.println("Right Talon Value = " + rightTalons.getSpeed());
         return (fixRightPow);//goes to the talon
+
     }
 
     public void compareEncoders() {
         if (maxRightEncoderRate > maxLeftEncoderRate) {
             ratio = maxLeftEncoderRate / maxRightEncoderRate;
-            leftEncoderFix = maxRightEncoderRate * ratio;
+            leftEncoderFix = maxRightEncoderRate * ratio + .1;
+            isLeftHigher = false;
 
         } else if (maxLeftEncoderRate > maxRightEncoderRate) {
             ratio = maxRightEncoderRate / maxLeftEncoderRate;
             rightEncoderFix = maxLeftEncoderRate * ratio;
-
+            isLeftHigher = true;
+            }
+        else{
+            ratio = 1;
         }
 
     }
-    //fix(),RightMotor(),and LeftMotor() are all used for the tank drive algorithm to correct the value differences of the axis
+    public void breakTime(){
+        if (time.get() > encoderWaitTime){
+            compareEncoders();
+            time.reset();
+        }
+    }
 
     public void setPower() {
         joyStickX = operatorInputs.joystickX();
