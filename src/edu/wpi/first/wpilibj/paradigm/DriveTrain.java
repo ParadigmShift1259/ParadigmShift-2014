@@ -95,8 +95,8 @@ public class DriveTrain {
 
 //they see me rollin', and dey hatin'
         if (leftPow != 0 && rightPow != 0) {
-            maxLeftEncoderRate = leftSpeed / leftPow;
-            maxRightEncoderRate = rightSpeed / rightPow;
+            maxLeftEncoderRate = Math.abs(leftSpeed / leftPow);
+            //maxRightEncoderRate = rightSpeed / rightPow;
             if(Math.min(Math.abs(leftSpeed),Math.abs(rightSpeed))>encoderDeadzone)
             {
                 breakTime();
@@ -121,8 +121,8 @@ public class DriveTrain {
         double fixRightPow = fix(rightPow);
 //they see me rollin', and dey hatin'
         if (leftPow != 0 && rightPow != 0) {
-            maxRightEncoderRate = rightSpeed / rightPow;
-            maxLeftEncoderRate = leftSpeed / leftPow;
+            maxRightEncoderRate = Math.abs(rightSpeed / rightPow);
+            //maxLeftEncoderRate = Math.abs(leftSpeed / leftPow);
             if(Math.min(Math.abs(leftSpeed),Math.abs(rightSpeed))>encoderDeadzone)
             {
                 breakTime();
@@ -156,6 +156,8 @@ public class DriveTrain {
 
     }
     public void breakTime(){
+        SmartDashboard.putNumber("Ratio", ratio);
+        SmartDashboard.putBoolean("Left > Right", isLeftHigher);
         if (time.get() > encoderWaitTime){
             compareEncoders();
             time.reset();
@@ -181,14 +183,16 @@ public class DriveTrain {
         rightPow = -joyStickY - joyStickX;
         leftSpeed = leftEncoder.getRate();
         rightSpeed = rightEncoder.getRate();
-        leftTalons.set(-LeftMotor());
+        
+        leftTalons.set(-LeftMotor()); //Left Motors are forward=negative
         SmartDashboard.putNumber("JoystickX", joyStickX);
-        SmartDashboard.putNumber("LeftTalons",leftTalons.get());
-        SmartDashboard.putNumber("LeftSpeed",leftSpeed);
-        rightTalons.set(RightMotor());
+        SmartDashboard.putNumber("LeftTalons",-leftTalons.get()); //Left Motors are forward=negative
+        SmartDashboard.putNumber("LeftSpeed",-leftSpeed); //Left Motors are forward=negative
+        
+        rightTalons.set(RightMotor()); //Right Motors are forward=positive
         SmartDashboard.putNumber("JoystickY", joyStickY);
-        SmartDashboard.putNumber("RightTalons",rightTalons.get());
-        SmartDashboard.putNumber("RightSpeed",rightSpeed);
+        SmartDashboard.putNumber("RightTalons",rightTalons.get()); //Right Motors are forward=positive
+        SmartDashboard.putNumber("RightSpeed",rightSpeed); //Right Motors are forward=positive
     }
 
     public void shift() {//current setting is start in high gear
