@@ -84,6 +84,8 @@ public class Picker {
         }
     }
     
+    
+    
     public double getKickerAngle() {
         pickerAngleVoltage = analogChannel.getVoltage();
         pickerAngleDegree = pickerAngleVoltage * (360/MAX_ENCODER_VOLTAGE);
@@ -97,13 +99,13 @@ public class Picker {
            settingPos1 = true;    
        }
        if(settingPos1 = true) {
-           if(currentAngle > 135) {
+           if(currentAngle > loadPos) {
                pickerMotor.set(-0.2);
            }
-           if(currentAngle < 135) {
+           if(currentAngle < loadPos) {
                pickerMotor.set(0.2);
            }
-           if(currentAngle == 135) {
+           if(currentAngle == loadPos) {
                pickerMotor.set(0);
                settingPos1 = false;
            }
@@ -117,13 +119,13 @@ public class Picker {
            settingPos2 = true;    
        }
        if(settingPos2 = true) {
-           if(currentAngle > 80) {
+           if(currentAngle > shootPos) {
                pickerMotor.set(-0.2);
            }
-           if(currentAngle < 80) {
+           if(currentAngle < shootPos) {
                pickerMotor.set(0.2);
            }
-           if(currentAngle == 80) {
+           if(currentAngle == shootPos) {
                pickerMotor.set(0);
                settingPos2 = false;
            }
@@ -137,13 +139,13 @@ public class Picker {
            settingPos3 = true;    
        }
        if(settingPos3 = true) {
-           if(currentAngle > 45) {
+           if(currentAngle > autoPos) {
                pickerMotor.set(-0.2);
            }
-           if(currentAngle < 45) {
+           if(currentAngle < autoPos) {
                pickerMotor.set(0.2);
            }
-           if(currentAngle == 45) {
+           if(currentAngle == autoPos) {
                pickerMotor.set(0);
                settingPos3 = false;
            }
