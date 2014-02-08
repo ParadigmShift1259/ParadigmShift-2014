@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Compressor;
 //import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class AdventureRick extends IterativeRobot {
     //electromagic!
 
+    OperatorInputs inputs;
     DriveTrain drive;
     DriverControls operatorInputs;
     Compressor compressor;
@@ -36,9 +38,9 @@ public class AdventureRick extends IterativeRobot {
      * Initializes when the robot first starts, (only once at power-up).
      */
     public void robotInit() {
+        inputs = new OperatorInputs();
         operatorInputs = new DriverControls();
         drive = new DriveTrain(operatorInputs);
-        //shoot = new Shooter(operatorInputs);
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
@@ -48,11 +50,19 @@ public class AdventureRick extends IterativeRobot {
         drive.leftEncoder.start();
         drive.rightEncoder.start();
         drive.time.start();
-        SmartDashboard.putBoolean("In Low Gear", drive.isHighGear);
+        SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
-//        SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
-//        SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
+        SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
+        SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
+        SmartDashboard.putBoolean("Is Picking", pick.isPicking);
+        SmartDashboard.putBoolean("Is Pooting", pick.isPicking);
+        SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
+        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
+        SmartDashboard.putNumber("Speed", drive.totalSpeed);
+//      SmartDashboard.putNumber("Kicker Angle", shoot.angle); -> Don't need to display, not sure what will be displayed.
+        //autonomousCommand = (Command) testChooser.getSelected();
+        //autonomousCommand.start();
         //drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
 
         //operatorInputs.shiftHigh = false;
@@ -69,6 +79,7 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+        inputs.readAll();
         drive.setPower();
         //remove if not needed
         compressor.start();
@@ -83,11 +94,17 @@ public class AdventureRick extends IterativeRobot {
 //        if (checkForKickerStop == true) {
 //            shoot.isKickerStopped();
 //        }
-        SmartDashboard.putBoolean("In Low Gear", drive.isHighGear);
+        SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
-//        SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
-//        SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
+        SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
+        SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
+        SmartDashboard.putBoolean("Is Picking", pick.isPicking);
+        SmartDashboard.putBoolean("Is Pooting", pick.isPicking);
+        SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
+        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
+        SmartDashboard.putNumber("Speed", drive.totalSpeed);
+        //SmartDashboard.putNumber("Kicker Angle", shoot.angle); *Don't need to display, not sure what will be displayed.
 //        drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
     }
 

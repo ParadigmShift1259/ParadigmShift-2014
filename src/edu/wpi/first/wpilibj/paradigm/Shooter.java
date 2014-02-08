@@ -25,21 +25,21 @@ public class Shooter {
     private final Joystick xBox = new Joystick(2);
     private final Talon kickermotor = new Talon(PORT_5);
     private boolean buttonPressed;
-    private final int A_BUTTON = 1;
-    private final int SELECT_BUTTON = 9;
-    private final int RIGHT_BUMPER = 6;
+    private double triggerPressed;
+    //private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
+    private final int BACK_BUTTON = 7;
+    private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
     private double motorSpeed = 1.0;
     private final AnalogChannel analogChannel = new AnalogChannel(1);
     private final DigitalInput digitalInput = new DigitalInput(9);
     private double previousVoltage = ILLEGAL_VOLTAGE;
     private double currentVoltage;
     private boolean inPosition;
-    public boolean caliButtPressed = true;
-    private boolean kicking;
+    private boolean caliButtPressed = true;
+    boolean kicking;
     private double kickingPos;
-    private boolean found;
+    double angle;
     private boolean pressed;
-    private double angle;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
 
     public Shooter(DriverControls _operatorInputs) {
@@ -64,62 +64,76 @@ public class Shooter {
     P.S. It has a dumb name that can go to suckySucky().
     */
     
-    public boolean checkToKick() {
-        buttonPressed = xBox.getRawButton(A_BUTTON);
-        if (buttonPressed) {
+    public void kick() {
+        triggerPressed = xBox.getAxis(RIGHT_TRIGGER);
+        inPosition = digitalInput.get();
+        if (triggerPressed == 0.5) {
             kicking = true;
-            kickermotor.set(motorSpeed);
-        } else {
-            kicking = false;
-            kickermotor.set(0);
+            buttonPressed = false;
         }
-        return buttonPressed; //Return value of button to know whether the robot had just kicked.
+        if (kicking) {
+            kickermotor.set(0.7);
+            if (inPosition) {
+                kicking = false;
+                kickermotor.set(0);
+            }
+        }
     }
     
     public void calibrate() {
         inPosition = digitalInput.get();
-        buttonPressed = xBox.getRawButton(SELECT_BUTTON);
+        buttonPressed = xBox.getRawButton(BACK_BUTTON);
         if (buttonPressed) {
             caliButtPressed = true;
             buttonPressed = false;
         }
         if (caliButtPressed) {
-            if (inPosition) {
-                kickermotor.set(0);
-                caliButtPressed = false;
-                found = true;
-            } else {
-                kickermotor.set(0.1);
+            try {
+                if (inPosition) {
+                    kickermotor.set(0);
+                    caliButtPressed = false;
+                } else {
+                    if (angle > kickingPos && angle <= 165) {
+                        kickermotor.set(0.1);
+                    } else if (angle > kickingPos || angle <= 145){
+                        kickermotor.set(-0.1);
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }   
     }
     
-    public void getKickerAngle() {
+    public double getKickerAngle() {
         angle = analogChannel.getVoltage();
-       
-        if (found) {
-            //This is the porportion to convert voltage into a degrees angle.
-            //There are 360 degree permax encoder voltage.
-            kickingPos = angle * (360/MAX_ENCODER_VOLTAGE);
-            
-            found = false;
-        }
+        //This is the porportion to convert voltage into a degrees angle.
+        //There are 360 degree permax encoder voltage.
+        kickingPos = angle * (360/MAX_ENCODER_VOLTAGE);
+        return angle;
     }
     
+    
     public void setKickingPosition() {
-        buttonPressed = xBox.getRawButton(RIGHT_BUMPER);
-        if (buttonPressed){
+        triggerPressed = xBox.getAxis(LEFT_TRIGGER);
+        if (triggerPressed == 0.5){
             pressed = true;
             buttonPressed = false;
         }
         if (pressed && !kicking && !caliButtPressed){
-            inPosition = digitalInput.get();
+            if (getKickerAngle() == kickingPos) {
+                inPosition = true;
+            }
             try {
                 if (inPosition) {
                     kickermotor.set(0);
                     pressed = false;
                 } else {
-                    kickermotor.set(0.1);
+                    if (angle > kickingPos && angle <= 165) {
+                        kickermotor.set(0.1);
+                    } else if (angle > kickingPos || angle <= 145){
+                        kickermotor.set(-0.1);
+                    }
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
