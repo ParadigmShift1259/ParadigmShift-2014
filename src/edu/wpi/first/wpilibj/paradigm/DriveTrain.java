@@ -54,6 +54,8 @@ public class DriveTrain {
     boolean isHighGear = true; //will start in high gear (low torque)
     boolean nemo = false;
     boolean isLeftHigher =true;
+    double leftSpeed=0;
+    double rightSpeed=0;
     final double encoderDeadzone = 1000;
     final double encoderWaitTime = 168; //0250 is 250 octal = 168 decimal
 
@@ -86,9 +88,9 @@ public class DriveTrain {
     }
     //see below
     public double LeftMotor() {
-        double leftSpeed = leftEncoder.getRate();
+        //moved leftSpeed to class scope, it is being set in setPower()
         double fixLeftPow = fix(leftPow);
-        double rightSpeed = rightEncoder.getRate();
+        //moved rightSpeed to class scope, it is being set in setPower()
         double fixRightPow = fix(rightPow);
 
 //they see me rollin', and dey hatin'
@@ -105,17 +107,17 @@ public class DriveTrain {
 
             }
         }
-        System.out.println("Left Speed = " + leftSpeed);
-        System.out.println("Left Power = " + leftPow);
-        System.out.println("Left Talon Value = " + leftTalons.getSpeed());
+        //System.out.println("Left Speed = " + leftSpeed);
+        //System.out.println("Left Power = " + leftPow);
+        //System.out.println("Left Talon Value = " + leftTalons.getSpeed());
 
         return (fixLeftPow);
     }
 
     public double RightMotor() {
-        double leftSpeed = leftEncoder.getRate();
+        //moved leftSpeed to class scope, it is being set in setPower()
         double fixLeftPow = fix(leftPow);
-        double rightSpeed = rightEncoder.getRate();
+        //moved rightSpeed to class scope, it is being set in setPower()
         double fixRightPow = fix(rightPow);
 //they see me rollin', and dey hatin'
         if (leftPow != 0 && rightPow != 0) {
@@ -130,9 +132,9 @@ public class DriveTrain {
             }
         }
 
-        System.out.println("Right Speed = " + rightSpeed);
-        System.out.println("Right Power = " + rightPow);
-        System.out.println("Right Talon Value = " + rightTalons.getSpeed());
+        //System.out.println("Right Speed = " + rightSpeed);
+        //System.out.println("Right Power = " + rightPow);
+        //System.out.println("Right Talon Value = " + rightTalons.getSpeed());
         return (fixRightPow);//goes to the talon
 
     }
@@ -162,9 +164,7 @@ public class DriveTrain {
 
     public void setPower() {
         joyStickX = operatorInputs.joystickX();
-        SmartDashboard.putNumber("JoystickX", joyStickX);
         joyStickY = operatorInputs.joystickY();
-        SmartDashboard.putNumber("JoystickY", joyStickY);
         //set fixnum = the maxiumum value for this angle on the joystick
         if (joyStickX == 0 || joyStickY == 0) {
             fixNum = 1;
@@ -179,8 +179,16 @@ public class DriveTrain {
         }
         leftPow = -joyStickY + joyStickX; // what is does when joystick is put all the way to the right or left
         rightPow = -joyStickY - joyStickX;
+        leftSpeed = leftEncoder.getRate();
+        rightSpeed = rightEncoder.getRate();
         leftTalons.set(-LeftMotor());
+        SmartDashboard.putNumber("JoystickX", joyStickX);
+        SmartDashboard.putNumber("LeftTalons",leftTalons.get());
+        SmartDashboard.putNumber("LeftSpeed",leftSpeed);
         rightTalons.set(RightMotor());
+        SmartDashboard.putNumber("JoystickY", joyStickY);
+        SmartDashboard.putNumber("RightTalons",rightTalons.get());
+        SmartDashboard.putNumber("RightSpeed",rightSpeed);
     }
 
     public void shift() {//current setting is start in high gear
