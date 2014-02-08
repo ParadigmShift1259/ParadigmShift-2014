@@ -8,6 +8,8 @@ package edu.wpi.first.wpilibj.paradigm;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -18,14 +20,15 @@ import edu.wpi.first.wpilibj.Compressor;
  */
 public class AdventureRick extends IterativeRobot {
     //electromagic!
-    
+
     DriveTrain drive;
     DriverControls operatorInputs;
     Compressor compressor;
     Shooter shoot;
     Picker pick;
+    Preferences prefs;
     private boolean checkForKickerStop = false;
-    
+
     final int PRESSURE_SWITCH_CHANNEL = 1;
     final int COMPRESSOR_RELAY_CHANNEL = 1;
 
@@ -35,7 +38,6 @@ public class AdventureRick extends IterativeRobot {
     public void robotInit() {
         operatorInputs = new DriverControls();
         drive = new DriveTrain(operatorInputs);
-        //shoot = new Shooter();
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
@@ -44,6 +46,9 @@ public class AdventureRick extends IterativeRobot {
         compressor.start();
         drive.leftEncoder.start();
         drive.rightEncoder.start();
+        SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
+        drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
+
         //operatorInputs.shiftHigh = false;
     }
 
@@ -51,7 +56,7 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically (every 20-25 ms) during autonomous
      */
     public void autonomousPeriodic() {
-        //shoot.calibrate();
+
     }
 
     /**
@@ -60,22 +65,24 @@ public class AdventureRick extends IterativeRobot {
     public void teleopPeriodic() {
         drive.setPower();
         //remove if not needed
-        compressor.start(); 
+        compressor.start();
         //drive.shift();  //shift when the trigger is pressed
         drive.shift();
         drive.shiftHigh();
         drive.shiftLow();
         //drive.engageShifter();
-        System.out.println("Trigger "+ operatorInputs.joystickTriggerPressed());
+        System.out.println("Trigger " + operatorInputs.joystickTriggerPressed());
         //After the robot has kicked, check to see if it has stopped
         checkForKickerStop = shoot.checkToKick();
         if (checkForKickerStop == true) {
             shoot.isKickerStopped();
         }
-        
+        SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
+        drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
     }
 
-    /**f
+    /**
+     * f
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
