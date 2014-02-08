@@ -37,6 +37,7 @@ public class DriveTrain {
 
     double leftPow;
     double rightPow;
+    double totalSpeed;
     long sleeptime = 1000;
 
     double speedMult = 1;
@@ -235,5 +236,13 @@ public class DriveTrain {
 //            shiftItLikeItsHot = 0;
 //
 //        }
-
+    public void setSpeedPositive() {
+        totalSpeed = (leftPow + rightPow)/2;
+        if(isHighGear = true) {
+            totalSpeed = (leftPow + rightPow);
+        }
+        if(totalSpeed<0) {
+            totalSpeed = -totalSpeed;
+        }
+    }
 }

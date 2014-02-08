@@ -36,9 +36,9 @@ public class Shooter {
     private double currentVoltage;
     private boolean inPosition;
     private boolean caliButtPressed = true;
-    private boolean kicking;
+    boolean kicking;
     private double kickingPos;
-    private double angle;
+    double angle;
     private boolean pressed;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
 

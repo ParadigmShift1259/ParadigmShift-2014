@@ -50,11 +50,19 @@ public class AdventureRick extends IterativeRobot {
         drive.leftEncoder.start();
         drive.rightEncoder.start();
         drive.time.start();
-        SmartDashboard.putBoolean("In Low Gear", drive.isHighGear);
+        SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
         SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
         SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
+        SmartDashboard.putBoolean("Is Picking", pick.isPicking);
+        SmartDashboard.putBoolean("Is Pooting", pick.isPicking);
+        SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
+        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
+        SmartDashboard.putNumber("Speed", drive.totalSpeed);
+//      SmartDashboard.putNumber("Kicker Angle", shoot.angle); -> Don't need to display, not sure what will be displayed.
+        //autonomousCommand = (Command) testChooser.getSelected();
+        //autonomousCommand.start();
         //drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
 
         //operatorInputs.shiftHigh = false;
@@ -86,11 +94,17 @@ public class AdventureRick extends IterativeRobot {
 //        if (checkForKickerStop == true) {
 //            shoot.isKickerStopped();
 //        }
-        SmartDashboard.putBoolean("In Low Gear", drive.isHighGear);
+        SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
         SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
         SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
+        SmartDashboard.putBoolean("Is Picking", pick.isPicking);
+        SmartDashboard.putBoolean("Is Pooting", pick.isPicking);
+        SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
+        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
+        SmartDashboard.putNumber("Speed", drive.totalSpeed);
+        //SmartDashboard.putNumber("Kicker Angle", shoot.angle); *Don't need to display, not sure what will be displayed.
 //        drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
     }
 

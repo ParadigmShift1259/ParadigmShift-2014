@@ -40,6 +40,8 @@ public class Picker {
     //private final int A_BUTTON = 1;
     //private final int B_BUTTON = 2;
     //private final int Y_BUTTON = 4;
+    boolean isPicking;
+    boolean isPooting;
     
     
     /*
