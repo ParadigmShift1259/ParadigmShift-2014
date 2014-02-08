@@ -27,19 +27,18 @@ public class Shooter {
     private boolean buttonPressed;
     private final int A_BUTTON = 1;
     private final int SELECT_BUTTON = 9;
-    private final int RIGHT_BUMPER = 6;
+    private final int X_BUTTON = 3;
     private double motorSpeed = 1.0;
     private final AnalogChannel analogChannel = new AnalogChannel(1);
     private final DigitalInput digitalInput = new DigitalInput(9);
     private double previousVoltage = ILLEGAL_VOLTAGE;
     private double currentVoltage;
     private boolean inPosition;
-    public boolean caliButtPressed = true;
+    private boolean caliButtPressed = true;
     private boolean kicking;
     private double kickingPos;
-    private boolean found;
-    private boolean pressed;
     private double angle;
+    private boolean pressed;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
 
     public Shooter(DriverControls _operatorInputs) {
@@ -68,10 +67,14 @@ public class Shooter {
         buttonPressed = xBox.getRawButton(A_BUTTON);
         if (buttonPressed) {
             kicking = true;
-            kickermotor.set(motorSpeed);
-        } else {
-            kicking = false;
-            kickermotor.set(0);
+            buttonPressed = false;
+        }
+        if (kicking) {
+            
+            if (inPosition) {
+                kicking = false;
+                kickermotor.set(0);
+            }
         }
         return buttonPressed; //Return value of button to know whether the robot had just kicked.
     }
@@ -86,40 +89,43 @@ public class Shooter {
         if (caliButtPressed) {
             if (inPosition) {
                 kickermotor.set(0);
+                kickingPos = getKickerAngle();
                 caliButtPressed = false;
-                found = true;
             } else {
                 kickermotor.set(0.1);
             }
         }   
     }
     
-    public void getKickerAngle() {
+    public double getKickerAngle() {
         angle = analogChannel.getVoltage();
-       
-        if (found) {
-            //This is the porportion to convert voltage into a degrees angle.
-            //There are 360 degree permax encoder voltage.
-            kickingPos = angle * (360/MAX_ENCODER_VOLTAGE);
-            
-            found = false;
-        }
+        //This is the porportion to convert voltage into a degrees angle.
+        //There are 360 degree permax encoder voltage.
+        kickingPos = angle * (360/MAX_ENCODER_VOLTAGE);
+        return angle;
     }
     
+    
     public void setKickingPosition() {
-        buttonPressed = xBox.getRawButton(RIGHT_BUMPER);
+        buttonPressed = xBox.getRawButton(X_BUTTON);
         if (buttonPressed){
             pressed = true;
             buttonPressed = false;
         }
         if (pressed && !kicking && !caliButtPressed){
-            inPosition = digitalInput.get();
+            if (getKickerAngle() == kickingPos) {
+                inPosition = true;
+            }
             try {
                 if (inPosition) {
                     kickermotor.set(0);
                     pressed = false;
                 } else {
-                    kickermotor.set(0.1);
+                    if (angle > kickingPos && angle < 165) {
+                        kickermotor.set(0.1);
+                    } else if (angle > kickingPos || angle < 145){
+                        kickermotor.set(-0.1);
+                    }
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
