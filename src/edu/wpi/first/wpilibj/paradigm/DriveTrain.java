@@ -37,7 +37,7 @@ public class DriveTrain {
 
     double leftPow;
     double rightPow;
-    long sleeptime = 0100;
+    long sleeptime = 1000;
 
     double speedMult = 1;
     double fixNum;
@@ -45,6 +45,7 @@ public class DriveTrain {
     double maxRightEncoderRate;
     double ratio;
     double rightEncoderFix;
+    double leftEncoderFix;
     //double currentLeftRate;
     long sleepTime = 0100;
     //high gear = high speed (and low torque)
@@ -85,20 +86,17 @@ public class DriveTrain {
         double rightSpeed = rightEncoder.getRate();
         double fixRightPow = fix(rightPow);
 
-//        try {
-//            if (leftPow != 0 && rightPow != 0) {
-//                maxLeftEncoderRate = leftSpeed / leftPow;
-//                maxRightEncoderRate = rightSpeed / rightPow;
-//                compareEncoders();
-//                if (maxLeftEncoderRate > maxRightEncoderRate) {
-//                    ratio = maxRightEncoderRate / maxLeftEncoderRate;
-//                    fixLeftPow = ratio * fixLeftPow;
-//                    Thread.sleep(sleepTime);
-//                }
-//            }
-//        } catch (InterruptedException e) {
-//
-//        }
+//they see me rollin', and dey hatin'
+        if (leftPow != 0 && rightPow != 0) {
+            maxLeftEncoderRate = leftSpeed / leftPow;
+            maxRightEncoderRate = rightSpeed / rightPow;
+            compareEncoders();
+            if (maxLeftEncoderRate > maxRightEncoderRate) {
+                ratio = maxRightEncoderRate / maxLeftEncoderRate;
+                fixLeftPow = ratio * fixLeftPow;
+
+            }
+        }
         System.out.println("Left Speed = " + leftSpeed);
         System.out.println("Left Power = " + leftPow);
         System.out.println("Left Talon Value = " + leftTalons.getSpeed());
@@ -111,19 +109,16 @@ public class DriveTrain {
         double fixLeftPow = fix(leftPow);
         double rightSpeed = rightEncoder.getRate();
         double fixRightPow = fix(rightPow);
-//        try {
-//            if (leftPow != 0 && rightPow != 0) {
-//                maxRightEncoderRate = rightSpeed / rightPow;
-//                maxLeftEncoderRate = leftSpeed / leftPow;
-//                compareEncoders();
-//                if (maxRightEncoderRate > maxLeftEncoderRate) {
-//                    fixRightPow = ratio * fixRightPow;
-//                    Thread.sleep(sleepTime);
-//                }
-//            }
-//        } catch (InterruptedException e) {
-//
-//        }
+//they see me rollin', and dey hatin'
+        if (leftPow != 0 && rightPow != 0) {
+            maxRightEncoderRate = rightSpeed / rightPow;
+            maxLeftEncoderRate = leftSpeed / leftPow;
+            compareEncoders();
+            if (maxRightEncoderRate > maxLeftEncoderRate) {
+                fixRightPow = ratio * fixRightPow;
+            }
+        }
+
         System.out.println("Right Speed = " + rightSpeed);
         System.out.println("Right Power = " + rightPow);
         System.out.println("Right Talon Value = " + rightTalons.getSpeed());
@@ -133,6 +128,7 @@ public class DriveTrain {
     public void compareEncoders() {
         if (maxRightEncoderRate > maxLeftEncoderRate) {
             ratio = maxLeftEncoderRate / maxRightEncoderRate;
+            leftEncoderFix = maxRightEncoderRate * ratio;
 
         } else if (maxLeftEncoderRate > maxRightEncoderRate) {
             ratio = maxRightEncoderRate / maxLeftEncoderRate;
