@@ -24,7 +24,7 @@ public class AdventureRick extends IterativeRobot {
     DriveTrain drive;
     DriverControls operatorInputs;
     Compressor compressor;
-    Shooter shoot;
+    //Shooter shoot;
     Picker pick;
     //Preferences prefs;
     private boolean checkForKickerStop = false;
@@ -38,16 +38,17 @@ public class AdventureRick extends IterativeRobot {
     public void robotInit() {
         operatorInputs = new DriverControls();
         drive = new DriveTrain(operatorInputs);
-        shoot = new Shooter(operatorInputs);
+        //shoot = new Shooter(operatorInputs);
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
-        shoot = new Shooter(operatorInputs);//add parameters as needed
+        //shoot = new Shooter(operatorInputs);//add parameters as needed
         pick = new Picker(operatorInputs);//add parameters as needed
         compressor.start();
         drive.leftEncoder.start();
         drive.rightEncoder.start();
-        SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
+        drive.time.start();
+        SmartDashboard.putBoolean("In Low Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
         SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
@@ -61,7 +62,7 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically (every 20-25 ms) during autonomous
      */
     public void autonomousPeriodic() {
-        shoot.calibrate();
+        //shoot.calibrate();
     }
 
     /**
@@ -78,11 +79,11 @@ public class AdventureRick extends IterativeRobot {
         //drive.engageShifter();
         System.out.println("Trigger " + operatorInputs.joystickTriggerPressed());
         //After the robot has kicked, check to see if it has stopped
-        checkForKickerStop = shoot.checkToKick();
-        if (checkForKickerStop == true) {
-            shoot.isKickerStopped();
-        }
-        SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
+//        checkForKickerStop = shoot.checkToKick();
+//        if (checkForKickerStop == true) {
+//            shoot.isKickerStopped();
+//        }
+        SmartDashboard.putBoolean("In Low Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
         SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
