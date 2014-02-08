@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -54,7 +55,7 @@ public class DriveTrain {
     boolean nemo = false;
     boolean isLeftHigher =true;
     final double encoderDeadzone = 1000;
-    final double encoderWaitTime = 0250;
+    final double encoderWaitTime = 168; //0250 is 250 octal = 168 decimal
 
     boolean previousTriggerPressed; //what the trigger was before it changed
 
@@ -161,9 +162,9 @@ public class DriveTrain {
 
     public void setPower() {
         joyStickX = operatorInputs.joystickX();
-        //System.out.println("joyStickX " +joyStickX);
+        SmartDashboard.putNumber("JoystickX", joyStickX);
         joyStickY = operatorInputs.joystickY();
-        //System.out.println("joyStickY " +joyStickY);
+        SmartDashboard.putNumber("JoystickY", joyStickY);
         //set fixnum = the maxiumum value for this angle on the joystick
         if (joyStickX == 0 || joyStickY == 0) {
             fixNum = 1;
