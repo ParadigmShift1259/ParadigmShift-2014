@@ -30,11 +30,11 @@ public class Shooter {
     private final int RIGHT_BUMPER = 6;
     private double motorSpeed = 1.0;
     private final AnalogChannel analogChannel = new AnalogChannel(1);
-    private final DigitalInput digitalInput = new DigitalInput(1);
+    private final DigitalInput digitalInput = new DigitalInput(3);
     private double previousVoltage = ILLEGAL_VOLTAGE;
     private double currentVoltage;
     private boolean inPosition;
-    private boolean caliButtPressed = true;
+    public boolean caliButtPressed = true;
     private boolean kicking;
     private double kickingPos;
     private boolean found;
@@ -61,7 +61,7 @@ public class Shooter {
     /*
     This method is used to kick.
     
-    P.S. It has a dumb name that can go to suckySucky.
+    P.S. It has a dumb name that can go to suckySucky().
     */
     
     public boolean checkToKick() {
@@ -96,12 +96,12 @@ public class Shooter {
     
     public void getKickerAngle() {
         angle = analogChannel.getVoltage();
-        //This is the porportion to convert voltage into a degrees angle.
-        //There are 360 degree permax encoder voltage.
-        angle = angle * (360/MAX_ENCODER_VOLTAGE);
        
         if (found) {
-            kickingPos = angle;
+            //This is the porportion to convert voltage into a degrees angle.
+            //There are 360 degree permax encoder voltage.
+            kickingPos = angle * (360/MAX_ENCODER_VOLTAGE);
+            
             found = false;
         }
     }
@@ -114,11 +114,15 @@ public class Shooter {
         }
         if (pressed && !kicking && !caliButtPressed){
             inPosition = digitalInput.get();
-            if (inPosition) {
-                kickermotor.set(0);
-                pressed = false;
-            } else {
-                kickermotor.set(0.1);
+            try {
+                if (inPosition) {
+                    kickermotor.set(0);
+                    pressed = false;
+                } else {
+                    kickermotor.set(0.1);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
     }
