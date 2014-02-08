@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -52,11 +51,9 @@ public class DriveTrain {
     //high gear = high speed (and low torque)
     boolean isHighGear = true; //will start in high gear (low torque)
     boolean nemo = false;
-    boolean fixItBetter = false;
-    boolean isLeftHigher = true;
+    boolean isLeftHigher =true;
     final double encoderDeadzone = 1000;
-    //final -- encoderWaitTime is reset later in the code
-    double encoderWaitTime = 250; //0250 is 250 octal = 168 decimal
+    final double encoderWaitTime = 0250;
 
     boolean previousTriggerPressed; //what the trigger was before it changed
 
@@ -85,7 +82,6 @@ public class DriveTrain {
 //        }
         return v / fixNum;
     }
-
     //see below
     public double LeftMotor() {
         double leftSpeed = leftEncoder.getRate();
@@ -97,7 +93,8 @@ public class DriveTrain {
         if (leftPow != 0 && rightPow != 0) {
             maxLeftEncoderRate = leftSpeed / leftPow;
             maxRightEncoderRate = rightSpeed / rightPow;
-            if (Math.min(Math.abs(leftSpeed), Math.abs(rightSpeed)) > encoderDeadzone) {
+            if(Math.min(Math.abs(leftSpeed),Math.abs(rightSpeed))>encoderDeadzone)
+            {
                 breakTime();
             }
             if (isLeftHigher) {
@@ -122,7 +119,8 @@ public class DriveTrain {
         if (leftPow != 0 && rightPow != 0) {
             maxRightEncoderRate = rightSpeed / rightPow;
             maxLeftEncoderRate = leftSpeed / leftPow;
-            if (Math.min(Math.abs(leftSpeed), Math.abs(rightSpeed)) > encoderDeadzone) {
+            if(Math.min(Math.abs(leftSpeed),Math.abs(rightSpeed))>encoderDeadzone)
+            {
                 breakTime();
             }
             if (!isLeftHigher) {
@@ -140,21 +138,21 @@ public class DriveTrain {
     public void compareEncoders() {
         if (maxRightEncoderRate > maxLeftEncoderRate) {
             ratio = maxLeftEncoderRate / maxRightEncoderRate;
-            leftEncoderFix = maxRightEncoderRate * ratio;// + .1;
+            leftEncoderFix = maxRightEncoderRate * ratio + .1;
             isLeftHigher = false;
 
         } else if (maxLeftEncoderRate > maxRightEncoderRate) {
             ratio = maxRightEncoderRate / maxLeftEncoderRate;
             rightEncoderFix = maxLeftEncoderRate * ratio;
             isLeftHigher = true;
-        } else {
+            }
+        else{
             ratio = 1;
         }
 
     }
-
-    public void breakTime() {
-        if (time.get() > encoderWaitTime) {
+    public void breakTime(){
+        if (time.get() > encoderWaitTime){
             compareEncoders();
             time.reset();
         }
@@ -162,10 +160,8 @@ public class DriveTrain {
 
     public void setPower() {
         joyStickX = operatorInputs.joystickX();
-        SmartDashboard.putNumber("JoystickX", joyStickX);
         //System.out.println("joyStickX " +joyStickX);
         joyStickY = operatorInputs.joystickY();
-        SmartDashboard.putNumber("JoystickY", joyStickY);
         //System.out.println("joyStickY " +joyStickY);
         //set fixnum = the maxiumum value for this angle on the joystick
         if (joyStickX == 0 || joyStickY == 0) {
@@ -185,28 +181,12 @@ public class DriveTrain {
         rightTalons.set(RightMotor());
     }
 
-//    public void noHaywire() {
-//        if (leftPow > .05 && rightPow > .05 && isHighGear) {
-//            fixItBetter = false;
-//        } else {
-//            fixItBetter = true;
-//        }
-//    }
-
     public void shift() {//current setting is start in high gear
         boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-        // && fixItBetter == true
         if (triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
             isHighGear = !isHighGear; // high gear becomes not high gear
             gearShiftHigh.set(isHighGear); // the gear shifts
-            gearShiftLow.set(!isHighGear);//this is changing it to low gear
-            /*if(!isHighGear)
-            {
-                double oldEncoderWaitTime = encoderWaitTime;
-                encoderWaitTime = 0; //Force it to recalculate ratio
-                breakTime();
-                encoderWaitTime = oldEncoderWaitTime;
-            }*/
+            gearShiftLow.set(!isHighGear);
         }
         previousTriggerPressed = triggerPressed;
     }
