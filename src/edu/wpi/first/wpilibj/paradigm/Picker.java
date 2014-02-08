@@ -43,7 +43,7 @@ public class Picker {
     
     public void spinGrabber() {
         buttonPressed = xBox.getRawButton(BUTTON_X);
-        if (buttonPressed == true) {
+        if (buttonPressed) {
             jaguar.set(0.2);
         } else {
             jaguar.set(0);
@@ -59,7 +59,7 @@ public class Picker {
     
     public void spinPooter() {
         buttonPressed = xBox.getRawButton(BUTTON_LB);
-        if (buttonPressed == true) {
+        if (buttonPressed) {
             jaguar.set(-0.3);
         } else {
             jaguar.set(0);
