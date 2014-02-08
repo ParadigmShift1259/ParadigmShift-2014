@@ -26,8 +26,8 @@ public class Shooter {
     private final Talon kickermotor = new Talon(PORT_5);
     private boolean buttonPressed;
     private double triggerPressed;
-    private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
-    private final int SELECT_BUTTON = 9;
+    //private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
+    private final int BACK_BUTTON = 7;
     private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
     private double motorSpeed = 1.0;
     private final AnalogChannel analogChannel = new AnalogChannel(1);
@@ -64,7 +64,7 @@ public class Shooter {
     P.S. It has a dumb name that can go to suckySucky().
     */
     
-    public boolean checkToKick() {
+    public void kick() {
         triggerPressed = xBox.getAxis(RIGHT_TRIGGER);
         inPosition = digitalInput.get();
         if (triggerPressed == 0.5) {
@@ -78,23 +78,29 @@ public class Shooter {
                 kickermotor.set(0);
             }
         }
-        return buttonPressed; //Return value of button to know whether the robot had just kicked.
     }
     
     public void calibrate() {
         inPosition = digitalInput.get();
-        buttonPressed = xBox.getRawButton(SELECT_BUTTON);
+        buttonPressed = xBox.getRawButton(BACK_BUTTON);
         if (buttonPressed) {
             caliButtPressed = true;
             buttonPressed = false;
         }
         if (caliButtPressed) {
-            if (inPosition) {
-                kickermotor.set(0);
-                kickingPos = getKickerAngle();
-                caliButtPressed = false;
-            } else {
-                kickermotor.set(0.1);
+            try {
+                if (inPosition) {
+                    kickermotor.set(0);
+                    caliButtPressed = false;
+                } else {
+                    if (angle > kickingPos && angle <= 165) {
+                        kickermotor.set(0.1);
+                    } else if (angle > kickingPos || angle <= 145){
+                        kickermotor.set(-0.1);
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }   
     }
@@ -123,9 +129,9 @@ public class Shooter {
                     kickermotor.set(0);
                     pressed = false;
                 } else {
-                    if (angle > kickingPos && angle < 165) {
+                    if (angle > kickingPos && angle <= 165) {
                         kickermotor.set(0.1);
-                    } else if (angle > kickingPos || angle < 145){
+                    } else if (angle > kickingPos || angle <= 145){
                         kickermotor.set(-0.1);
                     }
                 }

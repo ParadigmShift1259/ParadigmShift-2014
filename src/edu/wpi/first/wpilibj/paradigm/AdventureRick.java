@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Compressor;
 //import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class AdventureRick extends IterativeRobot {
     //electromagic!
 
+    OperatorInputs inputs;
     DriveTrain drive;
     DriverControls operatorInputs;
     Compressor compressor;
@@ -36,9 +38,9 @@ public class AdventureRick extends IterativeRobot {
      * Initializes when the robot first starts, (only once at power-up).
      */
     public void robotInit() {
+        inputs = new OperatorInputs();
         operatorInputs = new DriverControls();
         drive = new DriveTrain(operatorInputs);
-        //shoot = new Shooter(operatorInputs);
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
@@ -69,6 +71,7 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+        inputs.readAll();
         drive.setPower();
         //remove if not needed
         compressor.start();
