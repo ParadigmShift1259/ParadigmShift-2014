@@ -9,6 +9,7 @@ package edu.wpi.first.wpilibj.paradigm;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.AnalogChannel;
 
 /**
  *
@@ -22,11 +23,11 @@ public class Picker {
     private int shootPos = 2136; //change value later, position while shooting/aiming
     private int autoPos = 2048; //change value later, position at the beginning of the auto/match
     private int currentPos; //the picker's current pos(ition)
-    private boolean selfDestruct = false; //for the self-destruct feature
     private final int BUTTON_X = 3; //this is the x butt on the controller
     private final int BUTTON_LB = 5; //this is is the poot butt
     private boolean buttonPressed; //used to indicate if a button is pressed
     private Talon jaguar = new Talon(8); //used in the SpinGrabber method...also is a Talon
+    private final AnalogChannel analogChannel = new AnalogChannel(2);
     
     /*
     This is the constructor for the Picker class.
@@ -63,6 +64,18 @@ public class Picker {
             jaguar.set(-0.3);
         } else {
             jaguar.set(0);
+        }
+    }
+    
+    public void getPickerAngle() {
+        angle = analogChannel.getVoltage();
+       
+        if (found) {
+            //This is the porportion to convert voltage into a degrees angle.
+            //There are 360 degree permax encoder voltage.
+            kickingPos = angle * (360/MAX_ENCODER_VOLTAGE);
+            
+            found = false;
         }
     }
     //need to figure out moveable parts on the picker in order to assign functions
