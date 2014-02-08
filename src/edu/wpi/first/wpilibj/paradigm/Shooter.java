@@ -30,7 +30,7 @@ public class Shooter {
     private final int RIGHT_BUMPER = 6;
     private double motorSpeed = 1.0;
     private final AnalogChannel analogChannel = new AnalogChannel(1);
-    private final DigitalInput digitalInput = new DigitalInput(3);
+    private final DigitalInput digitalInput = new DigitalInput(9);
     private double previousVoltage = ILLEGAL_VOLTAGE;
     private double currentVoltage;
     private boolean inPosition;
