@@ -26,8 +26,9 @@ public class Picker {
     private final int BUTTON_X = 3; //this is the x butt on the controller
     private final int BUTTON_LB = 5; //this is is the poot butt
     private boolean buttonPressed; //used to indicate if any button is pressed
-    private Talon jaguar = new Talon(8); //used in the SpinGrabber method...also is a Talon
-    private final AnalogChannel analogChannel = new AnalogChannel(2);
+    private Talon wheelSpinner = new Talon(8); //used in the SpinGrabber method...also is a Talon
+    private final AnalogChannel analogChannel = new AnalogChannel(4);
+    private double angle = analogChannel.getVoltage();
     
     /*
     This is the constructor for the Picker class.
@@ -45,9 +46,9 @@ public class Picker {
     public void spinGrabber() {
         buttonPressed = xBox.getRawButton(BUTTON_X);
         if (buttonPressed) {
-            jaguar.set(0.2);
+            wheelSpinner.set(0.2);
         } else {
-            jaguar.set(0);
+            wheelSpinner.set(0);
         }
     }
     
@@ -61,23 +62,13 @@ public class Picker {
     public void spinPooter() {
         buttonPressed = xBox.getRawButton(BUTTON_LB);
         if (buttonPressed) {
-            jaguar.set(-0.3);
+            wheelSpinner.set(-0.3);
         } else {
-            jaguar.set(0);
+            wheelSpinner.set(0);
         }
     }
     
-    public void getPickerAngle() {
-        angle = analogChannel.getVoltage();
-       
-        if (found) {
-            //This is the porportion to convert voltage into a degrees angle.
-            //There are 360 degree permax encoder voltage.
-            kickingPos = angle * (360/MAX_ENCODER_VOLTAGE);
-            
-            found = false;
-        }
-    }
+
     //need to figure out moveable parts on the picker in order to assign functions
     
 }
