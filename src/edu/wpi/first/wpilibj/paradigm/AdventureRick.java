@@ -48,6 +48,9 @@ public class AdventureRick extends IterativeRobot {
         drive.rightEncoder.start();
         SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
+        SmartDashboard.putNumber("Right Power Is", drive.rightPow);
+        SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
+        SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
         //drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
 
         //operatorInputs.shiftHigh = false;
@@ -80,6 +83,9 @@ public class AdventureRick extends IterativeRobot {
         }
         SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
+        SmartDashboard.putNumber("Right Power Is", drive.rightPow);
+        SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
+        SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
 //        drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
     }
 
