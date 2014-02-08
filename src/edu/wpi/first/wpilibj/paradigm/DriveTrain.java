@@ -87,16 +87,16 @@ public class DriveTrain {
         double fixRightPow = fix(rightPow);
 
 //they see me rollin', and dey hatin'
-        if (leftPow != 0 && rightPow != 0) {
-            maxLeftEncoderRate = leftSpeed / leftPow;
-            maxRightEncoderRate = rightSpeed / rightPow;
-            compareEncoders();
-            if (maxLeftEncoderRate > maxRightEncoderRate) {
-                ratio = maxRightEncoderRate / maxLeftEncoderRate;
-                fixLeftPow = ratio * fixLeftPow;
-
-            }
-        }
+//        if (leftPow != 0 && rightPow != 0) {
+//            maxLeftEncoderRate = leftSpeed / leftPow;
+//            maxRightEncoderRate = rightSpeed / rightPow;
+//            compareEncoders();
+//            if (maxLeftEncoderRate > maxRightEncoderRate) {
+//                ratio = maxRightEncoderRate / maxLeftEncoderRate;
+//                fixLeftPow = ratio * fixLeftPow;
+//
+//            }
+//        }
         System.out.println("Left Speed = " + leftSpeed);
         System.out.println("Left Power = " + leftPow);
         System.out.println("Left Talon Value = " + leftTalons.getSpeed());
@@ -110,14 +110,14 @@ public class DriveTrain {
         double rightSpeed = rightEncoder.getRate();
         double fixRightPow = fix(rightPow);
 //they see me rollin', and dey hatin'
-        if (leftPow != 0 && rightPow != 0) {
-            maxRightEncoderRate = rightSpeed / rightPow;
-            maxLeftEncoderRate = leftSpeed / leftPow;
-            compareEncoders();
-            if (maxRightEncoderRate > maxLeftEncoderRate) {
-                fixRightPow = ratio * fixRightPow;
-            }
-        }
+//        if (leftPow != 0 && rightPow != 0) {
+//            maxRightEncoderRate = rightSpeed / rightPow;
+//            maxLeftEncoderRate = leftSpeed / leftPow;
+//            compareEncoders();
+//            if (maxRightEncoderRate > maxLeftEncoderRate) {
+//                fixRightPow = ratio * fixRightPow;
+//            }
+//        }
 
         System.out.println("Right Speed = " + rightSpeed);
         System.out.println("Right Power = " + rightPow);

@@ -8,7 +8,7 @@ package edu.wpi.first.wpilibj.paradigm;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.Preferences;
+//import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -26,7 +26,7 @@ public class AdventureRick extends IterativeRobot {
     Compressor compressor;
     Shooter shoot;
     Picker pick;
-    Preferences prefs;
+    //Preferences prefs;
     private boolean checkForKickerStop = false;
 
     final int PRESSURE_SWITCH_CHANNEL = 1;
@@ -47,7 +47,8 @@ public class AdventureRick extends IterativeRobot {
         drive.leftEncoder.start();
         drive.rightEncoder.start();
         SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
-        drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
+        SmartDashboard.putNumber("Left Power Is", drive.leftPow);
+        //drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
 
         //operatorInputs.shiftHigh = false;
     }
@@ -78,7 +79,8 @@ public class AdventureRick extends IterativeRobot {
             shoot.isKickerStopped();
         }
         SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
-        drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
+        SmartDashboard.putNumber("Left Power Is", drive.leftPow);
+//        drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
     }
 
     /**
