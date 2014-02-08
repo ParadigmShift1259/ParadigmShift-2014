@@ -50,7 +50,8 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically (every 20-25 ms) during autonomous
      */
     public void autonomousPeriodic() {
-        
+        //Shooter shooter = new Shooter();
+        //shooter.calibrate();
     }
 
     /**
