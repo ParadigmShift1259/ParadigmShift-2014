@@ -25,7 +25,7 @@ public class Picker {
     private boolean selfDestruct = false; //for the self-destruct feature
     private final int BUTTON_X = 3; //this is the x butt on the controller
     private final int BUTTON_LB = 5; //this is is the poot butt
-    private boolean buttonPressed; //used to indicate if a button is pressed
+    private boolean buttonPressed; //used to indicate if any button is pressed
     private Talon jaguar = new Talon(8); //used in the SpinGrabber method...also is a Talon
     
     /*
