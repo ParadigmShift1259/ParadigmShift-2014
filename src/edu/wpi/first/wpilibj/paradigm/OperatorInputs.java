@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.Joystick;
 public class OperatorInputs {
 
     //variables
-    private final Joystick xBox = new Joystick(2);
     private double triggerPressed;
     private final int A_BUTTON = 1;
     private final int B_BUTTON = 2;
@@ -25,7 +24,8 @@ public class OperatorInputs {
     private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
     private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
     private Joystick joystick = new Joystick(1); //Created and initialized the joystick controller
-    private Joystick xBox = new Joystick(2); //Created and initialized the xbox controller
+    private final Joystick xBox = new Joystick(2); //Created and initialized the xbox controller
+    //private Joystick xBox = new Joystick(2);
     final double DEADZONE_Y = 0.05;
     final double DEADZONE_X = 0.15;
 

@@ -28,13 +28,14 @@ public class Shooter {
     private double triggerPressed;
     //private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
     private final int BACK_BUTTON = 7;
-    private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
+    private final Joystick.AxisType XBOX_TRIGGERS = Joystick.AxisType.kZ; //renamed because this is both the left trigger and the right trigger
     private double motorSpeed = 1.0;
     private final AnalogChannel analogChannel = new AnalogChannel(1);
     private final DigitalInput digitalInput = new DigitalInput(9);
     private double previousVoltage = ILLEGAL_VOLTAGE;
     private double currentVoltage;
-    private boolean inPosition;
+    //private 
+    boolean inPosition; //made protected for use in AdventureRick
     private boolean caliButtPressed = true;
     boolean kicking;
     private double kickingPos;
@@ -65,7 +66,7 @@ public class Shooter {
     */
     
     public void kick() {
-        triggerPressed = xBox.getAxis(RIGHT_TRIGGER);
+        triggerPressed = xBox.getAxis(XBOX_TRIGGERS);
         inPosition = digitalInput.get();
         if (triggerPressed == 0.5) {
             kicking = true;
@@ -115,7 +116,7 @@ public class Shooter {
     
     
     public void setKickingPosition() {
-        triggerPressed = xBox.getAxis(LEFT_TRIGGER);
+        triggerPressed = xBox.getAxis(XBOX_TRIGGERS);
         if (triggerPressed == 0.5){
             pressed = true;
             buttonPressed = false;
