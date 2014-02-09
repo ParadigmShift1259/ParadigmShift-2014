@@ -158,6 +158,7 @@ public class DriveTrain {
     public void breakTime(){
         SmartDashboard.putNumber("Ratio", ratio);
         SmartDashboard.putBoolean("Left > Right", isLeftHigher);
+        SmartDashboard.putNumber("Timer time", time.get());
         if (time.get() > encoderWaitTime){
             compareEncoders();
             time.reset();
