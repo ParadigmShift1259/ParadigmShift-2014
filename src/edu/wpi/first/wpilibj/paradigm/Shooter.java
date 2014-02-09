@@ -25,7 +25,13 @@ public class Shooter {
     private final Joystick xBox = new Joystick(2);
     private final Talon kickermotor = new Talon(PORT_5);
     private boolean buttonPressed;
-    private double triggerPressed;
+    //private double triggerPressed;
+    //put in place for testing on Sturday night 2/8/2014 - E A COBB
+        private boolean triggerPressed; // changed for testing on Saturday night
+        private final double LEFT_TRIGGER_PRESSED_MAX_VALUE = 1.0;
+        private final double LEFT_TRIGGER_PRESSED_MIN_VALUE = 0.5;
+        private final double RIGHT_TRIGGER_PRESSED_MAX_VALUE = -0.5;
+        private final double RIGHT_TRIGGER_PRESSED_MIN_VALUE = -1.0;
     //private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
     private final int BACK_BUTTON = 7;
     private final Joystick.AxisType XBOX_TRIGGERS = Joystick.AxisType.kZ; //renamed because this is both the left trigger and the right trigger
@@ -66,9 +72,10 @@ public class Shooter {
     */
     
     public void kick() {
-        triggerPressed = xBox.getAxis(XBOX_TRIGGERS);
+        triggerPressed = RIGHT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getAxis(XBOX_TRIGGERS) && 
+                xBox.getAxis(XBOX_TRIGGERS) <= RIGHT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
         inPosition = digitalInput.get();
-        if (triggerPressed == 0.5) {
+        if (triggerPressed){ //changed for testing on Sturday night 2/8/2014 - E A COBB
             kicking = true;
             buttonPressed = false;
         }
@@ -116,8 +123,9 @@ public class Shooter {
     
     
     public void setKickingPosition() {
-        triggerPressed = xBox.getAxis(XBOX_TRIGGERS);
-        if (triggerPressed == 0.5){
+        triggerPressed = RIGHT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getAxis(XBOX_TRIGGERS) && 
+                xBox.getAxis(XBOX_TRIGGERS) <= RIGHT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
+        if (triggerPressed){ //changed for testing on Sturday night 2/8/2014 - E A COBB
             pressed = true;
             buttonPressed = false;
         }
