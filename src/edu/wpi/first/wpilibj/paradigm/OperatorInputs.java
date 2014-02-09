@@ -73,6 +73,22 @@ public class OperatorInputs {
     public boolean isReleaseButtonPressed() {
         return xBox.getRawButton(LEFT_BUMPER);
     }
+    
+    public double xboxRightX() {
+        return deadzoneFilterX(this.xBox.getX(Joystick.Hand.kRight));
+    }
+
+    public double xboxRightY() {
+        return deadzoneFilterY(this.xBox.getY(Joystick.Hand.kRight));
+    }
+
+    public double xboxLeftX() {
+        return deadzoneFilterX(this.xBox.getX(Joystick.Hand.kLeft));
+    }
+
+    public double xboxLeftY() {
+        return deadzoneFilterY(this.xBox.getY(Joystick.Hand.kLeft));
+    }
 
     public double joystickX() {
         return deadzoneFilterX(this.joystick.getX()); //return the value of the x-axis of the joystick controller

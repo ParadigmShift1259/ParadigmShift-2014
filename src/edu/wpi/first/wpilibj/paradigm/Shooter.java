@@ -121,6 +121,9 @@ public class Shooter {
         return angle;
     }
     
+    public void programTalons() {
+        kickermotor.set(operatorInputs.xboxLeftY());
+    }  
     
     public void setKickingPosition() {
         triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getAxis(XBOX_TRIGGERS) && 
