@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DriveTrain {
 
-    DriverControls operatorInputs;
+    OperatorInputs operatorInputs;
 
     final int LEFT_PORT = 1; //attributes  defining the class
     final int RIGHT_PORT = 2;
@@ -61,7 +61,7 @@ public class DriveTrain {
 
     boolean previousTriggerPressed; //what the trigger was before it changed
 
-    public DriveTrain(DriverControls _operatorInputs) {
+    public DriveTrain(OperatorInputs _operatorInputs) {
         this.operatorInputs = _operatorInputs;
         //this.previousTriggerPressed = this.operatorInputs.joystickTriggerPressed();
         this.leftTalons = new Talon(LEFT_PORT);

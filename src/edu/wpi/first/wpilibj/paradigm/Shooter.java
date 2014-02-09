@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
  */
 public class Shooter {
     
-    DriverControls operatorInputs;
+    OperatorInputs operatorInputs;
     
     private final int PORT_5 = 5;
     //the current value can not possibly be the previous value the first time through
@@ -49,7 +49,7 @@ public class Shooter {
     private boolean pressed;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
 
-    public Shooter(DriverControls _operatorInputs) {
+    public Shooter(OperatorInputs _operatorInputs) {
         this.operatorInputs = _operatorInputs;       
     }
     

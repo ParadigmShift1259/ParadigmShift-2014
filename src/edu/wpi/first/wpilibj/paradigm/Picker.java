@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.AnalogChannel;
  */
 public class Picker {
     
-    DriverControls operatorInputs;
+    OperatorInputs operatorInputs;
     private Joystick xBox = new Joystick(2);
     private int loadPos = 135; //change value later, position while loading
     private int shootPos = 80; //change value later, position while shooting/aiming
@@ -48,7 +48,7 @@ public class Picker {
     This is the constructor for the Picker class.
     */
     
-    public Picker(DriverControls _operatorInputs) {
+    public Picker(OperatorInputs _operatorInputs) {
         this.operatorInputs = _operatorInputs;
     }
     

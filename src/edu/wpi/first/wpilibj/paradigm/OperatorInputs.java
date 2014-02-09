@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
  *
  * @author Programming
  */
-public class DriverControls {
+public class OperatorInputs {
 
     //variables
     private double triggerPressed;
@@ -28,7 +28,7 @@ public class DriverControls {
     final double DEADZONE_Y = 0.05;
     final double DEADZONE_X = 0.15;
 
-//    public DriverControls() {
+//    public OperatorInputs() {
 //        this.shiftUp = true;
 //    }
     public OperatorInputs() {
