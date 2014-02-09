@@ -26,7 +26,7 @@ public class AdventureRick extends IterativeRobot {
     DriveTrain drive;
     DriverControls operatorInputs;
     Compressor compressor;
-    Shooter shoot;
+    //Shooter shoot;
     //Picker pick;
     //Preferences prefs;
     private boolean checkForKickerStop = false;
@@ -44,7 +44,7 @@ public class AdventureRick extends IterativeRobot {
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
-        shoot = new Shooter(operatorInputs);//add parameters as needed
+        //shoot = new Shooter(operatorInputs);//add parameters as needed
         //pick = new Picker(operatorInputs);//add parameters as needed
         compressor.start();
         drive.leftEncoder.start();
@@ -58,10 +58,9 @@ public class AdventureRick extends IterativeRobot {
         /*
         SmartDashboard.putBoolean("Is Picking", pick.isPicking);
         SmartDashboard.putBoolean("Is Pooting", pick.isPicking);
-        */
         SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
         SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
-        
+        */
         SmartDashboard.putNumber("Speed", drive.totalSpeed);
 //      SmartDashboard.putNumber("Kicker Angle", shoot.angle); -> Don't need to display, not sure what will be displayed.
         //autonomousCommand = (Command) testChooser.getSelected();
@@ -105,10 +104,9 @@ public class AdventureRick extends IterativeRobot {
         /*
         SmartDashboard.putBoolean("Is Picking", pick.isPicking);
         SmartDashboard.putBoolean("Is Pooting", pick.isPicking);
-        */
         SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
         SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
-        
+        */
         SmartDashboard.putNumber("Speed", drive.totalSpeed);
         //SmartDashboard.putNumber("Kicker Angle", shoot.angle); *Don't need to display, not sure what will be displayed.
 //        drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
