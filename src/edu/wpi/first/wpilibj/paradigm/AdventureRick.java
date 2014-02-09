@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class AdventureRick extends IterativeRobot {
     //electromagic!
 
-    OperatorInputs inputs;
+    DriverControls inputs;
     DriveTrain drive;
     DriverControls operatorInputs;
     Compressor compressor;
@@ -38,7 +38,7 @@ public class AdventureRick extends IterativeRobot {
      * Initializes when the robot first starts, (only once at power-up).
      */
     public void robotInit() {
-        inputs = new OperatorInputs();
+        inputs = new DriverControls();
         operatorInputs = new DriverControls();
         drive = new DriveTrain(operatorInputs);
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.

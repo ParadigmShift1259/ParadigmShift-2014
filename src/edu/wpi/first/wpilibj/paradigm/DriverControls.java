@@ -13,15 +13,66 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class DriverControls {
 
+    //variables
+    private double triggerPressed;
+    private final int A_BUTTON = 1;
+    private final int B_BUTTON = 2;
+    private final int Y_BUTTON = 4;
+    private final int RIGHT_BUMPER = 6; //this is the x butt on the controller
+    private final int LEFT_BUMPER = 5; //this is is the poot butt
+    private final int BACK_BUTTON = 7;
+    private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
+    private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
     private Joystick joystick = new Joystick(1); //Created and initialized the joystick controller
     private Joystick xBox = new Joystick(2); //Created and initialized the xbox controller
     final double DEADZONE_Y = 0.05;
     final double DEADZONE_X = 0.15;
-    //boolean shiftUp;
 
 //    public DriverControls() {
 //        this.shiftUp = true;
 //    }
+    public OperatorInputs() {
+    
+    }
+
+    public void readAll() {
+
+    }
+
+    public boolean isShooterTriggerPressed() {
+        triggerPressed = xBox.getAxis(RIGHT_TRIGGER);
+        return (triggerPressed >= 0.5);
+    }
+
+    public boolean isSetKickerPositionButtonPressed() {
+        triggerPressed = xBox.getAxis(LEFT_TRIGGER);
+        return (triggerPressed >= 0.5);
+    }
+
+    //change later
+    public boolean isCaliButtonPressed() {
+        return xBox.getRawButton(BACK_BUTTON);
+    }
+
+    public boolean isPickerLoadingPositionButtonPressed() {
+        return xBox.getRawButton(A_BUTTON);
+    }
+
+    public boolean isPickerKickingPositionButtonPressed() {
+        return xBox.getRawButton(B_BUTTON);
+    }
+
+    public boolean isPickingAutoPositionButtonPressed() {
+        return xBox.getRawButton(Y_BUTTON);
+    }
+
+    public boolean isGrabbingButtonPressed() {
+        return xBox.getRawButton(RIGHT_BUMPER);
+    }
+
+    public boolean isReleaseButtonPressed() {
+        return xBox.getRawButton(LEFT_BUMPER);
+    }
 
     public double joystickX() {
         return deadzoneFilterX(this.joystick.getX()); //return the value of the x-axis of the joystick controller
@@ -49,6 +100,7 @@ public class DriverControls {
         return joyStickValue;
 
     }
+
         private double deadzoneFilterX(double joyStickValue) {
         if (Math.abs(joyStickValue) <= DEADZONE_X) {
             return 0;
@@ -61,6 +113,7 @@ public class DriverControls {
         return this.joystick.getTrigger();  //return the value of the joystick trigger
 
     }
+
         public boolean joystickTriggerPressed() {
         return this.joystick.getTrigger();  //return the value of the joystick trigger
 
@@ -78,6 +131,5 @@ public class DriverControls {
     public boolean shiftHigh() {
         return this.joystick.getRawButton(4);
     }
-
-   
+    
 }
