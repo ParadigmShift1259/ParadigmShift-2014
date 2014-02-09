@@ -122,7 +122,7 @@ public class Shooter {
     }
     
     public void programTalons() {
-        kickermotor.set(operatorInputs.xboxLeftY());
+        kickermotor.set(-operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
     }  
     
     public void setKickingPosition() {
