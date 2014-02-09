@@ -123,8 +123,8 @@ public class Shooter {
     
     
     public void setKickingPosition() {
-        triggerPressed = RIGHT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getAxis(XBOX_TRIGGERS) && 
-                xBox.getAxis(XBOX_TRIGGERS) <= RIGHT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
+        triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getAxis(XBOX_TRIGGERS) && 
+                xBox.getAxis(XBOX_TRIGGERS) <= LEFT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
         if (triggerPressed){ //changed for testing on Sturday night 2/8/2014 - E A COBB
             pressed = true;
             buttonPressed = false;
