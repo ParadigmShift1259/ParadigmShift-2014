@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  *
@@ -50,7 +51,11 @@ public class Shooter {
     private final double MAX_ENCODER_VOLTAGE = 2.0;
 
     public Shooter(OperatorInputs _operatorInputs) {
-        this.operatorInputs = _operatorInputs;       
+        this.operatorInputs = _operatorInputs;
+    }
+    
+    public double getKickerMotorPower() {
+        return kickermotor.get();
     }
     
     public boolean isKickerStopped() {
@@ -80,10 +85,11 @@ public class Shooter {
             buttonPressed = false;
         }
         if (kicking) {
-            kickermotor.set(0.7);
+            kickermotor.set(-0.7); //negative is kicking forward - 2/8/2014 E A Cobb
             if (inPosition) {
                 kicking = false;
                 kickermotor.set(0);
+                buttonPressed = true; //put in place for testing on Sturday night 2/8/2014 - E A COBB
             }
         }
     }
@@ -121,8 +127,11 @@ public class Shooter {
         return angle;
     }
     
-    public void programTalons() {
-        kickermotor.set(-operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
+    //Added for Saturday Night to program shooter - 2/8/2014 E A Cobb
+    public void manualShooterControl() {
+        if(!kicking) {
+            kickermotor.set(-operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
+        }
     }  
     
     public void setKickingPosition() {

@@ -91,8 +91,10 @@ public class AdventureRick extends IterativeRobot {
 //        drive.shiftHigh();
 //        drive.shiftLow();
         shoot.kick();
+        shoot.manualShooterControl();
+        SmartDashboard.putNumber("kicker Motor Power",shoot.getKickerMotorPower());
         //drive.engageShifter();
-        System.out.println("Trigger " + operatorInputs.joystickTriggerPressed());
+        //System.out.println("Trigger " + operatorInputs.joystickTriggerPressed());
         //After the robot has kicked, check to see if it has stopped
 //        checkForKickerStop = shoot.checkToKick();
 //        if (checkForKickerStop == true) {
@@ -120,7 +122,7 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-        shoot.programTalons();
+        shoot.manualShooterControl();
     }
 
 }
