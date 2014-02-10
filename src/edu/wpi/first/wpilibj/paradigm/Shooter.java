@@ -35,7 +35,7 @@ public class Shooter {
         private final double RIGHT_TRIGGER_PRESSED_MIN_VALUE = -1.0;
     //private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
     private final int BACK_BUTTON = 7;
-    private final Joystick.AxisType XBOX_TRIGGERS = Joystick.AxisType.kZ; //renamed because this is both the left trigger and the right trigger
+    private final int XBOX_TRIGGERS = 3; //renamed because this is both the left trigger and the right trigger
     private double motorSpeed = 1.0;
     private final AnalogChannel analogChannel = new AnalogChannel(1);
     private final DigitalInput digitalInput = new DigitalInput(9);
@@ -77,8 +77,8 @@ public class Shooter {
     */
     
     public void kick() {
-        triggerPressed = RIGHT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getAxis(XBOX_TRIGGERS) && 
-                xBox.getAxis(XBOX_TRIGGERS) <= RIGHT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
+        triggerPressed = RIGHT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS) && 
+                xBox.getRawAxis(XBOX_TRIGGERS) <= RIGHT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
         inPosition = digitalInput.get();
         if (triggerPressed){ //changed for testing on Sturday night 2/8/2014 - E A COBB
             kicking = true;
@@ -135,8 +135,8 @@ public class Shooter {
     }  
     
     public void setKickingPosition() {
-        triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getAxis(XBOX_TRIGGERS) && 
-                xBox.getAxis(XBOX_TRIGGERS) <= LEFT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
+        triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS) && 
+                xBox.getRawAxis(XBOX_TRIGGERS) <= LEFT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
         if (triggerPressed){ //changed for testing on Sturday night 2/8/2014 - E A COBB
             pressed = true;
             buttonPressed = false;
