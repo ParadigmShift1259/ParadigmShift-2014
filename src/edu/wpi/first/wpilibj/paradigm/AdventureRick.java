@@ -30,7 +30,7 @@ public class AdventureRick extends IterativeRobot {
     //Picker pick;
     //Preferences prefs;
     private boolean checkForKickerStop = false;
-
+    
     final int PRESSURE_SWITCH_CHANNEL = 1;
     final int COMPRESSOR_RELAY_CHANNEL = 1;
 
@@ -45,6 +45,7 @@ public class AdventureRick extends IterativeRobot {
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
         shoot = new Shooter(operatorInputs);//add parameters as needed
+        shoot.caliButtPressed = true;
         //pick = new Picker(operatorInputs);//add parameters as needed
         compressor.start();
         drive.leftEncoder.start();
@@ -75,7 +76,7 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically (every 20-25 ms) during autonomous
      */
     public void autonomousPeriodic() {
-        //shoot.calibrate();
+        shoot.calibrate();
     }
 
     /**
