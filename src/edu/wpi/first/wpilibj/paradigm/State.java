@@ -11,6 +11,7 @@ package edu.wpi.first.wpilibj.paradigm;
  * @author 212006372
  */
 public class State {
+    
     public final static int KICKING = 1;
     public final static int KICKER_STOPPING = 2;
     public final static int KICKER_STOPPED = 3;
