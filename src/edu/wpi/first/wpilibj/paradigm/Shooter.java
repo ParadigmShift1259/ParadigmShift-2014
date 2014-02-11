@@ -47,6 +47,8 @@ public class Shooter {
     private double kickingPos = 180;
     public boolean caliButtPressed = true;
     double angle;
+    private int MAX_ALLOWED_ANGLE = 165;
+    private int MIN_ALLOWED_ANGLE = 145;
     private boolean pressed;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
 
@@ -60,7 +62,7 @@ public class Shooter {
     
     public boolean isKickerStopped() {
         currentVoltage = analogChannel.getVoltage(); //Read current voltage
-        if (previousVoltage == currentVoltage) { 
+        if (previousVoltage >= currentVoltage-(MAX_ENCODER_VOLTAGE*0.01) && previousVoltage <= currentVoltage+(MAX_ENCODER_VOLTAGE*0.01)) { 
             previousVoltage = ILLEGAL_VOLTAGE; //Set back so it can run again 
             return true;
         } else {
@@ -102,15 +104,15 @@ public class Shooter {
         if (buttonPressed) {
             caliButtPressed = true;
         }
-        if (caliButtPressed) {
+        if (caliButtPressed && isKickerStopped()) {
             try {
                 if (inPosition) {
                     kickermotor.set(0);
                     caliButtPressed = false;
                 } else {
-                    if (angle > kickingPos && angle <= 165) {
+                    if (angle > kickingPos && angle <= MAX_ALLOWED_ANGLE) {
                         kickermotor.set(0.1);
-                    } else if (angle > kickingPos || angle <= 145){
+                    } else if (angle > kickingPos || angle <= MIN_ALLOWED_ANGLE){
                         kickermotor.set(-0.1);
                     }
                 }
@@ -142,7 +144,7 @@ public class Shooter {
             pressed = true;
             buttonPressed = false;
         }
-        if (pressed && !kicking && !caliButtPressed){
+        if (pressed && !kicking && !caliButtPressed && isKickerStopped()){
             if (getKickerAngle() == kickingPos) {
                 inPosition = true;
             }
@@ -151,9 +153,9 @@ public class Shooter {
                     kickermotor.set(0);
                     pressed = false;
                 } else {
-                    if (angle < kickingPos && angle >= 165) {
+                    if (angle < kickingPos && angle >= MAX_ALLOWED_ANGLE) {
                         kickermotor.set(-0.1);
-                    } else if (angle > kickingPos || angle <= 145){
+                    } else if (angle > kickingPos || angle <= MIN_ALLOWED_ANGLE){
                         kickermotor.set(0.1);
                     }
                 }
