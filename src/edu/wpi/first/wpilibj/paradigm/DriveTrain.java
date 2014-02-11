@@ -53,11 +53,14 @@ public class DriveTrain {
     //high gear = high speed (and low torque)
     boolean isHighGear = true; //will start in high gear (low torque)
     boolean nemo = false;
-    boolean isLeftHigher =true;
-    double leftSpeed=0;
-    double rightSpeed=0;
+    boolean isLeftHigher = true;
+    double leftSpeed = 0;
+    double rightSpeed = 0;
     final double encoderDeadzone = 1000;
     final double encoderWaitTime = 168; //0250 is 250 octal = 168 decimal
+    double leftChildProofSetter;
+    double rightChildProofSetter;
+    boolean childProofConfirmed = false;
 
     boolean previousTriggerPressed; //what the trigger was before it changed
 
@@ -86,6 +89,7 @@ public class DriveTrain {
 //        }
         return v / fixNum;
     }
+
     //see below
     public double LeftMotor() {
         //moved leftSpeed to class scope, it is being set in setPower()
@@ -97,8 +101,7 @@ public class DriveTrain {
         if (leftPow != 0 && rightPow != 0) {
             maxLeftEncoderRate = Math.abs(leftSpeed / leftPow);
             //maxRightEncoderRate = rightSpeed / rightPow;
-            if(Math.min(Math.abs(leftSpeed),Math.abs(rightSpeed))>encoderDeadzone)
-            {
+            if (Math.min(Math.abs(leftSpeed), Math.abs(rightSpeed)) > encoderDeadzone) {
                 breakTime();
             }
             if (isLeftHigher) {
@@ -106,6 +109,7 @@ public class DriveTrain {
                 fixLeftPow = ratio * fixLeftPow;
 
             }
+            leftChildProofSetter = fixLeftPow;
         }
         //System.out.println("Left Speed = " + leftSpeed);
         //System.out.println("Left Power = " + leftPow);
@@ -123,13 +127,14 @@ public class DriveTrain {
         if (leftPow != 0 && rightPow != 0) {
             maxRightEncoderRate = Math.abs(rightSpeed / rightPow);
             //maxLeftEncoderRate = Math.abs(leftSpeed / leftPow);
-            if(Math.min(Math.abs(leftSpeed),Math.abs(rightSpeed))>encoderDeadzone)
-            {
+            if (Math.min(Math.abs(leftSpeed), Math.abs(rightSpeed)) > encoderDeadzone) {
                 breakTime();
             }
             if (!isLeftHigher) {
                 fixRightPow = ratio * fixRightPow;
+
             }
+            rightChildProofSetter = fixRightPow;
         }
 
         //System.out.println("Right Speed = " + rightSpeed);
@@ -149,17 +154,17 @@ public class DriveTrain {
             ratio = maxRightEncoderRate / maxLeftEncoderRate;
             rightEncoderFix = maxLeftEncoderRate * ratio;
             isLeftHigher = true;
-            }
-        else{
+        } else {
             ratio = 1;
         }
 
     }
-    public void breakTime(){
+
+    public void breakTime() {
         SmartDashboard.putNumber("Ratio", ratio);
         SmartDashboard.putBoolean("Left > Right", isLeftHigher);
         SmartDashboard.putNumber("Timer time", time.get());
-        if (time.get() > encoderWaitTime){
+        if (time.get() > encoderWaitTime) {
             compareEncoders();
             time.reset();
         }
@@ -184,26 +189,29 @@ public class DriveTrain {
         rightPow = -joyStickY - joyStickX;
         leftSpeed = leftEncoder.getRate();
         rightSpeed = rightEncoder.getRate();
-        
+
         leftTalons.set(-LeftMotor()); //Left Motors are forward=negative
         SmartDashboard.putNumber("JoystickX", joyStickX);
-        SmartDashboard.putNumber("LeftTalons",-leftTalons.get()); //Left Motors are forward=negative
-        SmartDashboard.putNumber("LeftSpeed",-leftSpeed); //Left Motors are forward=negative
-        
+        SmartDashboard.putNumber("LeftTalons", -leftTalons.get()); //Left Motors are forward=negative
+        SmartDashboard.putNumber("LeftSpeed", -leftSpeed); //Left Motors are forward=negative
+
         rightTalons.set(RightMotor()); //Right Motors are forward=positive
         SmartDashboard.putNumber("JoystickY", joyStickY);
-        SmartDashboard.putNumber("RightTalons",rightTalons.get()); //Right Motors are forward=positive
-        SmartDashboard.putNumber("RightSpeed",rightSpeed); //Right Motors are forward=positive
+        SmartDashboard.putNumber("RightTalons", rightTalons.get()); //Right Motors are forward=positive
+        SmartDashboard.putNumber("RightSpeed", rightSpeed); //Right Motors are forward=positive
     }
 
     public void shift() {//current setting is start in high gear
         boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-        if (triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
-            isHighGear = !isHighGear; // high gear becomes not high gear
-            gearShiftHigh.set(isHighGear); // the gear shifts
-            gearShiftLow.set(!isHighGear);
+        if (previousTriggerPressed || childProofConfirmed) {
+            if (triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
+                isHighGear = !isHighGear; // high gear becomes not high gear
+                gearShiftHigh.set(isHighGear); // the gear shifts
+                gearShiftLow.set(!isHighGear);
+            }
+            previousTriggerPressed = triggerPressed;
+
         }
-        previousTriggerPressed = triggerPressed;
     }
 
     public void shiftHigh() {
@@ -250,13 +258,22 @@ public class DriveTrain {
 //            shiftItLikeItsHot = 0;
 //
 //        }
+
     public void setSpeedPositive() {
-        totalSpeed = (leftPow + rightPow)/2;
-        if(isHighGear = true) {
+        totalSpeed = (leftPow + rightPow) / 2;
+        if (isHighGear = true) {
             totalSpeed = (leftPow + rightPow);
         }
-        if(totalSpeed<0) {
+        if (totalSpeed < 0) {
             totalSpeed = -totalSpeed;
+        }
+    }
+
+    public void childProofing() {//needs to be tested on bot - Allison
+        if (rightChildProofSetter < .05 && leftChildProofSetter < .05) {
+            childProofConfirmed = true;
+        } else {
+            childProofConfirmed = false;
         }
     }
 }
