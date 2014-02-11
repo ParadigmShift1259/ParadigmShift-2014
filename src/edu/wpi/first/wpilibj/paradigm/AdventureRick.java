@@ -8,9 +8,7 @@ package edu.wpi.first.wpilibj.paradigm;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Compressor;
-//import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,26 +18,25 @@ import edu.wpi.first.wpilibj.Joystick;
  * file in the resource directory.
  */
 public class AdventureRick extends IterativeRobot {
-    //electromagic!
 
-    OperatorInputs inputs;
+    OperatorInputs operatorInputs = new OperatorInputs();
     DriveTrain drive;
-    OperatorInputs operatorInputs;
     Compressor compressor;
     Shooter shoot;
-    //Picker pick;
-    //Preferences prefs;
-    private boolean checkForKickerStop = false;
     
     final int PRESSURE_SWITCH_CHANNEL = 1;
     final int COMPRESSOR_RELAY_CHANNEL = 1;
+    private final long KICKING_DURATION = 1000;
+    
+    private long kickingStartTime;
+    private boolean shifterTriggerEnabled;
+    private boolean kickerButtonEnabled;
+    private boolean kickerToReadyButtonEnabled;
 
     /**
      * Initializes when the robot first starts, (only once at power-up).
      */
     public void robotInit() {
-        inputs = new OperatorInputs();
-        operatorInputs = new OperatorInputs();
         drive = new DriveTrain(operatorInputs);
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
@@ -51,71 +48,99 @@ public class AdventureRick extends IterativeRobot {
         drive.leftEncoder.start();
         drive.rightEncoder.start();
         drive.time.start();
-        SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
-        SmartDashboard.putNumber("Left Power Is", drive.leftPow);
-        SmartDashboard.putNumber("Right Power Is", drive.rightPow);
-        //SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
-        //SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
-        /*
-         SmartDashboard.putBoolean("Is Picking", pick.isPicking);
-         SmartDashboard.putBoolean("Is Pooting", pick.isPicking);
-         */
-        SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
-        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
-
-        SmartDashboard.putNumber("Speed", drive.totalSpeed);
-//      SmartDashboard.putNumber("Kicker Angle", shoot.angle); -> Don't need to display, not sure what will be displayed.
-        //autonomousCommand = (Command) testChooser.getSelected();
-        //autonomousCommand.start();
-        //drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
-
-        //operatorInputs.shiftHigh = false;
+        
+        shifterTriggerEnabled = true;
+        kickerButtonEnabled = true;
+        kickerToReadyButtonEnabled = true;
+        
+        State.kickerMode = State.KICKER_STOPPED;
+        State.pickerMode = State.PICKER_IN_STARTING_POSITION;
+        State.pickerWheelsMode = State.PICKER_WHEELS_STOPPED;
+        
+        updateDashboard();
     }
 
     /**
      * This function is called periodically (every 20-25 ms) during autonomous
      */
     public void autonomousPeriodic() {
-        shoot.calibrate();
+        //shoot.calibrate();
     }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        drive.setPower();
-        //remove if not needed
+        reenableButtons();
+        
+        // remove if not needed
         compressor.start();
-//shift when the trigger is pressed
-        drive.shift();
+        
+        // Drivetrain Gear Shifting
+        if (shifterTriggerEnabled && operatorInputs.joystickTriggerPressed()) {
+            drive.shift();
+            shifterTriggerEnabled = false; // do not enable more shifting unless trigger is first released
+        }
+        
+        // Speed control
+        drive.setPower(operatorInputs.joystickX(), operatorInputs.joystickY());
+        
+        // ??
         drive.childProofing();
-//        drive.shiftHigh();
-//        drive.shiftLow();
-        shoot.kick();
-        shoot.manualShooterControl();
-        SmartDashboard.putNumber("kicker Motor Power",shoot.getKickerMotorPower());
-        //drive.engageShifter();
-        //System.out.println("Trigger " + operatorInputs.joystickTriggerPressed());
-        //After the robot has kicked, check to see if it has stopped
-//        checkForKickerStop = shoot.checkToKick();
-//        if (checkForKickerStop == true) {
-//            shoot.isKickerStopped();
-//        }
-        SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
-        SmartDashboard.putNumber("Left Power Is", drive.leftPow);
-        SmartDashboard.putNumber("Right Power Is", drive.rightPow);
-        //SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
-        //SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
-        /*
-         SmartDashboard.putBoolean("Is Picking", pick.isPicking);
-         SmartDashboard.putBoolean("Is Pooting", pick.isPicking);
-         */
-        SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
-        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
 
-        SmartDashboard.putNumber("Speed", drive.totalSpeed);
-        //SmartDashboard.putNumber("Kicker Angle", shoot.angle); *Don't need to display, not sure what will be displayed.
-//        drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
+        // Determine if we need to move kicking arm into "ready" position
+        if (kickerToReadyButtonEnabled && requestToMoveKickerToReady()) {
+            if (    (State.kickerMode != State.KICKER_CALIBRATING)
+                 && (State.kickerMode != State.KICKING)
+                 && (State.kickerMode != State.KICKER_STOPPING)
+               ) {
+                State.kickerMode = State.KICKER_MOVING_TO_READY_POSITION;
+                kickerToReadyButtonEnabled = false;
+            }
+        }
+        if (State.kickerMode == State.KICKER_MOVING_TO_READY_POSITION) {
+            if (shoot.setKickingPosition() == true) {
+                State.kickerMode = State.KICKER_IN_READY_POSITION;
+            }
+        }
+        
+        // Determine if we need to kick
+        if (kickerButtonEnabled && requestToKick()) {
+            if (    (State.kickerMode != State.KICKER_CALIBRATING)
+                 && (State.kickerMode != State.KICKING)
+                 && (State.kickerMode != State.KICKER_STOPPING)
+                 //&& (State.kickerMode != State.KICKER_MOVING_TO_READY_POSITION)
+                 //&& (State.kickerMode == State.KICKER_IN_READY_POSITION)
+               ) {
+                
+                State.kickerMode = State.KICKING;
+                kickingStartTime = System.currentTimeMillis();
+                kickerButtonEnabled = false;
+            }
+        }
+        if (State.kickerMode == State.KICKING) {
+            if ((System.currentTimeMillis() - kickingStartTime) < KICKING_DURATION) {
+                shoot.kick();
+            } else {
+                shoot.stopKicker();
+                State.kickerMode = State.KICKER_STOPPING;
+            }
+        }
+        
+        // Wait for kicker arm to stop, if in the KICKER_STOPPING mode
+        if (State.kickerMode == State.KICKER_STOPPING) {
+            if (shoot.isKickerStopped()) {
+                State.kickerMode = State.KICKER_STOPPED;  // use this to only use button to manually move it back to ready
+                // State.kickerMode = State.KICKER_MOVING_TO_READY_POSITION; //use this to have it move back automatically
+            }
+        }
+        
+        
+        
+        
+        shoot.manualShooterControl();
+        
+        updateDashboard();
     }
 
     /**
@@ -124,6 +149,52 @@ public class AdventureRick extends IterativeRobot {
      */
     public void testPeriodic() {
         shoot.manualShooterControl();
+    }
+    
+    /**
+     * reenableButtons()    
+     * For many buttons used in the control of the robot, it's important that we react to the initial press of the button, 
+     * but then ignore it until the operator releases it and presses it again in the future.
+     * We'll use boolean variables, such as joystickTriggerEnabled, that will be disabled until the trigger is actually
+     * released.  Then it will be re-enabled, and so a subsequent press of the trigger will allow the function to proceed.
+     * 
+     */
+    private void reenableButtons() {
+        if (!operatorInputs.joystickTriggerPressed()) {
+            shifterTriggerEnabled = true;
+        }
+        if (!requestToKick()) {
+            kickerButtonEnabled = true;
+        }
+        if (!requestToMoveKickerToReady()) {
+            kickerToReadyButtonEnabled = true;
+        }
+    }
+    
+    private void updateDashboard() {
+        SmartDashboard.putNumber("kicker Motor Power",shoot.getKickerMotorPower());
+        SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
+        SmartDashboard.putNumber("Left Power Is", drive.leftPow);
+        SmartDashboard.putNumber("Right Power Is", drive.rightPow);
+        // SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
+        // SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
+        /*
+          SmartDashboard.putBoolean("Is Picking", pick.isPicking);
+          SmartDashboard.putBoolean("Is Pooting", pick.isPicking);
+        */
+        SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
+        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
+
+        SmartDashboard.putNumber("Speed", drive.totalSpeed);
+        // SmartDashboard.putNumber("Kicker Angle", shoot.angle); *Don't need to display, not sure what will be displayed.
+    }
+    
+    private boolean requestToMoveKickerToReady() {
+        return (operatorInputs.isXboxLeftTriggerPressed());
+    }
+    
+    private boolean requestToKick() {
+        return (operatorInputs.isXboxRightTriggerPressed());
     }
 
 }

@@ -28,15 +28,30 @@ public class OperatorInputs {
     final double DEADZONE_Y = 0.05;
     final double DEADZONE_X = 0.15;
 
+    private final double LEFT_TRIGGER_PRESSED_MAX_VALUE = 1.0;
+    private final double LEFT_TRIGGER_PRESSED_MIN_VALUE = 0.5;
+    private final double RIGHT_TRIGGER_PRESSED_MAX_VALUE = -0.5;
+    private final double RIGHT_TRIGGER_PRESSED_MIN_VALUE = -1.0;
+
+    private final int XBOX_TRIGGERS = 3; //renamed because this is both the left trigger and the right trigger
+
 //    public OperatorInputs() {
 //        this.shiftUp = true;
 //    }
     public OperatorInputs() {
-    
+
     }
-
-    public void readAll() {
-
+    
+    public boolean isXboxRightTriggerPressed() {
+        double triggerValue = xBox.getAxis(RIGHT_TRIGGER);
+        return ((triggerValue >= RIGHT_TRIGGER_PRESSED_MIN_VALUE) &&
+                (triggerValue <= RIGHT_TRIGGER_PRESSED_MAX_VALUE));
+    }
+    
+    public boolean isXboxLeftTriggerPressed() {
+        double triggerValue = xBox.getAxis(LEFT_TRIGGER);
+        return ((triggerValue >= LEFT_TRIGGER_PRESSED_MIN_VALUE) &&
+                (triggerValue <= LEFT_TRIGGER_PRESSED_MAX_VALUE));
     }
 
     public boolean isShooterTriggerPressed() {
@@ -73,7 +88,7 @@ public class OperatorInputs {
     public boolean isReleaseButtonPressed() {
         return xBox.getRawButton(LEFT_BUMPER);
     }
-    
+
     public double xboxRightX() {
         return deadzoneFilterX(this.xBox.getX(Joystick.Hand.kRight));
     }
@@ -117,7 +132,7 @@ public class OperatorInputs {
 
     }
 
-        private double deadzoneFilterX(double joyStickValue) {
+    private double deadzoneFilterX(double joyStickValue) {
         if (Math.abs(joyStickValue) <= DEADZONE_X) {
             return 0;
         }
@@ -130,7 +145,7 @@ public class OperatorInputs {
 
     }
 
-        public boolean joystickTriggerPressed() {
+    public boolean joystickTriggerPressed() {
         return this.joystick.getTrigger();  //return the value of the joystick trigger
 
     }
@@ -147,5 +162,5 @@ public class OperatorInputs {
     public boolean shiftHigh() {
         return this.joystick.getRawButton(4);
     }
-    
+
 }

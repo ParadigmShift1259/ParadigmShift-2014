@@ -26,16 +26,7 @@ public class Shooter {
     private final Joystick xBox = new Joystick(2);
     private final Talon kickermotor = new Talon(PORT_5);
     private boolean buttonPressed;
-    //private double triggerPressed;
-    //put in place for testing on Sturday night 2/8/2014 - E A COBB
-        private boolean triggerPressed; // changed for testing on Saturday night
-        private final double LEFT_TRIGGER_PRESSED_MAX_VALUE = 1.0;
-        private final double LEFT_TRIGGER_PRESSED_MIN_VALUE = 0.5;
-        private final double RIGHT_TRIGGER_PRESSED_MAX_VALUE = -0.5;
-        private final double RIGHT_TRIGGER_PRESSED_MIN_VALUE = -1.0;
-    //private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
-    private final int BACK_BUTTON = 7;
-    private final int XBOX_TRIGGERS = 3; //renamed because this is both the left trigger and the right trigger
+
     private double motorSpeed = 1.0;
     private final AnalogChannel analogChannel = new AnalogChannel(1);
     private final DigitalInput digitalInput = new DigitalInput(9);
@@ -70,29 +61,16 @@ public class Shooter {
         
     }
     
-    /*
-    This method is used to kick.
-    
-    P.S. It has a dumb name that can go to suckySucky().
-    P.P.S. Before 2/8/2014, the above (Post Scriptum) comment applies. ...Latin...
-    */
-    
+    /**
+     * kick()
+     * 
+     */
     public void kick() {
-        triggerPressed = RIGHT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS) && 
-                xBox.getRawAxis(XBOX_TRIGGERS) <= RIGHT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
-        inPosition = digitalInput.get();
-        if (triggerPressed){ //changed for testing on Sturday night 2/8/2014 - E A COBB
-            kicking = true;
-            buttonPressed = false;
-        }
-        if (kicking) {
-            kickermotor.set(-0.7); //negative is kicking forward - 2/8/2014 E A Cobb
-            if (inPosition) {
-                kicking = false;
-                kickermotor.set(0);
-                buttonPressed = true; //put in place for testing on Sturday night 2/8/2014 - E A COBB
-            }
-        }
+        kickermotor.set(-0.7); //negative is kicking forward - 2/8/2014 E A Cobb
+    }
+    
+    public void stopKicker() {
+        kickermotor.set(0);
     }
     
     public void calibrate() {
@@ -135,32 +113,31 @@ public class Shooter {
         }
     }  
     
-    public void setKickingPosition() {
-        triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS) && 
-                xBox.getRawAxis(XBOX_TRIGGERS) <= LEFT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
-        if (triggerPressed){ //changed for testing on Sturday night 2/8/2014 - E A COBB
-            pressed = true;
-            buttonPressed = false;
+    /**
+     * 
+     * @return 
+     */
+    public boolean setKickingPosition() {
+
+        angle = getKickerAngle();
+        if (angle == kickingPos) {
+            inPosition = true;
         }
-        if (pressed && !kicking && !caliButtPressed){
-            if (getKickerAngle() == kickingPos) {
-                inPosition = true;
-            }
-            try {
-                if (inPosition) {
-                    kickermotor.set(0);
-                    pressed = false;
-                } else {
-                    if (angle < kickingPos && angle >= 165) {
-                        kickermotor.set(-0.1);
-                    } else if (angle > kickingPos || angle <= 145){
-                        kickermotor.set(0.1);
-                    }
+        try {
+            if (inPosition) {
+                kickermotor.set(0);
+            } else {
+                if (angle < kickingPos && angle >= 165) {
+                    kickermotor.set(-0.1);
+                } else if (angle > kickingPos || angle <= 145) {
+                    kickermotor.set(0.1);
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        
+        return (inPosition);
     }
     
    //need to figure out moveable parts on the shooting mechanism before adding buttons/functions 

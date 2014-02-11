@@ -17,8 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DriveTrain {
 
-    OperatorInputs operatorInputs;
-
     final int LEFT_PORT = 1; //attributes  defining the class
     final int RIGHT_PORT = 2;
     final int SHIFT_PORT_LOW = 1;
@@ -65,8 +63,6 @@ public class DriveTrain {
     boolean previousTriggerPressed; //what the trigger was before it changed
 
     public DriveTrain(OperatorInputs _operatorInputs) {
-        this.operatorInputs = _operatorInputs;
-        //this.previousTriggerPressed = this.operatorInputs.joystickTriggerPressed();
         this.leftTalons = new Talon(LEFT_PORT);
         this.rightTalons = new Talon(RIGHT_PORT);
         this.gearShiftLow = new Solenoid(SHIFT_MODULE, SHIFT_PORT_LOW);
@@ -170,9 +166,7 @@ public class DriveTrain {
         }
     }
 
-    public void setPower() {
-        joyStickX = operatorInputs.joystickX();
-        joyStickY = operatorInputs.joystickY();
+    public void setPower(double joyStickX, double joyStickY) {
         //set fixnum = the maxiumum value for this angle on the joystick
         if (joyStickX == 0 || joyStickY == 0) {
             fixNum = 1;
@@ -185,9 +179,9 @@ public class DriveTrain {
                 fixNum = Math.abs(joyStickX) * fixNumMult + 1; //1 = math.abs(joyStickY)*fixnum 1
             }
         }
-        leftPow = -joyStickY + joyStickX; // what is does when joystick is put all the way to the right or left
-        rightPow = -joyStickY - joyStickX;
-        leftSpeed = leftEncoder.getRate();
+        leftPow    = -joyStickY + joyStickX; // what is does when joystick is put all the way to the right or left
+        rightPow   = -joyStickY - joyStickX;
+        leftSpeed  = leftEncoder.getRate();
         rightSpeed = rightEncoder.getRate();
 
         leftTalons.set(-LeftMotor()); //Left Motors are forward=negative
@@ -201,63 +195,18 @@ public class DriveTrain {
         SmartDashboard.putNumber("RightSpeed", rightSpeed); //Right Motors are forward=positive
     }
 
-    public void shift() {//current setting is start in high gear
-        boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-        if (previousTriggerPressed || childProofConfirmed) {
-            if (triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
-                isHighGear = !isHighGear; // high gear becomes not high gear
-                gearShiftHigh.set(isHighGear); // the gear shifts
-                gearShiftLow.set(!isHighGear);
-            }
-            previousTriggerPressed = triggerPressed;
+    /**
+     * shift()
+     * Using the solenoids for the gears in the gear box.  Since there are only two gears (low and high), 
+     * each call to this method will switch from one gear to the other.
+     */
+    public void shift() {
+        
+        isHighGear = !isHighGear;
+        gearShiftHigh.set(isHighGear);
+        gearShiftLow.set(!isHighGear);
 
-        }
     }
-
-    public void shiftHigh() {
-        // boolean pressed = operatorInputs.shiftHigh();
-        boolean pressed = operatorInputs.shifter();
-
-        if (nemo == true && pressed) {
-            gearShiftLow.set(!isHighGear);
-            gearShiftHigh.set(isHighGear);
-            nemo = false;
-
-        }
-//        boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-//        if(!isHighGear && triggerPressed ){
-//            isHighGear = !isHighGear; // high gear becomes not high gear
-//            gearShift.set(!isHighGear); // the gear shifts
-//            gearShift2.set(isHighGear);
-//            previousTriggerPressed = !triggerPressed;
-//        }
-    }
-
-    public void shiftLow() {
-        boolean pressed = operatorInputs.shifter();
-        if (nemo == false && pressed) {
-            gearShiftLow.set(isHighGear);
-            gearShiftHigh.set(!isHighGear);
-            nemo = true;
-
-        }
-//        boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-//        if(isHighGear && triggerPressed){
-//            isHighGear = !isHighGear; // high gear becomes not high gear
-//            gearShift.set(isHighGear); // the gear shifts
-//            gearShift2.set(!isHighGear);
-//            previousTriggerPressed = !triggerPressed;
-//        }
-    }
-//
-//    public void engageShifter() {
-//        if (operatorInputs.joystickTriggerPressed()) {
-//            shiftItLikeItsHot = 1;
-//        }
-//        if (operatorInputs.joystickTriggerPressedAgain()) {
-//            shiftItLikeItsHot = 0;
-//
-//        }
 
     public void setSpeedPositive() {
         totalSpeed = (leftPow + rightPow) / 2;
