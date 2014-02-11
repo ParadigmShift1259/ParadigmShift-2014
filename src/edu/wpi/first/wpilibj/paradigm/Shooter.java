@@ -43,9 +43,9 @@ public class Shooter {
     private double currentVoltage;
     //private 
     boolean inPosition; //made protected for use in AdventureRick
-    private boolean caliButtPressed = true;
     boolean kicking;
-    private double kickingPos;
+    private double kickingPos = 180;
+    public boolean caliButtPressed = true;
     double angle;
     private boolean pressed;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
@@ -98,6 +98,7 @@ public class Shooter {
     public void calibrate() {
         inPosition = digitalInput.get();
         buttonPressed = xBox.getRawButton(BACK_BUTTON);
+        angle = getKickerAngle();
         if (buttonPressed) {
             caliButtPressed = true;
         }
@@ -123,7 +124,7 @@ public class Shooter {
         angle = analogChannel.getVoltage();
         //This is the porportion to convert voltage into a degrees angle.
         //There are 360 degree permax encoder voltage.
-        kickingPos = angle * (360/MAX_ENCODER_VOLTAGE);
+        angle = angle * (360/MAX_ENCODER_VOLTAGE);
         return angle;
     }
     
