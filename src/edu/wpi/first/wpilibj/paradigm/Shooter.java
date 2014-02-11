@@ -74,6 +74,7 @@ public class Shooter {
     This method is used to kick.
     
     P.S. It has a dumb name that can go to suckySucky().
+    P.P.S. Before 2/8/2014, the above (Post Scriptum) comment applies. ...Latin...
     */
     
     public void kick() {
@@ -99,7 +100,6 @@ public class Shooter {
         buttonPressed = xBox.getRawButton(BACK_BUTTON);
         if (buttonPressed) {
             caliButtPressed = true;
-            buttonPressed = false;
         }
         if (caliButtPressed) {
             try {
@@ -150,10 +150,10 @@ public class Shooter {
                     kickermotor.set(0);
                     pressed = false;
                 } else {
-                    if (angle > kickingPos && angle <= 165) {
-                        kickermotor.set(0.1);
-                    } else if (angle > kickingPos || angle <= 145){
+                    if (angle < kickingPos && angle >= 165) {
                         kickermotor.set(-0.1);
+                    } else if (angle > kickingPos || angle <= 145){
+                        kickermotor.set(0.1);
                     }
                 }
             } catch (Exception ex) {
