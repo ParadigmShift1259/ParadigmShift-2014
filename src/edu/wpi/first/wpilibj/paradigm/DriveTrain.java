@@ -50,7 +50,6 @@ public class DriveTrain {
     long sleepTime = 0100;
     //high gear = high speed (and low torque)
     boolean isHighGear = true; //will start in high gear (low torque)
-    boolean nemo = false;
     boolean isLeftHigher = true;
     double leftSpeed = 0;
     double rightSpeed = 0;
@@ -62,7 +61,7 @@ public class DriveTrain {
 
     boolean previousTriggerPressed; //what the trigger was before it changed
 
-    public DriveTrain(OperatorInputs _operatorInputs) {
+    public DriveTrain() {
         this.leftTalons = new Talon(LEFT_PORT);
         this.rightTalons = new Talon(RIGHT_PORT);
         this.gearShiftLow = new Solenoid(SHIFT_MODULE, SHIFT_PORT_LOW);

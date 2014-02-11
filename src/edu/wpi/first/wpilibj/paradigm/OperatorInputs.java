@@ -53,28 +53,17 @@ public class OperatorInputs {
         return ((triggerValue >= LEFT_TRIGGER_PRESSED_MIN_VALUE) &&
                 (triggerValue <= LEFT_TRIGGER_PRESSED_MAX_VALUE));
     }
-
-    public boolean isShooterTriggerPressed() {
-        triggerPressed = xBox.getAxis(RIGHT_TRIGGER);
-        return (triggerPressed >= 0.5);
+    
+    public boolean isXboxAButtonPressed() {
+        return (xBox.getRawButton(A_BUTTON));
     }
-
-    public boolean isSetKickerPositionButtonPressed() {
-        triggerPressed = xBox.getAxis(LEFT_TRIGGER);
-        return (triggerPressed >= 0.5);
+    
+    public boolean isXboxBButtonPressed() {
+        return (xBox.getRawButton(B_BUTTON));
     }
-
     //change later
     public boolean isCaliButtonPressed() {
         return xBox.getRawButton(BACK_BUTTON);
-    }
-
-    public boolean isPickerLoadingPositionButtonPressed() {
-        return xBox.getRawButton(A_BUTTON);
-    }
-
-    public boolean isPickerKickingPositionButtonPressed() {
-        return xBox.getRawButton(B_BUTTON);
     }
 
     public boolean isPickingAutoPositionButtonPressed() {

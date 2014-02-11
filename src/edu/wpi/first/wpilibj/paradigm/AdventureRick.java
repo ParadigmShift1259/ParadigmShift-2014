@@ -34,6 +34,7 @@ public class AdventureRick extends IterativeRobot {
     private boolean kickerButtonEnabled;
     private boolean kickerToReadyButtonEnabled;
     private boolean pickerToPickButtonEnabled;
+    private boolean pickerToKickButtonEnabled;
 
     /**
      * Initializes when the robot first starts, (only once at power-up).
@@ -49,6 +50,7 @@ public class AdventureRick extends IterativeRobot {
         kickerButtonEnabled = true;
         kickerToReadyButtonEnabled = true;
         pickerToPickButtonEnabled = true;
+        pickerToKickButtonEnabled = true;
         
         State.kickerMode = State.KICKER_STOPPED;
         State.pickerMode = State.PICKER_IN_STARTING_POSITION;
@@ -145,11 +147,24 @@ public class AdventureRick extends IterativeRobot {
             }
         }
         if (State.pickerMode == State.PICKER_MOVING_TO_PICK) {
-            pi
+            if (pick.setPosLoading()) {
+                State.pickerMode = State.PICKER_IN_PICKING_POSITION;
+            }
+        }
+        
+        // Determine if operator wants to move to picker to kicking position
+        if (pickerToKickButtonEnabled && requestToMovePickerToKick()) {
+            State.pickerMode = State.PICKER_MOVING_TO_KICK;
+            pickerToKickButtonEnabled = false;
+        }
+        if (State.pickerMode == State.PICKER_MOVING_TO_KICK) {
+            if (pick.setPosKicking()) {
+                State.pickerMode = State.PICKER_IN_KICKING_POSITION;
+            }
         }
         
 
-        //************************************* MISCELLANEOUS* *************************************
+        //************************************* MISCELLANEOUS **************************************
         updateDashboard();
     }
 
@@ -182,6 +197,9 @@ public class AdventureRick extends IterativeRobot {
         if (!requestToMovePickerToPick()) {
             pickerToPickButtonEnabled = true;
         }
+        if (!requestToMovePickerToKick()) {
+            pickerToKickButtonEnabled = true;
+        }
     }
     
     private void updateDashboard() {
@@ -212,6 +230,10 @@ public class AdventureRick extends IterativeRobot {
     
     private boolean requestToMovePickerToPick() {
         return (operatorInputs.isXboxAButtonPressed());
+    }
+    
+    private boolean requestToMovePickerToKick() {
+        return (operatorInputs.isXboxBButtonPressed());
     }
 
 }

@@ -17,8 +17,6 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class Shooter {
     
-    OperatorInputs operatorInputs;
-    
     private final int PORT_5 = 5;
     //the current value can not possibly be the previous value the first time through
     private final double ILLEGAL_VOLTAGE = -9999.9; //can't be stopped when it hasn't started
@@ -41,8 +39,8 @@ public class Shooter {
     private boolean pressed;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
 
-    public Shooter(OperatorInputs _operatorInputs) {
-        this.operatorInputs = _operatorInputs;
+    public Shooter() {
+        
     }
     
     public double getKickerMotorPower() {

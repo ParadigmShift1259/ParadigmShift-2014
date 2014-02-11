@@ -16,15 +16,11 @@ import edu.wpi.first.wpilibj.AnalogChannel;
  * @author Programming
  */
 public class Picker {
-    
-    OperatorInputs operatorInputs;
-    private Joystick xBox = new Joystick(2);
-    private int loadPos = 135; //change value later, position while loading
-    private int shootPos = 80; //change value later, position while shooting/aiming
-    private int autoPos = 45; //change value later, position at the beginning of the auto/match
+
+    private int LOADING_POSITION_ANGLE = 135; //change value later, position while loading
+    private int KICKING_POSITION_ANGLE = 80; //change value later, position while shooting/aiming
+    private int INITIAL_POSITION_ANGLE = 45; //change value later, position at the beginning of the auto/match
     private double currentAngle; //the picker's current pos(ition)
-    private final int RIGHT_BUMPER = 6; //this is the x butt on the controller
-    private final int BUTTON_LB = 5; //this is is the poot butt
     private boolean buttonPressed = false; //used to indicate if any button is pressed
     private boolean isGrabbing = false;
     private boolean isPooting = false;
@@ -37,19 +33,13 @@ public class Picker {
     private boolean settingPos1 = false;
     private boolean settingPos2 = false;
     private boolean settingPos3 = false;
-    private final int A_BUTTON = 1;
-    private final int B_BUTTON = 2;
-    private final int Y_BUTTON = 4;
-    boolean isPicking;
-    //boolean isPooting; already defined
-    
     
     /*
     This is the constructor for the Picker class.
     */
     
-    public Picker(OperatorInputs _operatorInputs) {
-        this.operatorInputs = _operatorInputs;
+    public Picker() {
+        
     }
     
     /*
@@ -94,44 +84,36 @@ public class Picker {
         return pickerAngleDegree;
     } 
     
-    public void setPosLoading() {
-       buttonPressed = xBox.getRawButton(A_BUTTON);
-       currentAngle = getKickerAngle();
-       if(buttonPressed) {
-           settingPos1 = true;    
-       }
-       if(settingPos1 = true) {
-           if(currentAngle > loadPos) {
-               pickerMotor.set(-0.2);
-           }
-           if(currentAngle < loadPos) {
-               pickerMotor.set(0.2);
-           }
-           if(currentAngle == loadPos) {
-               pickerMotor.set(0);
-               settingPos1 = false;
-           }
-       }
+    public boolean setPosLoading() {
+        currentAngle = getKickerAngle();
+        boolean inPosition = false;
+        
+        if (currentAngle == LOADING_POSITION_ANGLE) {  // change this to include some range
+            pickerMotor.set(0);
+            inPosition = true;
+        } else if (currentAngle > LOADING_POSITION_ANGLE) {
+            pickerMotor.set(-0.2);
+        } else if (currentAngle < LOADING_POSITION_ANGLE) {
+            pickerMotor.set(0.2);
+        }
+
+        return (inPosition);
     }
     
-    public void setPosKicking() {
-       buttonPressed = xBox.getRawButton(B_BUTTON);
-       currentAngle = getKickerAngle();
-       if(buttonPressed) {
-           settingPos2 = true;    
-       }
-       if(settingPos2 = true) {
-           if(currentAngle > shootPos) {
-               pickerMotor.set(-0.2);
-           }
-           if(currentAngle < shootPos) {
-               pickerMotor.set(0.2);
-           }
-           if(currentAngle == shootPos) {
-               pickerMotor.set(0);
-               settingPos2 = false;
-           }
-       }
+    public boolean setPosKicking() {
+        currentAngle = getKickerAngle();
+        boolean inPosition = false;
+        
+        if (currentAngle == KICKING_POSITION_ANGLE) {  // change this to include some range
+            pickerMotor.set(0);
+            inPosition = true;
+        } else if (currentAngle > KICKING_POSITION_ANGLE) {
+            pickerMotor.set(-0.2);
+        } else if (currentAngle < KICKING_POSITION_ANGLE) {
+            pickerMotor.set(0.2);
+        }
+
+        return (inPosition);
     }
    
     public void setPosAuto() {
