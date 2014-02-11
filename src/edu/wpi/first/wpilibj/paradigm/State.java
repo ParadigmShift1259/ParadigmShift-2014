@@ -8,7 +8,7 @@ package edu.wpi.first.wpilibj.paradigm;
 
 /**
  *
- * @author 212006372
+ * @author gregderzay
  */
 public class State {
     
