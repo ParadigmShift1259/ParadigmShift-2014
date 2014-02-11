@@ -17,6 +17,8 @@ public class State {
     public final static int KICKER_STOPPED = 3;
     public final static int KICKER_CALIBRATING = 4;
     public final static int KICKER_CALIBRATED = 5;
+    public final static int KICKER_MOVING_TO_READY_POSITION = 6;
+    public final static int KICKER_IN_READY_POSITION = 7;
     
     public final static int PICKER_MOVING_TO_PICK = 10;
     public final static int PICKER_IN_PICKING_POSITION = 11;
