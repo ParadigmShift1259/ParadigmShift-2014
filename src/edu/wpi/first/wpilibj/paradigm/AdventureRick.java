@@ -19,31 +19,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class AdventureRick extends IterativeRobot {
 
-    OperatorInputs operatorInputs = new OperatorInputs();
-    DriveTrain drive;
-    Compressor compressor;
-    Shooter shoot;
-    
     final int PRESSURE_SWITCH_CHANNEL = 1;
     final int COMPRESSOR_RELAY_CHANNEL = 1;
     private final long KICKING_DURATION = 1000;
+    
+    OperatorInputs operatorInputs = new OperatorInputs();
+    DriveTrain drive = new DriveTrain();
+    Compressor compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
+    Shooter shoot = new Shooter();
+    Picker pick = new Picker();
     
     private long kickingStartTime;
     private boolean shifterTriggerEnabled;
     private boolean kickerButtonEnabled;
     private boolean kickerToReadyButtonEnabled;
+    private boolean pickerToPickButtonEnabled;
 
     /**
      * Initializes when the robot first starts, (only once at power-up).
      */
     public void robotInit() {
-        drive = new DriveTrain(operatorInputs);
-        //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
-        //compressorRelayChannel - The relay channel that the compressor relay is attached to.
-        compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
-        shoot = new Shooter(operatorInputs);//add parameters as needed
-        shoot.caliButtPressed = true;
-        //pick = new Picker(operatorInputs);//add parameters as needed
+
         compressor.start();
         drive.leftEncoder.start();
         drive.rightEncoder.start();
@@ -52,6 +48,7 @@ public class AdventureRick extends IterativeRobot {
         shifterTriggerEnabled = true;
         kickerButtonEnabled = true;
         kickerToReadyButtonEnabled = true;
+        pickerToPickButtonEnabled = true;
         
         State.kickerMode = State.KICKER_STOPPED;
         State.pickerMode = State.PICKER_IN_STARTING_POSITION;
@@ -73,10 +70,9 @@ public class AdventureRick extends IterativeRobot {
     public void teleopPeriodic() {
         reenableButtons();
         
-        // remove if not needed
-        compressor.start();
+        //********************************** DRIVETRAIN CONTROLS ***********************************
         
-        // Drivetrain Gear Shifting
+        //  Drivetrain Gear Shifting
         if (shifterTriggerEnabled && operatorInputs.joystickTriggerPressed()) {
             drive.shift();
             shifterTriggerEnabled = false; // do not enable more shifting unless trigger is first released
@@ -88,6 +84,10 @@ public class AdventureRick extends IterativeRobot {
         // ??
         drive.childProofing();
 
+        //************************************ KICKER CONTROLS *************************************
+        
+        shoot.manualShooterControl();
+        
         // Determine if we need to move kicking arm into "ready" position
         if (kickerToReadyButtonEnabled && requestToMoveKickerToReady()) {
             if (    (State.kickerMode != State.KICKER_CALIBRATING)
@@ -135,11 +135,21 @@ public class AdventureRick extends IterativeRobot {
             }
         }
         
+        //************************************ PICKER CONTROLS *************************************
         
+        // Determine if operator wants to move to picker to picking position
+        if (pickerToPickButtonEnabled && requestToMovePickerToPick()) {
+            if ((State.kickerMode != State.KICKING)) {
+                State.pickerMode = State.PICKER_MOVING_TO_PICK;
+                pickerToPickButtonEnabled = false;
+            }
+        }
+        if (State.pickerMode == State.PICKER_MOVING_TO_PICK) {
+            pi
+        }
         
-        
-        shoot.manualShooterControl();
-        
+
+        //************************************* MISCELLANEOUS* *************************************
         updateDashboard();
     }
 
@@ -169,6 +179,9 @@ public class AdventureRick extends IterativeRobot {
         if (!requestToMoveKickerToReady()) {
             kickerToReadyButtonEnabled = true;
         }
+        if (!requestToMovePickerToPick()) {
+            pickerToPickButtonEnabled = true;
+        }
     }
     
     private void updateDashboard() {
@@ -195,6 +208,10 @@ public class AdventureRick extends IterativeRobot {
     
     private boolean requestToKick() {
         return (operatorInputs.isXboxRightTriggerPressed());
+    }
+    
+    private boolean requestToMovePickerToPick() {
+        return (operatorInputs.isXboxAButtonPressed());
     }
 
 }
