@@ -83,7 +83,6 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        inputs.readAll();
         drive.setPower();
         //remove if not needed
         compressor.start();
