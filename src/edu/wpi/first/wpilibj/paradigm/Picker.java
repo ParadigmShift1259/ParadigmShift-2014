@@ -17,18 +17,18 @@ import edu.wpi.first.wpilibj.AnalogChannel;
  */
 public class Picker {
 
-    private final int LOADING_POSITION_ANGLE = 135; //change value later, position while loading
-    private final int KICKING_POSITION_ANGLE = 80; //change value later, position while shooting/aiming
-    private final int INITIAL_POSITION_ANGLE = 45; //change value later, position at the beginning of the auto/match
-    private final double NORMAL_PICKER_SPEED = 0.2;
+    private final int    LOADING_POSITION_ANGLE = 135; //change value later, position while loading
+    private final int    KICKING_POSITION_ANGLE = 80;  //change value later, position while shooting/aiming
+    private final int    INITIAL_POSITION_ANGLE = 45;  //change value later, position at the beginning of the auto/match
+    private final double NORMAL_PICKER_SPEED    = 0.2;
+    private final double NORMAL_PICKER_WHEEL_SPEED = 0.2;
+    private final double MAX_ENCODER_VOLTAGE    = 2.0; //maximum value expected from output of encoder/filter circuit
             
-    private Talon wheelSpinner = new Talon(8); //used in the SpinGrabber method...also is a Talon
-    private Talon pickerMotor = new Talon(4);
+    private final Talon wheelSpinner = new Talon(4);   //used in the SpinGrabber method...also is a Talon
+    private final Talon pickerMotor = new Talon(3);
     private final AnalogChannel analogChannel = new AnalogChannel(4);
     private double pickerAngleVoltage;
     private double pickerAngleDegree;
-    private double MAX_ENCODER_VOLTAGE = 2.0;
-
     
     /*
     This is the constructor for the Picker class.
@@ -38,41 +38,21 @@ public class Picker {
         
     }
     
-    /*
-    This method spins the picker wheels when the X button is pressed.
-    The wheels will load the ball into the picker.
-    */
-    
+    /**
+     *  The wheels will load the ball into the picker.
+     */
     public void spinGrabber() {
-        buttonPressed = xBox.getRawButton(RIGHT_BUMPER);
-        if (buttonPressed && !isPooting) {
-            isGrabbing = true;
-            wheelSpinner.set(0.2);
-        } else if (!buttonPressed && !isPooting){
-            wheelSpinner.set(0);
-            isGrabbing = false;
-        }
+        wheelSpinner.set(NORMAL_PICKER_WHEEL_SPEED);
     }
     
-    /*
-    This method controls the "pooter". The pooter will make the wheels 
-    spin backwards in case the ball gets stuck inside of the picker.\
-    
-    Possible: May be used for a (weak) pass.
+    /**
+     * This method spins the picker wheels in the forward direction to either
+     * release or pass the ball. 
+     * May be used for a (weak) pass.
     */
-    
     public void spinPooter() {
-        buttonPressed = xBox.getRawButton(BUTTON_LB);
-        if (buttonPressed && !isGrabbing) {
-            isPooting = true;
-            wheelSpinner.set(-0.3);
-        } else if (!buttonPressed && !isGrabbing){
-            wheelSpinner.set(0);
-            isPooting = false;
-        }
+        wheelSpinner.set(-NORMAL_PICKER_WHEEL_SPEED);
     }
-    
-    
     
     public double getKickerAngle() {
         pickerAngleVoltage = analogChannel.getVoltage();
