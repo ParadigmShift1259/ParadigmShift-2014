@@ -27,7 +27,7 @@ public class AdventureRick extends IterativeRobot {
     OperatorInputs operatorInputs;
     Compressor compressor;
     Shooter shoot;
-    //Picker pick;
+    Picker pick;
     //Preferences prefs;
     private boolean checkForKickerStop = false;
     
@@ -46,11 +46,16 @@ public class AdventureRick extends IterativeRobot {
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
         shoot = new Shooter(operatorInputs);//add parameters as needed
         shoot.caliButtPressed = true;
-        //pick = new Picker(operatorInputs);//add parameters as needed
+        pick = new Picker(operatorInputs);//add parameters as needed
         compressor.start();
         drive.leftEncoder.start();
         drive.rightEncoder.start();
         drive.time.start();
+        pick.spinGrabber();
+        pick.spinPooter();
+        pick.setPosAuto();
+        pick.setPosKicking();
+        pick.setPosLoading();
         SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
@@ -93,6 +98,7 @@ public class AdventureRick extends IterativeRobot {
 //        drive.shiftLow();
         shoot.kick();
         shoot.manualShooterControl();
+        
         SmartDashboard.putNumber("kicker Motor Power",shoot.getKickerMotorPower());
         //drive.engageShifter();
         //System.out.println("Trigger " + operatorInputs.joystickTriggerPressed());

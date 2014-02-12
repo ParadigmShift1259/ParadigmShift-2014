@@ -57,12 +57,12 @@ public class Picker {
     The wheels will load the ball into the picker.
     */
     
-    public void spinGrabber() {
-        buttonPressed = xBox.getRawButton(RIGHT_BUMPER);
-        if (buttonPressed && !isPooting) {
-            isGrabbing = true;
+    public void spinGrabber() { //Aka suckySucky();
+        buttonPressed = xBox.getRawButton(RIGHT_BUMPER); 
+        if (buttonPressed && !isPooting) { //Cannot commence when it is pooting(releasing)
+            isGrabbing = true; //Boolean so it cannot Grab and Poot at the same time
             wheelSpinner.set(0.2);
-        } else if (!buttonPressed && !isPooting){
+        } else if (!buttonPressed && !isPooting){ //We don't want the motor stopping when it is pooting
             wheelSpinner.set(0);
             isGrabbing = false;
         }
@@ -77,10 +77,10 @@ public class Picker {
     
     public void spinPooter() {
         buttonPressed = xBox.getRawButton(BUTTON_LB);
-        if (buttonPressed && !isGrabbing) {
-            isPooting = true;
+        if (buttonPressed && !isGrabbing) { //Cannot poot and grab at the same time
+            isPooting = true; //Boolean for so it can not poot and grab at the same time
             wheelSpinner.set(-0.3);
-        } else if (!buttonPressed && !isGrabbing){
+        } else if (!buttonPressed && !isGrabbing){ 
             wheelSpinner.set(0);
             isPooting = false;
         }
@@ -89,16 +89,16 @@ public class Picker {
     
     
     public double getKickerAngle() {
-        pickerAngleVoltage = analogChannel.getVoltage();
-        pickerAngleDegree = pickerAngleVoltage * (360/MAX_ENCODER_VOLTAGE);
+        pickerAngleVoltage = analogChannel.getVoltage(); //comment
+        pickerAngleDegree = pickerAngleVoltage * (360/MAX_ENCODER_VOLTAGE); //Converts Voltage to degrees
         return pickerAngleDegree;
     } 
     
     public void setPosLoading() {
        buttonPressed = xBox.getRawButton(A_BUTTON);
        currentAngle = getKickerAngle();
-       if(buttonPressed) {
-           settingPos1 = true;    
+       if(buttonPressed && !settingPos2 && !settingPos3) { //Cannot set two at once
+           settingPos1 = true;    //Set boolean so you don't have to hold the button down
        }
        if(settingPos1 = true) {
            if(currentAngle > loadPos) {
@@ -117,7 +117,7 @@ public class Picker {
     public void setPosKicking() {
        buttonPressed = xBox.getRawButton(B_BUTTON);
        currentAngle = getKickerAngle();
-       if(buttonPressed) {
+       if(buttonPressed && settingPos1 && settingPos3) { 
            settingPos2 = true;    
        }
        if(settingPos2 = true) {
@@ -137,7 +137,7 @@ public class Picker {
     public void setPosAuto() {
        buttonPressed = xBox.getRawButton(Y_BUTTON);
        currentAngle = getKickerAngle();
-       if(buttonPressed) {
+       if(buttonPressed && !settingPos1 && !settingPos2) {
            settingPos3 = true;    
        }
        if(settingPos3 = true) {
