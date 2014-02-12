@@ -18,13 +18,13 @@ public class OperatorInputs {
     private final int A_BUTTON = 1;
     private final int B_BUTTON = 2;
     private final int Y_BUTTON = 4;
-    private final int RIGHT_BUMPER = 6; //this is the x butt on the controller
-    private final int LEFT_BUMPER = 5; //this is is the poot butt
+    private final int RIGHT_BUMPER = 6;
+    private final int LEFT_BUMPER = 5;
     private final int BACK_BUTTON = 7;
     private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
     private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
-    private Joystick joystick = new Joystick(1); //Created and initialized the joystick controller
-    private Joystick xBox = new Joystick(2); //Created and initialized the xbox controller
+    private Joystick joystick = new Joystick(1);
+    private Joystick xBox = new Joystick(2);
     final double DEADZONE_Y = 0.05;
     final double DEADZONE_X = 0.15;
 
@@ -61,6 +61,11 @@ public class OperatorInputs {
     public boolean isXboxBButtonPressed() {
         return (xBox.getRawButton(B_BUTTON));
     }
+    
+    public boolean isXboxYButtonPressed() {
+        return (xBox.getRawButton(Y_BUTTON));
+    }
+    
     //change later
     public boolean isCaliButtonPressed() {
         return xBox.getRawButton(BACK_BUTTON);

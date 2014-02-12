@@ -17,22 +17,18 @@ import edu.wpi.first.wpilibj.AnalogChannel;
  */
 public class Picker {
 
-    private int LOADING_POSITION_ANGLE = 135; //change value later, position while loading
-    private int KICKING_POSITION_ANGLE = 80; //change value later, position while shooting/aiming
-    private int INITIAL_POSITION_ANGLE = 45; //change value later, position at the beginning of the auto/match
-    private double currentAngle; //the picker's current pos(ition)
-    private boolean buttonPressed = false; //used to indicate if any button is pressed
-    private boolean isGrabbing = false;
-    private boolean isPooting = false;
+    private final int LOADING_POSITION_ANGLE = 135; //change value later, position while loading
+    private final int KICKING_POSITION_ANGLE = 80; //change value later, position while shooting/aiming
+    private final int INITIAL_POSITION_ANGLE = 45; //change value later, position at the beginning of the auto/match
+    private final double NORMAL_PICKER_SPEED = 0.2;
+            
     private Talon wheelSpinner = new Talon(8); //used in the SpinGrabber method...also is a Talon
     private Talon pickerMotor = new Talon(4);
     private final AnalogChannel analogChannel = new AnalogChannel(4);
     private double pickerAngleVoltage;
     private double pickerAngleDegree;
     private double MAX_ENCODER_VOLTAGE = 2.0;
-    private boolean settingPos1 = false;
-    private boolean settingPos2 = false;
-    private boolean settingPos3 = false;
+
     
     /*
     This is the constructor for the Picker class.
@@ -85,55 +81,51 @@ public class Picker {
     } 
     
     public boolean setPosLoading() {
-        currentAngle = getKickerAngle();
+        double currentAngle = getKickerAngle();
         boolean inPosition = false;
         
         if (currentAngle == LOADING_POSITION_ANGLE) {  // change this to include some range
             pickerMotor.set(0);
             inPosition = true;
         } else if (currentAngle > LOADING_POSITION_ANGLE) {
-            pickerMotor.set(-0.2);
+            pickerMotor.set(-NORMAL_PICKER_SPEED);
         } else if (currentAngle < LOADING_POSITION_ANGLE) {
-            pickerMotor.set(0.2);
+            pickerMotor.set(NORMAL_PICKER_SPEED);
         }
 
         return (inPosition);
     }
     
     public boolean setPosKicking() {
-        currentAngle = getKickerAngle();
+        double currentAngle = getKickerAngle();
         boolean inPosition = false;
         
         if (currentAngle == KICKING_POSITION_ANGLE) {  // change this to include some range
             pickerMotor.set(0);
             inPosition = true;
         } else if (currentAngle > KICKING_POSITION_ANGLE) {
-            pickerMotor.set(-0.2);
+            pickerMotor.set(-NORMAL_PICKER_SPEED);
         } else if (currentAngle < KICKING_POSITION_ANGLE) {
-            pickerMotor.set(0.2);
+            pickerMotor.set(NORMAL_PICKER_SPEED);
         }
 
         return (inPosition);
     }
    
-    public void setPosAuto() {
-       buttonPressed = xBox.getRawButton(Y_BUTTON);
-       currentAngle = getKickerAngle();
-       if(buttonPressed) {
-           settingPos3 = true;    
-       }
-       if(settingPos3 = true) {
-           if(currentAngle > autoPos) {
-               pickerMotor.set(-0.2);
-           }
-           if(currentAngle < autoPos) {
-               pickerMotor.set(0.2);
-           }
-           if(currentAngle == autoPos) {
-               pickerMotor.set(0);
-               settingPos3 = false;
-           }
-       }
+    public boolean setPosAuto() {
+        double currentAngle = getKickerAngle();
+        boolean inPosition = false;
+        
+        if (currentAngle == KICKING_POSITION_ANGLE) {  // change this to include some range
+            pickerMotor.set(0);
+            inPosition = true;
+        } else if (currentAngle > KICKING_POSITION_ANGLE) {
+            pickerMotor.set(-NORMAL_PICKER_SPEED);
+        } else if (currentAngle < KICKING_POSITION_ANGLE) {
+            pickerMotor.set(NORMAL_PICKER_SPEED);
+        }
+
+        return (inPosition);
     }
     //need to figure out moveable parts on the picker in order to assign functions
     

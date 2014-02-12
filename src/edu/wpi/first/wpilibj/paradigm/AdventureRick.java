@@ -35,6 +35,7 @@ public class AdventureRick extends IterativeRobot {
     private boolean kickerToReadyButtonEnabled;
     private boolean pickerToPickButtonEnabled;
     private boolean pickerToKickButtonEnabled;
+    private boolean pickerToStartPositionButtonEnabled;
 
     /**
      * Initializes when the robot first starts, (only once at power-up).
@@ -51,6 +52,7 @@ public class AdventureRick extends IterativeRobot {
         kickerToReadyButtonEnabled = true;
         pickerToPickButtonEnabled = true;
         pickerToKickButtonEnabled = true;
+        pickerToStartPositionButtonEnabled = true;
         
         State.kickerMode = State.KICKER_STOPPED;
         State.pickerMode = State.PICKER_IN_STARTING_POSITION;
@@ -163,6 +165,17 @@ public class AdventureRick extends IterativeRobot {
             }
         }
         
+        // Determine if operator wants to move to picker to starting position
+        if (pickerToStartPositionButtonEnabled && requestToMovePickerToStartPosition()) {
+            State.pickerMode = State.PICKER_MOVING_TO_STARTING_POSITION;
+            pickerToStartPositionButtonEnabled = false;
+        }
+        if (State.pickerMode == State.PICKER_MOVING_TO_STARTING_POSITION) {
+            if (pick.setPosAuto()) {
+                State.pickerMode = State.PICKER_IN_STARTING_POSITION;
+            }
+        }
+        
 
         //************************************* MISCELLANEOUS **************************************
         updateDashboard();
@@ -200,6 +213,9 @@ public class AdventureRick extends IterativeRobot {
         if (!requestToMovePickerToKick()) {
             pickerToKickButtonEnabled = true;
         }
+        if (!requestToMovePickerToStartPosition()) {
+            pickerToStartPositionButtonEnabled = true;
+        }
     }
     
     private void updateDashboard() {
@@ -234,6 +250,10 @@ public class AdventureRick extends IterativeRobot {
     
     private boolean requestToMovePickerToKick() {
         return (operatorInputs.isXboxBButtonPressed());
+    }
+    
+    private boolean requestToMovePickerToStartPosition() {
+        return (operatorInputs.isXboxYButtonPressed());
     }
 
 }
