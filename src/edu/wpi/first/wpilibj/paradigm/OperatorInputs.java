@@ -27,14 +27,14 @@ public class OperatorInputs {
     private final int LEFT_STICK_BUTTON  = 9;
     private final int RIGHT_STICK_BUTTON = 10;
     
-    private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
+    private final Joystick.AxisType LEFT_TRIGGER  = Joystick.AxisType.kZ;
     private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
 
     final double DEADZONE_Y = 0.05;
     final double DEADZONE_X = 0.15;
 
-    private final double LEFT_TRIGGER_PRESSED_MAX_VALUE = 1.0;
-    private final double LEFT_TRIGGER_PRESSED_MIN_VALUE = 0.5;
+    private final double LEFT_TRIGGER_PRESSED_MAX_VALUE  =  1.0;
+    private final double LEFT_TRIGGER_PRESSED_MIN_VALUE  =  0.5;
     private final double RIGHT_TRIGGER_PRESSED_MAX_VALUE = -0.5;
     private final double RIGHT_TRIGGER_PRESSED_MIN_VALUE = -1.0;
 
