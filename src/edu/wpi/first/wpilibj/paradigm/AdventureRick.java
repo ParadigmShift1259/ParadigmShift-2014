@@ -51,11 +51,6 @@ public class AdventureRick extends IterativeRobot {
         drive.leftEncoder.start();
         drive.rightEncoder.start();
         drive.time.start();
-        pick.spinGrabber();
-        pick.spinPooter();
-        pick.setPosAuto();
-        pick.setPosKicking();
-        pick.setPosLoading();
         SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
@@ -98,7 +93,11 @@ public class AdventureRick extends IterativeRobot {
 //        drive.shiftLow();
         shoot.kick();
         shoot.manualShooterControl();
-        
+        pick.spinGrabber();
+        pick.spinPooter();
+        pick.setPosAuto();
+        pick.setPosKicking();
+        pick.setPosLoading();
         SmartDashboard.putNumber("kicker Motor Power",shoot.getKickerMotorPower());
         //drive.engageShifter();
         //System.out.println("Trigger " + operatorInputs.joystickTriggerPressed());
