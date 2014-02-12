@@ -37,7 +37,7 @@ public class Shooter {
     private final int BACK_BUTTON = 7;
     private final int XBOX_TRIGGERS = 3; //renamed because this is both the left trigger and the right trigger
     private double motorSpeed = 1.0;
-    private final AnalogChannel analogChannel = new AnalogChannel(1);
+    private final AnalogChannel analogChannel = new AnalogChannel(2);
     private final DigitalInput digitalInput = new DigitalInput(9);
     private double previousVoltage = ILLEGAL_VOLTAGE;
     private double currentVoltage;
