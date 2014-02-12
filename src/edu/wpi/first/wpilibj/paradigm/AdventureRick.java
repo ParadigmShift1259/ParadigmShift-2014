@@ -30,7 +30,7 @@ public class AdventureRick extends IterativeRobot {
     Picker pick;
     //Preferences prefs;
     private boolean checkForKickerStop = false;
-    
+
     final int PRESSURE_SWITCH_CHANNEL = 1;
     final int COMPRESSOR_RELAY_CHANNEL = 1;
 
@@ -92,13 +92,17 @@ public class AdventureRick extends IterativeRobot {
 //        drive.shiftHigh();
 //        drive.shiftLow();
         shoot.kick();
-        shoot.manualShooterControl();
+        shoot.calibrate();
+        shoot.setKickingPosition();
+        //shoot.manualShooterControl();
         pick.spinGrabber();
         pick.spinPooter();
-        pick.setPosAuto();
-        pick.setPosKicking();
-        pick.setPosLoading();
-        SmartDashboard.putNumber("kicker Motor Power",shoot.getKickerMotorPower());
+        //all of these positions make the picker move forward, need to test the encoder value to reset values
+       //pick.setPosAuto();
+        //pick.setPosKicking();
+        //pick.setPosLoading();
+        SmartDashboard.putNumber("kicker Motor Power", shoot.getKickerMotorPower());
+        SmartDashboard.putBoolean("Blah:", shoot.kicking);
         //drive.engageShifter();
         //System.out.println("Trigger " + operatorInputs.joystickTriggerPressed());
         //After the robot has kicked, check to see if it has stopped

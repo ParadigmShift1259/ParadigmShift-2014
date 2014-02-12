@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -51,6 +52,7 @@ public class Shooter {
     private int MAX_ALLOWED_ANGLE = 165;
     private int MIN_ALLOWED_ANGLE = 145;
     private boolean pressed;
+    private boolean calibrated = false;
     private boolean settingPos = true;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
 
@@ -64,7 +66,7 @@ public class Shooter {
     
     public boolean isKickerStopped() {
         currentVoltage = analogChannel.getVoltage(); //Read current voltage
-        if (previousVoltage >= currentVoltage-(MAX_ENCODER_VOLTAGE*0.01) && previousVoltage <= currentVoltage+(MAX_ENCODER_VOLTAGE*0.01)) { 
+        if (previousVoltage >= currentVoltage-(MAX_ENCODER_VOLTAGE*0.1) && previousVoltage <= currentVoltage+(MAX_ENCODER_VOLTAGE*0.1)) { 
             previousVoltage = ILLEGAL_VOLTAGE; //Set back so it can run again 
             return true;
         } else {
@@ -85,7 +87,11 @@ public class Shooter {
         triggerPressed = RIGHT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS) && 
                 xBox.getRawAxis(XBOX_TRIGGERS) <= RIGHT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
         inPosition = digitalInput.get();
-        if (triggerPressed && !caliButtPressed && !settingPos && isKickerStopped()){ //changed for testing on Sturday night 2/8/2014 - E A COBB
+        SmartDashboard.putBoolean("triggerPressed", triggerPressed);
+        SmartDashboard.putBoolean("!caliButtPressed", !caliButtPressed);
+        SmartDashboard.putBoolean("!settingPos", !settingPos);
+        SmartDashboard.putBoolean("isKickerStopped", isKickerStopped());
+        if (triggerPressed && !caliButtPressed && !settingPos){ //changed for testing on Sturday night 2/8/2014 - E A COBB
             kicking = true;
             buttonPressed = false;
         }
@@ -111,6 +117,7 @@ public class Shooter {
                 if (inPosition) {
                     kickermotor.set(0);
                     caliButtPressed = false;
+                    calibrated = true;
                 } else {
                     if (angle > kickingPos && angle <= MAX_ALLOWED_ANGLE) {
                         kickermotor.set(0.1);
@@ -142,7 +149,7 @@ public class Shooter {
     public void setKickingPosition() {
         triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS) && 
                 xBox.getRawAxis(XBOX_TRIGGERS) <= LEFT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
-        if (triggerPressed && !kicking && !caliButtPressed && isKickerStopped()){ //changed for testing on Sturday night 2/8/2014 - E A COBB
+        if (calibrated && triggerPressed && !kicking && !caliButtPressed && isKickerStopped()){ //changed for testing on Sturday night 2/8/2014 - E A COBB
             pressed = true;
             buttonPressed = false;
             settingPos = true;

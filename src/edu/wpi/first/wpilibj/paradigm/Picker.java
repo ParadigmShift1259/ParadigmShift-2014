@@ -61,7 +61,7 @@ public class Picker {
         buttonPressed = xBox.getRawButton(RIGHT_BUMPER); 
         if (buttonPressed && !isPooting) { //Cannot commence when it is pooting(releasing)
             isGrabbing = true; //Boolean so it cannot Grab and Poot at the same time
-            wheelSpinner.set(0.2);
+            wheelSpinner.set(1);
         } else if (!buttonPressed && !isPooting){ //We don't want the motor stopping when it is pooting
             wheelSpinner.set(0);
             isGrabbing = false;
@@ -79,7 +79,7 @@ public class Picker {
         buttonPressed = xBox.getRawButton(BUTTON_LB);
         if (buttonPressed && !isGrabbing) { //Cannot poot and grab at the same time
             isPooting = true; //Boolean for so it can not poot and grab at the same time
-            wheelSpinner.set(-0.3);
+            wheelSpinner.set(-1);
         } else if (!buttonPressed && !isGrabbing){ 
             wheelSpinner.set(0);
             isPooting = false;
@@ -102,10 +102,10 @@ public class Picker {
        }
        if(settingPos1 = true) {
            if(currentAngle > loadPos) {
-               pickerMotor.set(-0.2);
+               pickerMotor.set(-0.7);
            }
            if(currentAngle < loadPos) {
-               pickerMotor.set(0.2);
+               pickerMotor.set(0.7);
            }
            if(currentAngle == loadPos) {
                pickerMotor.set(0);
@@ -117,15 +117,15 @@ public class Picker {
     public void setPosKicking() {
        buttonPressed = xBox.getRawButton(B_BUTTON);
        currentAngle = getKickerAngle();
-       if(buttonPressed && settingPos1 && settingPos3) { 
+       if(buttonPressed && !settingPos1 && !settingPos3) { 
            settingPos2 = true;    
        }
        if(settingPos2 = true) {
            if(currentAngle > shootPos) {
-               pickerMotor.set(-0.2);
+               pickerMotor.set(-0.7);
            }
            if(currentAngle < shootPos) {
-               pickerMotor.set(0.2);
+               pickerMotor.set(0.7);
            }
            if(currentAngle == shootPos) {
                pickerMotor.set(0);
@@ -142,10 +142,10 @@ public class Picker {
        }
        if(settingPos3 = true) {
            if(currentAngle > autoPos) {
-               pickerMotor.set(-0.2);
+               pickerMotor.set(-0.7);
            }
            if(currentAngle < autoPos) {
-               pickerMotor.set(0.2);
+               pickerMotor.set(0.7);
            }
            if(currentAngle == autoPos) {
                pickerMotor.set(0);
