@@ -53,4 +53,39 @@ public class State {
         }
         return str;
     }
+    
+    public static String printPickerMode() {
+        String str;
+        switch (State.kickerMode) {
+            case State.PICKER_MOVING_TO_PICK:              str="Moving to Picking Position";  break;
+            case State.PICKER_IN_PICKING_POSITION:         str="In Picking Position";         break;
+            case State.PICKER_MOVING_TO_KICK:              str="Moving to Kicking Position";  break;
+            case State.PICKER_IN_KICKING_POSITION:         str="In Kicking Position";         break;
+            case State.PICKER_MOVING_TO_STARTING_POSITION: str="Moving to Starting Position"; break;
+            case State.PICKER_IN_STARTING_POSITION:        str="In Starting Position";        break;
+            default:                                       str="Unknown";                     break;
+        }
+        return str;
+    }
+    
+    public static String printPickerWheelsMode() {
+        String str;
+        switch (State.kickerMode) {
+            case State.PICKER_WHEELS_STOPPED: str="Picker Wheels Stopped";  break;
+            case State.PICKER_WHEELS_FORWARD: str="Picker Wheels Forward";  break;
+            case State.PICKER_WHEELS_REVERSE: str="Picker Wheels Reverse";  break;
+            default:                          str="Unknown";                break;
+        }
+        return str;
+    }
+    
+    public static String printBallLocationMode() {
+        String str;
+        switch (State.kickerMode) {
+            case State.BALL_IN_KICKING_POSITION:     str="In Kicking Position";     break;
+            case State.BALL_NOT_IN_KICKING_POSITION: str="Not In Kicking Position"; break;
+            default:                                 str="Unknown";                 break;
+        }
+        return str;
+    }
 }
