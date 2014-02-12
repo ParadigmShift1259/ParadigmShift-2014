@@ -39,6 +39,7 @@ public class AdventureRick extends IterativeRobot {
     private boolean pickerToStartPositionButtonEnabled;
     private boolean pickerWheelReverseButtonEnabled;
     private boolean pickerWheelForwardButtonEnabled;
+    private boolean pickerWheelStopButtonEnabled;
 
     /**
      * Initializes when the robot first starts, (only once at power-up).
@@ -59,6 +60,7 @@ public class AdventureRick extends IterativeRobot {
         pickerToStartPositionButtonEnabled = true;
         pickerWheelReverseButtonEnabled = true;
         pickerWheelForwardButtonEnabled = true;
+        pickerWheelStopButtonEnabled = true;
         
         State.kickerMode = State.KICKER_STOPPED;
         State.pickerMode = State.PICKER_IN_STARTING_POSITION;
@@ -191,11 +193,19 @@ public class AdventureRick extends IterativeRobot {
         // Spin the picker wheels in reverse to grab the ball
         if (pickerWheelReverseButtonEnabled & requestToSpinPickerWheelsInReverse()) {
             State.pickerWheelsMode = State.PICKER_WHEELS_REVERSE;
+            pick.spinPickerWheelsReverse();
         }
         
         // Spin the picker wheels forward to release the ball
         if (pickerWheelForwardButtonEnabled & requestToSpinPickerWheelsForward()) {
             State.pickerWheelsMode = State.PICKER_WHEELS_FORWARD;
+            pick.spinPickerWheelsForward();
+        }
+        
+        // Stop the spinning of the picker wheels
+        if (pickerWheelStopButtonEnabled & requestToStopPickerWheels()) {
+            State.pickerWheelsMode = State.PICKER_WHEELS_STOPPED;
+            pick.stopPickerWheels();
         }
         
 
@@ -242,7 +252,8 @@ public class AdventureRick extends IterativeRobot {
         if (!requestToMovePickerToKick())             { pickerToKickButtonEnabled          = true; }
         if (!requestToMovePickerToStartPosition())    { pickerToStartPositionButtonEnabled = true; }
         if (!requestToSpinPickerWheelsInReverse())    { pickerWheelReverseButtonEnabled    = true; }
-        if (!requestToSpinPickerWheelsForward())      {pickerWheelForwardButtonEnabled     = true; }
+        if (!requestToSpinPickerWheelsForward())      { pickerWheelForwardButtonEnabled    = true; }
+        if (!requestToStopPickerWheels())             { pickerWheelStopButtonEnabled       = true; }
     }
     
     private void updateDashboard() {
@@ -256,8 +267,10 @@ public class AdventureRick extends IterativeRobot {
           SmartDashboard.putBoolean("Is Picking", pick.isPicking);
           SmartDashboard.putBoolean("Is Pooting", pick.isPicking);
         */
-        SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
-        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
+        SmartDashboard.putString("Kicker Mode: ",        State.printKickerMode());
+        SmartDashboard.putString("Picker Mode: ",        State.printPickerMode());
+        SmartDashboard.putString("Picker Wheels Mode: ", State.printPickerWheelsMode());
+        SmartDashboard.putString("Ball Location Mode: ", State.printBallLocationMode());
 
         SmartDashboard.putNumber("Speed", drive.totalSpeed);
         // SmartDashboard.putNumber("Kicker Angle", shoot.angle); *Don't need to display, not sure what will be displayed.
@@ -293,5 +306,9 @@ public class AdventureRick extends IterativeRobot {
     
     private boolean requestToCalibrate() {
         return (operatorInputs.isXboxBackButtonPressed());
+    }
+    
+    private boolean requestToStopPickerWheels() {
+        return (operatorInputs.isXboxXButtonPressed());
     }
 }

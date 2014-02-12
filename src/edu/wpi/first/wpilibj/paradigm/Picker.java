@@ -41,7 +41,7 @@ public class Picker {
     /**
      *  The wheels will load the ball into the picker.
      */
-    public void spinGrabber() {
+    public void spinPickerWheelsReverse() {
         wheelSpinner.set(NORMAL_PICKER_WHEEL_SPEED);
     }
     
@@ -50,8 +50,12 @@ public class Picker {
      * release or pass the ball. 
      * May be used for a (weak) pass.
     */
-    public void spinPooter() {
+    public void spinPickerWheelsForward() {
         wheelSpinner.set(-NORMAL_PICKER_WHEEL_SPEED);
+    }
+    
+    public void stopPickerWheels() {
+        wheelSpinner.set(0);
     }
     
     public double getKickerAngle() {
