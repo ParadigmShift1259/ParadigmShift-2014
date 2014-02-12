@@ -104,11 +104,8 @@ public class Shooter {
         return angle;
     }
     
-    //Added for Saturday Night to program shooter - 2/8/2014 E A Cobb
-    public void manualShooterControl() {
-        if(!kicking) {
-            kickermotor.set(-operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
-        }
+    public void manualShooterControl(double motorControlValue) {
+        kickermotor.set(motorControlValue);
     }  
     
     /**
