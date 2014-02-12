@@ -17,12 +17,12 @@ import edu.wpi.first.wpilibj.AnalogChannel;
  */
 public class Picker {
 
-    private final int    LOADING_POSITION_ANGLE = 135; //change value later, position while loading
-    private final int    KICKING_POSITION_ANGLE = 80;  //change value later, position while shooting/aiming
-    private final int    INITIAL_POSITION_ANGLE = 45;  //change value later, position at the beginning of the auto/match
-    private final double NORMAL_PICKER_SPEED    = 0.2;
+    private final int    LOADING_POSITION_ANGLE    = 135; //change value later, position while loading
+    private final int    KICKING_POSITION_ANGLE    = 80;  //change value later, position while shooting/aiming
+    private final int    INITIAL_POSITION_ANGLE    = 45;  //change value later, position at the beginning of the auto/match
+    private final double NORMAL_PICKER_SPEED       = 0.2;
     private final double NORMAL_PICKER_WHEEL_SPEED = 0.2;
-    private final double MAX_ENCODER_VOLTAGE    = 2.0; //maximum value expected from output of encoder/filter circuit
+    private final double MAX_ENCODER_VOLTAGE       = 2.0; //maximum value expected from output of encoder/filter circuit
             
     private final Talon wheelSpinner = new Talon(4);   //used in the SpinGrabber method...also is a Talon
     private final Talon pickerMotor = new Talon(3);
@@ -107,6 +107,5 @@ public class Picker {
 
         return (inPosition);
     }
-    //need to figure out moveable parts on the picker in order to assign functions
     
 }
