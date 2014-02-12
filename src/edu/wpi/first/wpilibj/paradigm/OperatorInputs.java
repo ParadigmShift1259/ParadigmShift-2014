@@ -30,8 +30,8 @@ public class OperatorInputs {
     private final Joystick.AxisType LEFT_TRIGGER  = Joystick.AxisType.kZ;
     private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
 
-    final double DEADZONE_Y = 0.05;
-    final double DEADZONE_X = 0.15;
+    final double DEADZONE_Y = 0.05; // for joystick in Y direction
+    final double DEADZONE_X = 0.15; // for joystick in X direction
 
     private final double LEFT_TRIGGER_PRESSED_MAX_VALUE  =  1.0;
     private final double LEFT_TRIGGER_PRESSED_MIN_VALUE  =  0.5;
@@ -70,7 +70,7 @@ public class OperatorInputs {
         return (xBox.getRawButton(Y_BUTTON));
     }
     
-    public boolean isXboxBackPressed() {
+    public boolean isXboxBackButtonPressed() {
         return (xBox.getRawButton(BACK_BUTTON));
     }
 
@@ -133,34 +133,25 @@ public class OperatorInputs {
 
     }
 
-    public boolean shifter() {
-        return this.joystick.getTrigger();  //return the value of the joystick trigger
-
-    }
-
     public boolean joystickTriggerPressed() {
         return this.joystick.getTrigger();  //return the value of the joystick trigger
 
     }
 
-    public boolean joystickTriggerPressedAgain() {
+    ///////////////////// REMOVE THESE
+    
+    public boolean shifter() {
         return this.joystick.getTrigger();  //return the value of the joystick trigger
-
     }
-
     public boolean shiftLow() {
         return this.joystick.getRawButton(3);
     }
-
     public boolean shiftHigh() {
         return this.joystick.getRawButton(4);
     }
-    
-        //change later
     public boolean isCaliButtonPressed() {
-        return xBox.getRawButton(BACK_BUTTON);
+        return isXboxBackButtonPressed();
     }
-
     public boolean isPickingAutoPositionButtonPressed() {
         return xBox.getRawButton(Y_BUTTON);
     }
