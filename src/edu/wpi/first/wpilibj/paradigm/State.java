@@ -39,4 +39,18 @@ public class State {
     public static int pickerWheelsMode;
     public static int ballLocationMode;
     
+    public static String printKickerMode() {
+        String str;
+        switch (State.kickerMode) {
+            case State.KICKING:                         str="Kicking";                  break;
+            case State.KICKER_CALIBRATING:              str="Calibrating";              break;
+            case State.KICKER_CALIBRATED:               str="Calibrated";               break;
+            case State.KICKER_IN_READY_POSITION:        str="In Ready Position";        break;
+            case State.KICKER_MOVING_TO_READY_POSITION: str="Moving to Ready Position"; break;
+            case State.KICKER_STOPPING:                 str="Stopping, after kick";     break;
+            case State.KICKER_STOPPED:                  str="Stopped";                  break;
+            default:                                    str="Unknown";                  break;
+        }
+        return str;
+    }
 }
