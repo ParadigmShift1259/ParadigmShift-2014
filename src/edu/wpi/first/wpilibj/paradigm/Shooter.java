@@ -44,12 +44,14 @@ public class Shooter {
     //private 
     boolean inPosition; //made protected for use in AdventureRick
     boolean kicking;
+    private String selfdestruct = "PERKELES!";
     private double kickingPos = 180;
     public boolean caliButtPressed = true;
     double angle;
     private int MAX_ALLOWED_ANGLE = 165;
     private int MIN_ALLOWED_ANGLE = 145;
     private boolean pressed;
+    private boolean settingPos = true;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
 
     public Shooter(OperatorInputs _operatorInputs) {
@@ -83,7 +85,7 @@ public class Shooter {
         triggerPressed = RIGHT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS) && 
                 xBox.getRawAxis(XBOX_TRIGGERS) <= RIGHT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
         inPosition = digitalInput.get();
-        if (triggerPressed){ //changed for testing on Sturday night 2/8/2014 - E A COBB
+        if (triggerPressed && !caliButtPressed && !settingPos && isKickerStopped()){ //changed for testing on Sturday night 2/8/2014 - E A COBB
             kicking = true;
             buttonPressed = false;
         }
@@ -101,10 +103,10 @@ public class Shooter {
         inPosition = digitalInput.get();
         buttonPressed = xBox.getRawButton(BACK_BUTTON);
         angle = getKickerAngle();
-        if (buttonPressed) {
+        if (buttonPressed && !settingPos && isKickerStopped()) {
             caliButtPressed = true;
         }
-        if (caliButtPressed && isKickerStopped()) {
+        if (caliButtPressed) {
             try {
                 if (inPosition) {
                     kickermotor.set(0);
@@ -140,11 +142,12 @@ public class Shooter {
     public void setKickingPosition() {
         triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS) && 
                 xBox.getRawAxis(XBOX_TRIGGERS) <= LEFT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
-        if (triggerPressed){ //changed for testing on Sturday night 2/8/2014 - E A COBB
+        if (triggerPressed && !kicking && !caliButtPressed && isKickerStopped()){ //changed for testing on Sturday night 2/8/2014 - E A COBB
             pressed = true;
             buttonPressed = false;
+            settingPos = true;
         }
-        if (pressed && !kicking && !caliButtPressed && isKickerStopped()){
+        if (pressed){
             if (getKickerAngle() == kickingPos) {
                 inPosition = true;
             }
@@ -152,6 +155,7 @@ public class Shooter {
                 if (inPosition) {
                     kickermotor.set(0);
                     pressed = false;
+                    settingPos = false;
                 } else {
                     if (angle < kickingPos && angle >= MAX_ALLOWED_ANGLE) {
                         kickermotor.set(-0.1);
