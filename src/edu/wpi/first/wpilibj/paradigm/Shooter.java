@@ -53,7 +53,7 @@ public class Shooter {
     private int MIN_ALLOWED_ANGLE = 145;
     private boolean pressed;
     private boolean calibrated = false;
-    private boolean settingPos = true;
+    private boolean settingPos = false;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
 
     public Shooter(OperatorInputs _operatorInputs) {
