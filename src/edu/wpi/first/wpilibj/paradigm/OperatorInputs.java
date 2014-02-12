@@ -16,13 +16,16 @@ public class OperatorInputs {
     private Joystick joystick = new Joystick(1);
     private Joystick xBox     = new Joystick(2);
     
-    private final int A_BUTTON     = 1;
-    private final int B_BUTTON     = 2;
-    private final int X_BUTTON     = 3;
-    private final int Y_BUTTON     = 4;
-    private final int LEFT_BUMPER  = 5;
-    private final int RIGHT_BUMPER = 6;
-    private final int BACK_BUTTON  = 7;
+    private final int A_BUTTON           = 1;
+    private final int B_BUTTON           = 2;
+    private final int X_BUTTON           = 3;
+    private final int Y_BUTTON           = 4;
+    private final int LEFT_BUMPER        = 5;
+    private final int RIGHT_BUMPER       = 6;
+    private final int BACK_BUTTON        = 7;
+    private final int START_BUTTON       = 8;
+    private final int LEFT_STICK_BUTTON  = 9;
+    private final int RIGHT_STICK_BUTTON = 10;
     
     private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
     private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
