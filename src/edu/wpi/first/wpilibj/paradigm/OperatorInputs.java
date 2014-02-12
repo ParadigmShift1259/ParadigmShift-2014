@@ -13,18 +13,20 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class OperatorInputs {
 
-    //variables
-    private double triggerPressed;
-    private final int A_BUTTON = 1;
-    private final int B_BUTTON = 2;
-    private final int Y_BUTTON = 4;
+    private Joystick joystick = new Joystick(1);
+    private Joystick xBox     = new Joystick(2);
+    
+    private final int A_BUTTON     = 1;
+    private final int B_BUTTON     = 2;
+    private final int X_BUTTON     = 3;
+    private final int Y_BUTTON     = 4;
+    private final int LEFT_BUMPER  = 5;
     private final int RIGHT_BUMPER = 6;
-    private final int LEFT_BUMPER = 5;
-    private final int BACK_BUTTON = 7;
+    private final int BACK_BUTTON  = 7;
+    
     private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
     private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
-    private Joystick joystick = new Joystick(1);
-    private Joystick xBox = new Joystick(2);
+
     final double DEADZONE_Y = 0.05;
     final double DEADZONE_X = 0.15;
 
@@ -33,11 +35,6 @@ public class OperatorInputs {
     private final double RIGHT_TRIGGER_PRESSED_MAX_VALUE = -0.5;
     private final double RIGHT_TRIGGER_PRESSED_MIN_VALUE = -1.0;
 
-    private final int XBOX_TRIGGERS = 3; //renamed because this is both the left trigger and the right trigger
-
-//    public OperatorInputs() {
-//        this.shiftUp = true;
-//    }
     public OperatorInputs() {
 
     }
@@ -62,24 +59,23 @@ public class OperatorInputs {
         return (xBox.getRawButton(B_BUTTON));
     }
     
+    public boolean isXboxXButtonPressed() {
+        return (xBox.getRawButton(X_BUTTON));
+    }
+        
     public boolean isXboxYButtonPressed() {
         return (xBox.getRawButton(Y_BUTTON));
     }
     
-    //change later
-    public boolean isCaliButtonPressed() {
-        return xBox.getRawButton(BACK_BUTTON);
+    public boolean isXboxBackPressed() {
+        return (xBox.getRawButton(BACK_BUTTON));
     }
 
-    public boolean isPickingAutoPositionButtonPressed() {
-        return xBox.getRawButton(Y_BUTTON);
-    }
-
-    public boolean isGrabbingButtonPressed() {
+    public boolean isXboxRightBumperPressed() {
         return xBox.getRawButton(RIGHT_BUMPER);
     }
 
-    public boolean isReleaseButtonPressed() {
+    public boolean isXboxLeftBumperPressed() {
         return xBox.getRawButton(LEFT_BUMPER);
     }
 
@@ -155,6 +151,15 @@ public class OperatorInputs {
 
     public boolean shiftHigh() {
         return this.joystick.getRawButton(4);
+    }
+    
+        //change later
+    public boolean isCaliButtonPressed() {
+        return xBox.getRawButton(BACK_BUTTON);
+    }
+
+    public boolean isPickingAutoPositionButtonPressed() {
+        return xBox.getRawButton(Y_BUTTON);
     }
 
 }
