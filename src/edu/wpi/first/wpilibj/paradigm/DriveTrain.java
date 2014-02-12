@@ -17,10 +17,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DriveTrain {
 
-    final int LEFT_PORT = 1; //attributes  defining the class
-    final int RIGHT_PORT = 2;
-    final int SHIFT_PORT_LOW = 1;
-    final int SHIFT_PORT_HIGH = 2;
+    final int PWM_LEFT_PORT   = 1; // For talons 3 & 4, driving left side of robot
+    final int PWM_RIGHT_PORT  = 2; // For talons 1 & 2, driving right side of robot
+    final int SHIFT_PORT_LOW  = 1; // 
+    final int SHIFT_PORT_HIGH = 2; //
     final int SHIFT_MODULE = 1;
 
     private Talon leftTalons; //has to motors and motor controllers 
@@ -62,8 +62,8 @@ public class DriveTrain {
     boolean previousTriggerPressed; //what the trigger was before it changed
 
     public DriveTrain() {
-        this.leftTalons = new Talon(LEFT_PORT);
-        this.rightTalons = new Talon(RIGHT_PORT);
+        this.leftTalons = new Talon(PWM_LEFT_PORT);
+        this.rightTalons = new Talon(PWM_RIGHT_PORT);
         this.gearShiftLow = new Solenoid(SHIFT_MODULE, SHIFT_PORT_LOW);
         this.gearShiftHigh = new Solenoid(SHIFT_MODULE, SHIFT_PORT_HIGH);
         this.leftEncoder = new Encoder(3, 4);

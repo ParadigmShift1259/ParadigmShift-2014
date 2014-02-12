@@ -30,12 +30,15 @@ public class AdventureRick extends IterativeRobot {
     Picker pick = new Picker();
     
     private long kickingStartTime;
+    private boolean calibrateButtonEnabled;
     private boolean shifterTriggerEnabled;
     private boolean kickerButtonEnabled;
     private boolean kickerToReadyButtonEnabled;
     private boolean pickerToPickButtonEnabled;
     private boolean pickerToKickButtonEnabled;
     private boolean pickerToStartPositionButtonEnabled;
+    private boolean pickerWheelReverseButtonEnabled;
+    private boolean pickerWheelForwardButtonEnabled;
 
     /**
      * Initializes when the robot first starts, (only once at power-up).
@@ -47,12 +50,15 @@ public class AdventureRick extends IterativeRobot {
         drive.rightEncoder.start();
         drive.time.start();
         
+        calibrateButtonEnabled = true;
         shifterTriggerEnabled = true;
         kickerButtonEnabled = true;
         kickerToReadyButtonEnabled = true;
         pickerToPickButtonEnabled = true;
         pickerToKickButtonEnabled = true;
         pickerToStartPositionButtonEnabled = true;
+        pickerWheelReverseButtonEnabled = true;
+        pickerWheelForwardButtonEnabled = true;
         
         State.kickerMode = State.KICKER_STOPPED;
         State.pickerMode = State.PICKER_IN_STARTING_POSITION;
@@ -65,7 +71,7 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically (every 20-25 ms) during autonomous
      */
     public void autonomousPeriodic() {
-        //shoot.calibrate();
+        
     }
 
     /**
@@ -90,7 +96,13 @@ public class AdventureRick extends IterativeRobot {
 
         //************************************ KICKER CONTROLS *************************************
         
-        shoot.manualShooterControl();
+        if (    (State.kickerMode != State.KICKER_CALIBRATING)
+             && (State.kickerMode != State.KICKING)
+             && (State.kickerMode != State.KICKER_STOPPING)
+            ) {
+            //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red)
+            shoot.manualShooterControl(-operatorInputs.xboxLeftY());
+        }
         
         // Determine if we need to move kicking arm into "ready" position
         if (kickerToReadyButtonEnabled && requestToMoveKickerToReady()) {
@@ -176,8 +188,33 @@ public class AdventureRick extends IterativeRobot {
             }
         }
         
+        // Spin the picker wheels in reverse to grab the ball
+        if (pickerWheelReverseButtonEnabled & requestToSpinPickerWheelsInReverse()) {
+            State.pickerWheelsMode = State.PICKER_WHEELS_REVERSE;
+        }
+        
+        // Spin the picker wheels forward to release the ball
+        if (pickerWheelForwardButtonEnabled & requestToSpinPickerWheelsForward()) {
+            State.pickerWheelsMode = State.PICKER_WHEELS_FORWARD;
+        }
+        
 
         //************************************* MISCELLANEOUS **************************************
+        if (calibrateButtonEnabled & requestToCalibrate()) {
+            if (    (State.kickerMode != State.KICKER_CALIBRATING)
+                 && (State.kickerMode != State.KICKING)
+                 && (State.kickerMode != State.KICKER_STOPPING)
+               ) {
+                State.kickerMode = State.KICKER_CALIBRATING;
+                calibrateButtonEnabled = false;
+            }
+        }
+        if (State.kickerMode == State.KICKER_CALIBRATING) {
+            if (shoot.setKickingPosition() == true) {
+                State.kickerMode = State.KICKER_IN_READY_POSITION;
+            }
+        }
+        
         updateDashboard();
     }
 
@@ -186,7 +223,7 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-        shoot.manualShooterControl();
+        shoot.manualShooterControl(-operatorInputs.xboxLeftY());
     }
     
     /**
@@ -198,24 +235,14 @@ public class AdventureRick extends IterativeRobot {
      * 
      */
     private void reenableButtons() {
-        if (!operatorInputs.joystickTriggerPressed()) {
-            shifterTriggerEnabled = true;
-        }
-        if (!requestToKick()) {
-            kickerButtonEnabled = true;
-        }
-        if (!requestToMoveKickerToReady()) {
-            kickerToReadyButtonEnabled = true;
-        }
-        if (!requestToMovePickerToPick()) {
-            pickerToPickButtonEnabled = true;
-        }
-        if (!requestToMovePickerToKick()) {
-            pickerToKickButtonEnabled = true;
-        }
-        if (!requestToMovePickerToStartPosition()) {
-            pickerToStartPositionButtonEnabled = true;
-        }
+        if (!operatorInputs.joystickTriggerPressed()) { shifterTriggerEnabled              = true; }
+        if (!requestToKick())                         { kickerButtonEnabled                = true; }
+        if (!requestToMoveKickerToReady())            { kickerToReadyButtonEnabled         = true; }
+        if (!requestToMovePickerToPick())             { pickerToPickButtonEnabled          = true; }
+        if (!requestToMovePickerToKick())             { pickerToKickButtonEnabled          = true; }
+        if (!requestToMovePickerToStartPosition())    { pickerToStartPositionButtonEnabled = true; }
+        if (!requestToSpinPickerWheelsInReverse())    { pickerWheelReverseButtonEnabled    = true; }
+        if (!requestToSpinPickerWheelsForward())      {pickerWheelForwardButtonEnabled     = true; }
     }
     
     private void updateDashboard() {
@@ -255,5 +282,16 @@ public class AdventureRick extends IterativeRobot {
     private boolean requestToMovePickerToStartPosition() {
         return (operatorInputs.isXboxYButtonPressed());
     }
+    
+    private boolean requestToSpinPickerWheelsInReverse() {
+        return (operatorInputs.isXboxRightBumperPressed());
+    }
 
+    private boolean requestToSpinPickerWheelsForward() {
+        return (operatorInputs.isXboxLeftBumperPressed());
+    }
+    
+    private boolean requestToCalibrate() {
+        return (operatorInputs.isXboxBackButtonPressed());
+    }
 }

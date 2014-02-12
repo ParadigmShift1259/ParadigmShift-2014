@@ -17,26 +17,17 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class Shooter {
     
-    private final int PORT_5 = 5;
+    private final int PWM_TALON_PORT = 5;
     //the current value can not possibly be the previous value the first time through
     private final double ILLEGAL_VOLTAGE = -9999.9; //can't be stopped when it hasn't started
-    
-    private final Joystick xBox = new Joystick(2);
-    private final Talon kickermotor = new Talon(PORT_5);
-    private boolean buttonPressed;
+    private final Talon kickermotor = new Talon(PWM_TALON_PORT);
 
     private double motorSpeed = 1.0;
     private final AnalogChannel analogChannel = new AnalogChannel(1);
     private final DigitalInput digitalInput = new DigitalInput(9);
     private double previousVoltage = ILLEGAL_VOLTAGE;
     private double currentVoltage;
-    //private 
-    boolean inPosition; //made protected for use in AdventureRick
-    boolean kicking;
     private double kickingPos = 180;
-    public boolean caliButtPressed = true;
-    double angle;
-    private boolean pressed;
     private final double MAX_ENCODER_VOLTAGE = 2.0;
 
     public Shooter() {
@@ -71,33 +62,28 @@ public class Shooter {
         kickermotor.set(0);
     }
     
-    public void calibrate() {
-        inPosition = digitalInput.get();
-        buttonPressed = xBox.getRawButton(BACK_BUTTON);
-        angle = getKickerAngle();
-        if (buttonPressed) {
-            caliButtPressed = true;
-        }
-        if (caliButtPressed) {
-            try {
-                if (inPosition) {
-                    kickermotor.set(0);
-                    caliButtPressed = false;
-                } else {
-                    if (angle > kickingPos && angle <= 165) {
-                        kickermotor.set(0.1);
-                    } else if (angle > kickingPos || angle <= 145){
-                        kickermotor.set(-0.1);
-                    }
+    public boolean calibrate() {
+        boolean inPosition = digitalInput.get();
+        double angle = getKickerAngle();
+
+        try {
+            if (inPosition) {
+                kickermotor.set(0);
+            } else {
+                if (angle > kickingPos && angle <= 165) {
+                    kickermotor.set(0.1);
+                } else if (angle > kickingPos || angle <= 145) {
+                    kickermotor.set(-0.1);
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
             }
-        }   
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return (inPosition);
     }
     
     public double getKickerAngle() {
-        angle = analogChannel.getVoltage();
+        double angle = analogChannel.getVoltage();
         //This is the porportion to convert voltage into a degrees angle.
         //There are 360 degree permax encoder voltage.
         angle = angle * (360/MAX_ENCODER_VOLTAGE);
@@ -113,8 +99,8 @@ public class Shooter {
      * @return 
      */
     public boolean setKickingPosition() {
-
-        angle = getKickerAngle();
+        boolean inPosition = false;
+        double angle = getKickerAngle();
         if (angle == kickingPos) {
             inPosition = true;
         }

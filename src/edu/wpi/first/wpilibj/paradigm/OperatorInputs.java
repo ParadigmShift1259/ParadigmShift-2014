@@ -97,6 +97,8 @@ public class OperatorInputs {
     public double xboxLeftY() {
         return deadzoneFilterY(this.xBox.getY(Joystick.Hand.kLeft));
     }
+    
+    // Joystick
 
     public double joystickX() {
         return deadzoneFilterX(this.joystick.getX()); //return the value of the x-axis of the joystick controller
