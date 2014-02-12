@@ -28,9 +28,9 @@ public class Picker {
     private boolean buttonPressed = false; //used to indicate if any button is pressed
     private boolean isGrabbing = false;
     private boolean isPooting = false;
-    private Talon wheelSpinner = new Talon(8); //used in the SpinGrabber method...also is a Talon
+    private Talon wheelSpinner = new Talon(3); //used in the SpinGrabber method...also is a Talon
     private Talon pickerMotor = new Talon(4);
-    private final AnalogChannel analogChannel = new AnalogChannel(4);
+    private final AnalogChannel analogChannel = new AnalogChannel(1);
     private double pickerAngleVoltage;
     private double pickerAngleDegree;
     private double MAX_ENCODER_VOLTAGE = 2.0;
