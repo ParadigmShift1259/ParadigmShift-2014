@@ -95,14 +95,15 @@ public class AdventureRick extends IterativeRobot {
         shoot.calibrate();
         shoot.setKickingPosition();
         //shoot.manualShooterControl();
-        pick.spinGrabber();
-        pick.spinPooter();
+        pick.spinGrabber();//works 2/12/14
+        pick.spinPooter();//works 2/12/14
         //all of these positions make the picker move forward, need to test the encoder value to reset values
-       //pick.setPosAuto();
+        //pick.setPosAuto();
         //pick.setPosKicking();
         //pick.setPosLoading();
         SmartDashboard.putNumber("kicker Motor Power", shoot.getKickerMotorPower());
         SmartDashboard.putBoolean("Blah:", shoot.kicking);
+
         //drive.engageShifter();
         //System.out.println("Trigger " + operatorInputs.joystickTriggerPressed());
         //After the robot has kicked, check to see if it has stopped
@@ -132,7 +133,14 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-        shoot.manualShooterControl();
+        //shoot.manualShooterControl();
+        //System.out.println("Picker Encoder Value Is " + pick.getPickerAngle());
+        
+        System.out.println("Shooter Encoder Value Is :" + shoot.getKickerAngle());
+        //shoot.manualShooterControl();
+        //shoot.autoShoot(4,-0.2);
+        pick.setPosLoading();
+        
     }
 
 }
