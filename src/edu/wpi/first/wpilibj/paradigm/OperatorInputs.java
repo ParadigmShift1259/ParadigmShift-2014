@@ -17,8 +17,9 @@ public class OperatorInputs {
     private double triggerPressed;
     private final int A_BUTTON = 1;
     private final int B_BUTTON = 2;
+    private final int X_BUTTON = 3;
     private final int Y_BUTTON = 4;
-    private final int RIGHT_BUMPER = 6; //this is the x butt on the controller
+    private final int RIGHT_BUMPER = 6;
     private final int LEFT_BUMPER = 5; //this is is the poot butt
     private final int BACK_BUTTON = 7;
     private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
@@ -74,6 +75,9 @@ public class OperatorInputs {
         return xBox.getRawButton(LEFT_BUMPER);
     }
     
+    public boolean isShootButtonPressed(){
+        return xBox.getRawButton(LEFT_BUMPER);
+    }
     public double xboxRightX() {
         return deadzoneFilterX(this.xBox.getX(Joystick.Hand.kRight));
     }
