@@ -22,9 +22,10 @@ public class Shooter {
     
     private final int PORT_5 = 5;
     //the current value can not possibly be the previous value the first time through
-    private final double ILLEGAL_VOLTAGE = -9999.9; //can't be stopped when it hasn't started
-    
+   private final double ILLEGAL_ANGLE = -9999.9; //can't be stopped when it hasn't started
+    OperatorInputs oi = new OperatorInputs();
     private final Joystick xBox = new Joystick(2);
+    
     private final Talon kickermotor = new Talon(PORT_5);
     private boolean buttonPressed;
     //private double triggerPressed;
@@ -38,23 +39,24 @@ public class Shooter {
     private final int BACK_BUTTON = 7;
     private final int XBOX_TRIGGERS = 3; //renamed because this is both the left trigger and the right trigger
     private double motorSpeed = 1.0;
-    private final AnalogChannel analogChannel = new AnalogChannel(2);
+    private final AnalogChannel analogChannel = new AnalogChannel(1);
     private final DigitalInput digitalInput = new DigitalInput(9);
-    private double previousVoltage = ILLEGAL_VOLTAGE;
-    private double currentVoltage;
+    private double previousAngle = ILLEGAL_ANGLE;
+    //private double previousAngle = -1;
+    private double currentAngle;
     //private 
     boolean inPosition; //made protected for use in AdventureRick
-    boolean kicking;
-    private String selfdestruct = "PERKELES!";
+    boolean kicking = false;
     private double kickingPos = 180;
     public boolean caliButtPressed = true;
     double angle;
-    private int MAX_ALLOWED_ANGLE = 165;
-    private int MIN_ALLOWED_ANGLE = 145;
+    private final int MAX_ALLOWED_ANGLE = 165;
+    private final int MIN_ALLOWED_ANGLE = 145;
     private boolean pressed;
     private boolean calibrated = false;
     private boolean settingPos = false;
-    private final double MAX_ENCODER_VOLTAGE = 2.0;
+    private final double MAX_ENCODER_VOLTAGE = 5.0;
+    private Timer timer = new Timer();
 
     public Shooter(OperatorInputs _operatorInputs) {
         this.operatorInputs = _operatorInputs;
@@ -65,12 +67,13 @@ public class Shooter {
     }
     
     public boolean isKickerStopped() {
-        currentVoltage = analogChannel.getVoltage(); //Read current voltage
-        if (previousVoltage >= currentVoltage-(MAX_ENCODER_VOLTAGE*0.1) && previousVoltage <= currentVoltage+(MAX_ENCODER_VOLTAGE*0.1)) { 
-            previousVoltage = ILLEGAL_VOLTAGE; //Set back so it can run again 
+        //currentAngle = analogChannel.getVoltage(); //Read current voltage
+        currentAngle = getKickerAngle();
+        if (previousAngle >= currentAngle-(5) && previousAngle <= currentAngle+(5)) { 
+            previousAngle = ILLEGAL_ANGLE; //Set back so it can run again 
             return true;
         } else {
-            previousVoltage = currentVoltage; //current becomes previous
+            previousAngle = currentAngle; //current becomes previous
             return false;
         }
         
@@ -137,6 +140,7 @@ public class Shooter {
         //There are 360 degree permax encoder voltage.
         angle = angle * (360/MAX_ENCODER_VOLTAGE);
         return angle;
+        
     }
     
     //Added for Saturday Night to program shooter - 2/8/2014 E A Cobb
@@ -146,10 +150,27 @@ public class Shooter {
         }
     }  
     
+    public void autoShoot(double time,double power){
+        double base = 0.0;
+        if(oi.isShootButtonPressed()){
+            
+            timer.start();
+            System.out.println("Loop should be starting");
+            while(base + timer.get()<time){
+                kickermotor.set(power);
+                System.out.println("Motor should be going");
+                System.out.println(timer.get());
+            }
+            kickermotor.set(0);
+        }
+        
+        
+    }
+    
     public void setKickingPosition() {
         triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS) && 
                 xBox.getRawAxis(XBOX_TRIGGERS) <= LEFT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
-        if (calibrated && triggerPressed && !kicking && !caliButtPressed && isKickerStopped()){ //changed for testing on Sturday night 2/8/2014 - E A COBB
+        if (/*calibrated &&*/ triggerPressed && !kicking && !caliButtPressed && isKickerStopped()){ //changed for testing on Sturday night 2/8/2014 - E A COBB
             pressed = true;
             buttonPressed = false;
             settingPos = true;
