@@ -99,6 +99,7 @@ public class AdventureRick extends IterativeRobot {
         compressor.start();
 //shift when the trigger is pressed
         drive.shift();
+        pickerPID.steppedSetpoint();
         drive.childProofing();
 //        drive.shiftHigh();
 //        drive.shiftLow();
