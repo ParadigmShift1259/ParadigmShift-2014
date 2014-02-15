@@ -155,14 +155,17 @@ public class Shooter {
 
             timer.start();
             //System.out.println("Loop should be starting");
-            while (base + timer.get() < time) {
-                kickermotor.set(power);
-                //System.out.println("Motor should be going");
-                //ystem.out.println(timer.get());
-            }
-            kickermotor.set(0);
         }
+        if (base + timer.get() < time) {
+            kickermotor.set(power);
+            //System.out.println("Motor should be going");
+            //ystem.out.println(timer.get());
+        } else {
+            kickermotor.set(0);
+            timer.stop();
+            timer.reset();
 
+        }
     }
 
     public void setKickingPosition() {

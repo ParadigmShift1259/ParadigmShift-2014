@@ -22,8 +22,14 @@ public class OperatorInputs {
     private final int RIGHT_BUMPER = 6;
     private final int LEFT_BUMPER = 5; //this is is the poot butt
     private final int BACK_BUTTON = 7;
-    private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
-    private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
+    //private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
+    private final int XBOX_TRIGGER = 3;
+
+    private final double RIGHT_TRIGGER_MIN = -1.0;
+    private final double RIGHT_TRIGGER_MAX = -0.5;
+    private final double LEFT_TRIGGER_MIN = 0.5;
+    private final double LEFT_TRIGGER_MAX = 1.0;
+
     private Joystick joystick = new Joystick(1); //Created and initialized the joystick controller
     private Joystick xBox = new Joystick(2); //Created and initialized the xbox controller
     final double DEADZONE_Y = 0.05;
@@ -41,13 +47,13 @@ public class OperatorInputs {
     }
 
     public boolean isShooterTriggerPressed() {
-        triggerPressed = xBox.getAxis(RIGHT_TRIGGER);
-        return (triggerPressed >= 0.5);
+        triggerPressed = xBox.getRawAxis(XBOX_TRIGGER);
+        return (RIGHT_TRIGGER_MIN <= triggerPressed && triggerPressed <= RIGHT_TRIGGER_MAX);
     }
 
     public boolean isSetKickerPositionButtonPressed() {
-        triggerPressed = xBox.getAxis(LEFT_TRIGGER);
-        return (triggerPressed >= 0.5);
+        triggerPressed = xBox.getRawAxis(XBOX_TRIGGER);
+        return (LEFT_TRIGGER_MIN <= triggerPressed && triggerPressed <= LEFT_TRIGGER_MAX);
     }
 
     //change later
