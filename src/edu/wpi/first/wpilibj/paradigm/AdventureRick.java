@@ -27,7 +27,9 @@ public class AdventureRick extends IterativeRobot {
     OperatorInputs operatorInputs;
     Compressor compressor;
     Shooter shoot;
-    Picker pick;
+    PickerPID pickerPID;
+    //Picker pick;
+
     //Preferences prefs;
     private boolean checkForKickerStop = false;
 
@@ -45,9 +47,10 @@ public class AdventureRick extends IterativeRobot {
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
         shoot = new Shooter(operatorInputs);//add parameters as needed
+        pickerPID = new PickerPID();
         shoot.caliButtPressed = true;
-        pick = new Picker(operatorInputs);//add parameters as needed
-        compressor.start();
+        //pick = new Picker(operatorInputs);//add parameters as needed
+        //compressor.start();
         drive.leftEncoder.start();
         drive.rightEncoder.start();
         drive.time.start();
@@ -76,12 +79,20 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically (every 20-25 ms) during autonomous
      */
     public void autonomousPeriodic() {
-        shoot.calibrate();
+        //shoot.calibrate();
+        pickerPID.enable();
+       
+        //SmartDashboard.putData("PID",pickerPID.getPIDController());
     }
 
     /**
      * This function is called periodically during operator control
      */
+    public void disabledInit(){
+        pickerPID.disable();
+        pickerPID.getPIDController().reset();
+        super.disabledInit();
+    }
     public void teleopPeriodic() {
         drive.setPower();
         //remove if not needed
@@ -95,8 +106,8 @@ public class AdventureRick extends IterativeRobot {
         shoot.calibrate();
         shoot.setKickingPosition();
         //shoot.manualShooterControl();
-        pick.spinGrabber();//works 2/12/14
-        pick.spinPooter();//works 2/12/14
+//        pick.spinGrabber();//works 2/12/14
+//        pick.spinPooter();//works 2/12/14
         //all of these positions make the picker move forward, need to test the encoder value to reset values
         //pick.setPosAuto();
         //pick.setPosKicking();
@@ -125,7 +136,7 @@ public class AdventureRick extends IterativeRobot {
 
         SmartDashboard.putNumber("Speed", drive.totalSpeed);
         //SmartDashboard.putNumber("Kicker Angle", shoot.angle); *Don't need to display, not sure what will be displayed.
-//        drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
+        //drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
     }
 
     /**
@@ -133,14 +144,16 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-        //shoot.manualShooterControl();
-        //System.out.println("Picker Encoder Value Is " + pick.getPickerAngle());
-        
-        System.out.println("Shooter Encoder Value Is :" + shoot.getKickerAngle());
-        //shoot.manualShooterControl();
-        //shoot.autoShoot(4,-0.2);
-        pick.setPosLoading();
-        
+
+        //pickerPID.enable();
+//        System.out.println("Picker Encoder Value Is " + pick.getPickerAngle());
+//
+//        System.out.println("Shooter Encoder Value Is :" + shoot.getKickerAngle());
+
+        //System.out.println(pick.pickerPID.getPickerAngle());
+//
+//        shoot.manualShooterControl();
+//        shoot.autoShoot(5, -.1);
     }
 
 }

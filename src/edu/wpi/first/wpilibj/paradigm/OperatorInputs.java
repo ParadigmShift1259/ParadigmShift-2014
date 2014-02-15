@@ -33,7 +33,7 @@ public class OperatorInputs {
 //        this.shiftUp = true;
 //    }
     public OperatorInputs() {
-    
+
     }
 
     public void readAll() {
@@ -74,10 +74,11 @@ public class OperatorInputs {
     public boolean isReleaseButtonPressed() {
         return xBox.getRawButton(LEFT_BUMPER);
     }
-    
-    public boolean isShootButtonPressed(){
+
+    public boolean isShootButtonPressed() {
         return xBox.getRawButton(LEFT_BUMPER);
     }
+
     public double xboxRightX() {
         return deadzoneFilterX(this.xBox.getX(Joystick.Hand.kRight));
     }
@@ -121,7 +122,7 @@ public class OperatorInputs {
 
     }
 
-        private double deadzoneFilterX(double joyStickValue) {
+    private double deadzoneFilterX(double joyStickValue) {
         if (Math.abs(joyStickValue) <= DEADZONE_X) {
             return 0;
         }
@@ -134,7 +135,7 @@ public class OperatorInputs {
 
     }
 
-        public boolean joystickTriggerPressed() {
+    public boolean joystickTriggerPressed() {
         return this.joystick.getTrigger();  //return the value of the joystick trigger
 
     }
@@ -151,5 +152,5 @@ public class OperatorInputs {
     public boolean shiftHigh() {
         return this.joystick.getRawButton(4);
     }
-    
+
 }
