@@ -25,8 +25,8 @@ public class DriveTrain {
     final int SHIFT_PORT_HIGH = 2;
     final int SHIFT_MODULE = 1;
 
-    private Talon leftTalons; //has to motors and motor controllers 
-    private Talon rightTalons;
+    public Talon leftTalons; //has to motors and motor controllers 
+    public Talon rightTalons;
     private Solenoid gearShiftLow; // and a gear shifter
     private Solenoid gearShiftHigh;
     Encoder leftEncoder;

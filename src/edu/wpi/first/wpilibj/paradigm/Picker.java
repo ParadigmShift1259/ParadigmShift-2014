@@ -21,14 +21,22 @@ public class Picker {
 
     OperatorInputs operatorInputs;
     private Joystick xBox = new Joystick(2);
-    private int loadPos = 346; //change value later, position while loading
-    private int shootPos = 225; //change value later, position while shooting/aiming
-    private int autoPos = 36; //change value later, position at the beginning of the auto/match
+    private double pickPos = -1.1; //change value later, position while loading
+    public double kickPos = 0.31; //change value later, position while shooting/aiming
+    private double trussPos = 0.1; //change value later, position at the beginning of the auto/match
     private double currentAngle; //the picker's current pos(ition)
     private final int RIGHT_BUMPER = 6; //this is the x butt on the controller
     private final int BUTTON_LB = 5; //this is is the poot butt
     private boolean buttonPressed = false; //used to indicate if any button is pressed
+    private boolean isKickPos = false;
+    private boolean isPickPos = false;
+    private boolean isTrussPos = false;
     private boolean isGrabbing = false;
+    private static final double KP_KICKX = 0.5;
+    private static final double KP_PICK = 0.4;
+    private static final double KP_TRUSS = 0.8;
+    private static final double KI_TRUSS = 0.025;
+    private static final double KI_PICKnKICKX = 0.01;
     private boolean isPooting = false;
     private Talon wheelSpinner = new Talon(3); //used in the SpinGrabber method...also is a Talon
     // private Talon pickerMotor = new Talon(4);
@@ -44,15 +52,76 @@ public class Picker {
     private final int B_BUTTON = 2;
     private final int Y_BUTTON = 4;
     boolean isPicking;
+    private boolean isManual;
 
-    public PickerPID pickerPID = new PickerPID();
-    //boolean isPooting; already defined
+    public PickerPID pickerPID;
+
+//boolean isPooting; already defined
 
     /*
      This is the constructor for the Picker class.
      */
-    public Picker(OperatorInputs _operatorInputs) {
+    public Picker(OperatorInputs _operatorInputs, PickerPID pickerPid) {
         this.operatorInputs = _operatorInputs;
+        pickerPID = pickerPid;
+    }
+
+    public void kick() {
+        buttonPressed = operatorInputs.xBoxXButton();
+        if (buttonPressed) {
+            isKickPos = true;
+            PickerPID.Kp = KP_KICKX;
+            PickerPID.Ki = KI_PICKnKICKX;
+            pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
+            pickerPID.getPIDController().reset();
+            pickerPID.enable();
+            pickerPID.setSetpoint(kickPos);
+        } else if (!buttonPressed) {
+            isKickPos = false;
+            //?
+
+        }
+    }
+
+    public void truss() {
+        buttonPressed = xBox.getRawButton(Y_BUTTON);
+        if (buttonPressed) {
+            isTrussPos = true;
+            if (pickerPID.getSetpoint()<trussPos) {
+                PickerPID.Kp = KP_TRUSS;
+                PickerPID.Ki = KI_TRUSS;
+            }else{
+                PickerPID.Kp = KP_KICKX;
+                PickerPID.Ki = KI_PICKnKICKX;
+            }
+                pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
+                pickerPID.getPIDController().reset();
+                pickerPID.enable();
+                pickerPID.setSetpoint(trussPos);
+            } else if (!buttonPressed) {
+                isTrussPos = false;
+                //?
+
+            }
+        }
+
+    
+
+    public void pick() {
+        buttonPressed = xBox.getRawButton(B_BUTTON);
+        if (buttonPressed) {
+            isPickPos = true;
+            PickerPID.Kp = KP_PICK;
+            PickerPID.Ki = KI_PICKnKICKX;
+            pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
+            pickerPID.getPIDController().reset();
+            pickerPID.enable();
+            pickerPID.setSetpoint(pickPos);
+        } else if (!buttonPressed) {
+            isPickPos = false;
+            //?
+
+        }
     }
 
     /*
@@ -103,7 +172,7 @@ public class Picker {
         //System.out.println("Beginning of method");
         buttonPressed = xBox.getRawButton(5);
         //currentAngle = getPickerAngle();
-        double err = currentAngle - loadPos;//move to class level if needed
+        double err = currentAngle - pickPos;//move to class level if needed
         //pickerMotor.set(0.0);
         if (buttonPressed /*&& !settingPos2 && !settingPos3*/) { //Cannot set two at once
             //System.out.println("Button pressed");
@@ -128,43 +197,59 @@ public class Picker {
         }
         //System.out.println("End of method");
     }
+
+    public void manualPickerControl() {
+
+        if (!settingPos1 && !settingPos2 && !settingPos3 && Math.abs(operatorInputs.xboxLeftY()) > 0) {
+            //pickerPID.disable();
+
+            pickerPID.set(-operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
+            //System.out.println("TALON_OUT " + pickerPID.getTalonValue());
+            //pickerPID.getPIDController().reset();
+            isManual = true;
+        } else if (isManual && operatorInputs.xboxLeftY() == 0) {
+            isManual = false;
+            pickerPID.set(0);
+        }
+        //System.out.println("controllerXboxY " + operatorInputs.xboxLeftY());
+    }
     /*
      public void setPosKicking() {
-     buttonPressed = xBox.getRawButton(B_BUTTON);
-     currentAngle = getPickerAngle();
+     buttonPressed = operatorInputs.isPickerKickingPositionButtonPressed();
+     currentAngle = pickerPID.getPickerAngle();
      if (buttonPressed && !settingPos1 && !settingPos3) {
      settingPos2 = true;
      }
      if (settingPos2 = true) {
-     if (currentAngle > shootPos) {
-     pickerMotor.set(-0.7);
-     } else if (currentAngle < shootPos) {
-     pickerMotor.set(0.7);
-     } else if (currentAngle == shootPos) {
-     pickerMotor.set(0);
+     if (currentAngle > kickPos) {
+     pickerPID.set(-0.7);
+     } else if (currentAngle < kickPos) {
+     pickerPID.set(0.7);
+     } else if (currentAngle == kickPos) {
+     pickerPID.set(0);
      settingPos2 = false;
      }
      }
      }
-
-     public void setPosAuto() {
-     buttonPressed = xBox.getRawButton(Y_BUTTON);
-     currentAngle = getPickerAngle();
-     if (buttonPressed && !settingPos1 && !settingPos2) {
-     settingPos3 = true;
-     }
-     if (settingPos3 = true) {
-     if (currentAngle > autoPos) {
-     pickerMotor.set(-0.7);
-     } else if (currentAngle < autoPos) {
-     pickerMotor.set(0.7);
-     } else if (currentAngle == autoPos) {
-     pickerMotor.set(0);
-     settingPos3 = false;
-     }
-     }
-     }
      */
-    //need to figure out moveable parts on the picker in order to assign functions
 
+    public void setPosAuto() {
+        buttonPressed = xBox.getRawButton(Y_BUTTON);
+        currentAngle = pickerPID.getPickerAngle();
+        if (buttonPressed && !settingPos1 && !settingPos2) {
+            settingPos3 = true;
+        }
+        if (settingPos3 = true) {
+            if (currentAngle > trussPos) {
+                pickerPID.set(-0.7);
+            } else if (currentAngle < trussPos) {
+                pickerPID.set(0.7);
+            } else if (currentAngle == trussPos) {
+                pickerPID.set(0);
+                settingPos3 = false;
+            }
+        }
+    }
+
+    //need to figure out moveable parts on the picker in order to assign functions
 }

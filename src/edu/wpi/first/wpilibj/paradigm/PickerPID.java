@@ -16,40 +16,53 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class PickerPID extends PIDSubsystem {
 
-    private static final double Kp = 2.0;
-    private static final double Ki = 0.03;
-    private static final double Kd = 1.6;
+    public static double Kp = 1.0;
+    public static double Ki = 0.025; //0.03
+    public static double Kd = 4.5; //1.6
+    public static double position = 0.35;
+    public static double outputBounds = 0.7;
 
     private double currentAngle;
     public static final double LOAD_ANGLE = 346;
     public static final double KICKING_ANGLE = 226;
     public static final double AUTO_ANGLE = 255;
     public static final double TRUSS_ANGLE = 250;
-    private final double step = .4; //added by John
+    public static double VOLTAGE_CORRECTION = 2.07;
+    private static final double step = .4; //aded by John
     private double desiredPos; //added by John
-    public boolean posSet; //added by John
+    private boolean posSet; //added by John
     private double nextStep; //added by John
-    private final int pickerChannel = 2;
-    private final AnalogChannel analogChannel = new AnalogChannel(pickerChannel);
-    private final Talon pickerMotor = new Talon(4);
+    public static double TOLERANCE = 0.02;
+    private static final int pickerChannel = 2;
+    private static final AnalogChannel analogChannel = new AnalogChannel(pickerChannel);
+    private static final Talon pickerMotor = new Talon(4);
     private double pickerAngleVoltage;
     private double pickerAngleDegree;
-    private final double MAX_ENCODER_VOLTAGE = 5.0;
+    private static final double MAX_ENCODER_VOLTAGE = 5.0;
 
     // Initialize your subsystem here
     public PickerPID() {
         super("PickerPID", Kp, Ki, Kd);
 
-        getPIDController().setInputRange(0, 5);
-        getPIDController().setOutputRange(-1.0, 1.0);
-        getPIDController().setContinuous(false);
-        setAbsoluteTolerance(0.025);
-        setSetpoint(4.4);
-        getPIDController().startLiveWindowMode();
+        getPIDController().setInputRange(VOLTAGE_CORRECTION - 5, VOLTAGE_CORRECTION);
+        getPIDController().setOutputRange(-outputBounds, outputBounds);
+        getPIDController().setContinuous(true);
+        setAbsoluteTolerance(TOLERANCE);
+        setSetpoint(position);//4.4
         // Use these to get going:
         // setSetpoint() -  Sets where the PID controller should move the system
         //                  to
         // enable() - Enables the PID controller.
+    }
+
+    public double getVoltage() {
+        return VOLTAGE_CORRECTION - analogChannel.getVoltage();
+
+    }
+
+    public double getTalonValue() {
+
+        return pickerMotor.get();
     }
 
     public void setNewSetpoint(double desiredPos) //added by John
@@ -61,11 +74,11 @@ public class PickerPID extends PIDSubsystem {
     public void steppedSetpoint() //added by John
     {
         if (!posSet) {
-            double currentPos = analogChannel.getVoltage();
+            double currentPos = VOLTAGE_CORRECTION - analogChannel.getVoltage();
             //determines to go higher or lower
             if ((desiredPos - currentPos) > 0) {
                 //if it is out of the step do a step else set to end
-                if ((nextStep - currentPos) > 0.025) {//change 0.025 to tolerance variable
+                if ((nextStep - currentPos) > TOLERANCE) {//change 0.025 to TOLERANCE variable
 
                 } else if (Math.abs(desiredPos - currentPos) > step) {
                     nextStep = currentPos + step;
@@ -76,7 +89,7 @@ public class PickerPID extends PIDSubsystem {
                 }
             } else {
                 //if it is out of the step do a step else set to end
-                if ((currentPos - nextStep) > 0.025) {//change 0.025 to tolerance variable
+                if ((currentPos - nextStep) > TOLERANCE) {//change 0.025 to TOLERANCE variable
                 } else if (Math.abs(desiredPos - currentPos) > step) {
                     nextStep = currentPos - step;
                     setSetpoint(nextStep);
@@ -98,24 +111,36 @@ public class PickerPID extends PIDSubsystem {
 //        // e.g. a sensor, like a potentiometer:
 //        // yourPot.getAverageVoltage() / kYourMaxVoltage;
 //        System.out.println("Picker Angle = " + getPickerAngle());
-        System.out.println(analogChannel.getVoltage());
-        return pickerAngleVoltage = analogChannel.getVoltage(); //comment
+        //System.out.println(VOLTAGE_CORRECTION - analogChannel.getVoltage());
+        SmartDashboard.putNumber("Picker Voltage Angle = ", VOLTAGE_CORRECTION - analogChannel.getVoltage());
+        SmartDashboard.putNumber("Position", getPIDController().getSetpoint());
+        return pickerAngleVoltage = VOLTAGE_CORRECTION - analogChannel.getVoltage(); //comment
 //return getPickerAngle();
     }
 
     public double getPickerAngle() {
         pickerAngleVoltage = analogChannel.getVoltage(); //comment
         pickerAngleDegree = pickerAngleVoltage * (360 / MAX_ENCODER_VOLTAGE); //Converts Voltage to degrees
-        System.out.println("Picker Angle = " + pickerAngleDegree);
+        //System.out.println("Picker Angle = " + pickerAngleDegree);
         return pickerAngleDegree;
+    }
+
+    public void set(double input) {
+        //System.out.println("Input :" + input);
+        if (!getPIDController().isEnable()) {
+            pickerMotor.set(input);
+
+        }
+        //System.out.println(getPIDController().isEnable());
+
     }
 
     protected void usePIDOutput(double output) {
         // Use output to drive your system, like a motor
         // e.g. yourMotor.set(output);
-        pickerMotor.set(output);
-        System.out.println("Picker PID Output = " + output);
-        //System.out.println("Period: " + getPIDController().)
+        pickerMotor.set(-output);
+        System.out.println("Picker PID Output = " + (-output));
+        SmartDashboard.putNumber("Picker PID Output Value = ", (-output));
     }
 
 }

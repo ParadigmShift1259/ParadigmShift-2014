@@ -48,6 +48,7 @@ public class OperatorInputs {
 
     public boolean isShooterTriggerPressed() {
         triggerPressed = xBox.getRawAxis(XBOX_TRIGGER);
+        System.out.println("Trigger Pressed " + (RIGHT_TRIGGER_MIN <= triggerPressed && triggerPressed <= RIGHT_TRIGGER_MAX));
         return (RIGHT_TRIGGER_MIN <= triggerPressed && triggerPressed <= RIGHT_TRIGGER_MAX);
     }
 
@@ -66,13 +67,17 @@ public class OperatorInputs {
     }
 
     public boolean isPickerKickingPositionButtonPressed() {
-        return xBox.getRawButton(B_BUTTON);
-    }
-
-    public boolean isPickingAutoPositionButtonPressed() {
         return xBox.getRawButton(Y_BUTTON);
     }
 
+    public boolean isPickingAutoPositionButtonPressed() {
+        return xBox.getRawButton(B_BUTTON);
+    }
+    
+    public boolean xBoxXButton() {
+        return xBox.getRawButton(X_BUTTON);
+    }
+    
     public boolean isGrabbingButtonPressed() {
         return xBox.getRawButton(RIGHT_BUMPER);
     }

@@ -56,7 +56,7 @@ public class Shooter {
     private boolean calibrated = false;
     private boolean settingPos = false;
     private final double MAX_ENCODER_VOLTAGE = 5.0;
-    private Timer timer = new Timer();
+    public Timer shootTimer = new Timer();
 
     public Shooter(OperatorInputs _operatorInputs) {
         this.operatorInputs = _operatorInputs;
@@ -145,26 +145,44 @@ public class Shooter {
     //Added for Saturday Night to program shooter - 2/8/2014 E A Cobb
     public void manualShooterControl() {
         if (!kicking) {
-            kickermotor.set(-operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
+            kickermotor.set(operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
+        }
+    }
+
+    public void quickButtonShoot(double time, double power, double delay) {
+        if (oi.isShooterTriggerPressed()) {
+            kicking = true;
+            shootTimer.start();
+            //shootTimer.reset();
+            //System.out.println("Loop should be starting");
+        }
+        if ((shootTimer.get() > delay) && (shootTimer.get()<time) )
+        {
+            kickermotor.set(power);
+        }
+            //System.out.println("Motor should be going");
+            //ystem.out.println(shootTimer.get());
+        if (shootTimer.get() > time) { 
+            kickermotor.set(0);
+            shootTimer.stop();
+            shootTimer.reset();
+            kicking = false;
+
         }
     }
 
     public void autoShoot(double time, double power) {
         double base = 0.0;
-        if (oi.isShooterTriggerPressed()) {
+//        shootTimer.start();
+        //System.out.println("Loop should be starting");
 
-            timer.start();
-            //System.out.println("Loop should be starting");
-        }
-        if (base + timer.get() < time) {
+        if (base + shootTimer.get() < time) {
             kickermotor.set(power);
             //System.out.println("Motor should be going");
-            //ystem.out.println(timer.get());
+            //ystem.out.println(shootTimer.get());
         } else {
             kickermotor.set(0);
-            timer.stop();
-            timer.reset();
-
+            shootTimer.stop();
         }
     }
 
