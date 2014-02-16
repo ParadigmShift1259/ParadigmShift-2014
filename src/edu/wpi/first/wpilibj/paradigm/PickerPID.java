@@ -20,7 +20,7 @@ public class PickerPID extends PIDSubsystem {
     public static double Ki = 0.025; //0.03
     public static double Kd = 4.5; //1.6
     public static double position = 0.35;
-    public static double outputBounds = 0.7;
+    public static double outputBounds = 0.8;
 
     private double currentAngle;
     public static final double LOAD_ANGLE = 346;

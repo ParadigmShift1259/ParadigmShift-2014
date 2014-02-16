@@ -95,6 +95,17 @@ public class AdventureRick extends IterativeRobot {
 
     public void teleopInit() {
         compressor.start();
+        PickerPID.VOLTAGE_CORRECTION = prefs.getDouble("Voltage_Correction", PickerPID.VOLTAGE_CORRECTION);
+        Picker.KP_HARD = prefs.getDouble("KP_HARD", Picker.KP_HARD);
+        Picker.KP_SOFT = prefs.getDouble("KP_SOFT", Picker.KP_SOFT);
+        Picker.KP_MEDIUM = prefs.getDouble("KP_MEDIUM", Picker.KP_MEDIUM);
+        Picker.KI_HARD = prefs.getDouble("KI_HARD", Picker.KI_HARD);
+        Picker.KI_MEDIUM = prefs.getDouble("KI_MEDIUM", Picker.KI_MEDIUM);
+        Picker.KI_SOFT = prefs.getDouble("KI_SOFT", Picker.KI_SOFT);
+        Picker.KD_HARD = prefs.getDouble("KD_HARD", Picker.KD_HARD);
+        Picker.KD_MEDIUM = prefs.getDouble("KD_MEDIUM", Picker.KD_MEDIUM);
+        Picker.KD_SOFT = prefs.getDouble("KD_SOFT", Picker.KD_SOFT);
+        /*
         PickerPID.Kp = prefs.getDouble("Kp", PickerPID.Kp);
         PickerPID.Ki = prefs.getDouble("Ki", PickerPID.Ki);
         PickerPID.Kd = prefs.getDouble("Kd", PickerPID.Kd);
@@ -103,9 +114,9 @@ public class AdventureRick extends IterativeRobot {
         pickerPID.setSetpoint(PickerPID.position);
         PickerPID.TOLERANCE = prefs.getDouble("Tolerance", PickerPID.TOLERANCE);
         pickerPID.setAbsoluteTolerance(PickerPID.TOLERANCE);
-        PickerPID.VOLTAGE_CORRECTION = prefs.getDouble("Voltage_Correction", PickerPID.VOLTAGE_CORRECTION);
         PickerPID.outputBounds = prefs.getDouble("output_bound", PickerPID.outputBounds);
         pickerPID.getPIDController().setOutputRange(-PickerPID.outputBounds, PickerPID.outputBounds);
+        */
         pickerPID.enable();
         pickerPID.setSetpoint(pick.kickPos);
     }
@@ -162,7 +173,7 @@ public class AdventureRick extends IterativeRobot {
         drive.childProofing();
 //        drive.shiftHigh();
 //        drive.shiftLow();
-        shoot.kick();
+        //shoot.kick();
         shoot.calibrate();
         shoot.setKickingPosition();
         shoot.manualShooterControl();

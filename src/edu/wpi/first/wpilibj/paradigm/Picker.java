@@ -21,9 +21,9 @@ public class Picker {
 
     OperatorInputs operatorInputs;
     private Joystick xBox = new Joystick(2);
-    private double pickPos = -1.1; //change value later, position while loading
-    public double kickPos = 0.31; //change value later, position while shooting/aiming
-    private double trussPos = 0.1; //change value later, position at the beginning of the auto/match
+    private double pickPos = -1.00; //change value later, position while loading
+    public double kickPos = 0.56; //change value later, position while shooting/aiming
+    private double trussPos = 0.28; //change value later, position at the beginning of the auto/match
     private double currentAngle; //the picker's current pos(ition)
     private final int RIGHT_BUMPER = 6; //this is the x butt on the controller
     private final int BUTTON_LB = 5; //this is is the poot butt
@@ -32,11 +32,15 @@ public class Picker {
     private boolean isPickPos = false;
     private boolean isTrussPos = false;
     private boolean isGrabbing = false;
-    private static final double KP_KICKX = 0.5;
-    private static final double KP_PICK = 0.4;
-    private static final double KP_TRUSS = 0.8;
-    private static final double KI_TRUSS = 0.025;
-    private static final double KI_PICKnKICKX = 0.01;
+    public static double KP_MEDIUM = 0.4;
+    public static double KP_SOFT = 0.2;
+    public static double KP_HARD = 1.0;
+    public static double KI_HARD = 0.025;
+    public static double KI_MEDIUM = 0.025;
+    public static double KI_SOFT = 0.01;
+    public static double KD_HARD = 2.5;
+    public static double KD_MEDIUM = 3.0;
+    public static double KD_SOFT = 4.5;
     private boolean isPooting = false;
     private Talon wheelSpinner = new Talon(3); //used in the SpinGrabber method...also is a Talon
     // private Talon pickerMotor = new Talon(4);
@@ -70,8 +74,9 @@ public class Picker {
         buttonPressed = operatorInputs.xBoxXButton();
         if (buttonPressed) {
             isKickPos = true;
-            PickerPID.Kp = KP_KICKX;
-            PickerPID.Ki = KI_PICKnKICKX;
+            PickerPID.Kp = KP_SOFT;
+            PickerPID.Ki = KI_MEDIUM;
+            PickerPID.Kd = KD_MEDIUM;
             pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
             pickerPID.getPIDController().reset();
             pickerPID.enable();
@@ -86,13 +91,22 @@ public class Picker {
     public void truss() {
         buttonPressed = xBox.getRawButton(Y_BUTTON);
         if (buttonPressed) {
+            //System.out.println(pickerPID.getSetpoint());
             isTrussPos = true;
-            if (pickerPID.getSetpoint()<trussPos) {
-                PickerPID.Kp = KP_TRUSS;
-                PickerPID.Ki = KI_TRUSS;
-            }else{
-                PickerPID.Kp = KP_KICKX;
-                PickerPID.Ki = KI_PICKnKICKX;
+            if (pickerPID.getPosition()>trussPos) {
+                //to move from kick
+                PickerPID.Kp = KP_HARD;
+                PickerPID.Ki = KI_HARD;
+                PickerPID.Kd = KD_HARD;
+            }
+            else if(pickerPID.getPosition()==trussPos)
+            {
+            }
+            else{
+                // to move from pick
+                PickerPID.Kp = KP_SOFT;
+                PickerPID.Ki = KI_MEDIUM;
+                PickerPID.Kd = KD_MEDIUM;
             }
                 pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
                 pickerPID.getPIDController().reset();
@@ -111,8 +125,9 @@ public class Picker {
         buttonPressed = xBox.getRawButton(B_BUTTON);
         if (buttonPressed) {
             isPickPos = true;
-            PickerPID.Kp = KP_PICK;
-            PickerPID.Ki = KI_PICKnKICKX;
+            PickerPID.Kp = KP_MEDIUM;
+            PickerPID.Ki = KI_SOFT;
+            PickerPID.Kd = KD_SOFT;
             pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
             pickerPID.getPIDController().reset();
             pickerPID.enable();
