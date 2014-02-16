@@ -33,13 +33,13 @@ public class Picker {
     private boolean isTrussPos = false;
     private boolean isGrabbing = false;
     public static double KP_MEDIUM = 0.4;
-    public static double KP_SOFT = 0.2;
-    public static double KP_HARD = 1.0;
+    public static double KP_SOFT = 1.0;
+    public static double KP_HARD = 1.3;
     public static double KI_HARD = 0.025;
-    public static double KI_MEDIUM = 0.025;
-    public static double KI_SOFT = 0.01;
+    public static double KI_MEDIUM = 0.03;
+    public static double KI_SOFT = 0.005;
     public static double KD_HARD = 2.5;
-    public static double KD_MEDIUM = 3.0;
+    public static double KD_MEDIUM = 12.0;
     public static double KD_SOFT = 4.5;
     private boolean isPooting = false;
     private Talon wheelSpinner = new Talon(3); //used in the SpinGrabber method...also is a Talon
@@ -48,10 +48,10 @@ public class Picker {
 //    private final AnalogChannel analogChannel = new AnalogChannel(pickerChannel);
     private double pickerAngleVoltage;
     private double pickerAngleDegree;
-    private double MAX_ENCODER_VOLTAGE = 5.0;
-    private boolean settingPos1 = false;
-    private boolean settingPos2 = false;
-    private boolean settingPos3 = false;
+   // private double MAX_ENCODER_VOLTAGE = 5.0;
+   // private boolean settingPos1 = false;
+   // private boolean settingPos2 = false;
+   // private boolean settingPos3 = false;
     private final int A_BUTTON = 1;
     private final int B_BUTTON = 2;
     private final int Y_BUTTON = 4;
@@ -183,13 +183,14 @@ public class Picker {
 //        return pickerAngleDegree;
 //        //return pickerAngleVoltage;
 //    }
+    /*
     public void setPosLoading() { //loadPos = 346
         //System.out.println("Beginning of method");
         buttonPressed = xBox.getRawButton(5);
         //currentAngle = getPickerAngle();
         double err = currentAngle - pickPos;//move to class level if needed
         //pickerMotor.set(0.0);
-        if (buttonPressed /*&& !settingPos2 && !settingPos3*/) { //Cannot set two at once
+        if (buttonPressed //&& !settingPos2 && !settingPos3) { //Cannot set two at once
             //System.out.println("Button pressed");
             settingPos1 = true;    //Set boolean so you don't have to hold the button down
         }
@@ -207,8 +208,10 @@ public class Picker {
 //            if (currentAngle == loadPos) {
 //                settingPos1 = false;
 //                pickerMotor.set(0.0);
+            
 //            }
             //          }
+            
         }
         //System.out.println("End of method");
     }
@@ -228,7 +231,7 @@ public class Picker {
         }
         //System.out.println("controllerXboxY " + operatorInputs.xboxLeftY());
     }
-    /*
+    
      public void setPosKicking() {
      buttonPressed = operatorInputs.isPickerKickingPositionButtonPressed();
      currentAngle = pickerPID.getPickerAngle();
@@ -246,7 +249,7 @@ public class Picker {
      }
      }
      }
-     */
+     
 
     public void setPosAuto() {
         buttonPressed = xBox.getRawButton(Y_BUTTON);
@@ -267,4 +270,5 @@ public class Picker {
     }
 
     //need to figure out moveable parts on the picker in order to assign functions
+    */
 }

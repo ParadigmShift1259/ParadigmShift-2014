@@ -23,10 +23,6 @@ public class PickerPID extends PIDSubsystem {
     public static double outputBounds = 0.8;
 
     private double currentAngle;
-    public static final double LOAD_ANGLE = 346;
-    public static final double KICKING_ANGLE = 226;
-    public static final double AUTO_ANGLE = 255;
-    public static final double TRUSS_ANGLE = 250;
     public static double VOLTAGE_CORRECTION = 2.07;
     private static final double step = .4; //aded by John
     private double desiredPos; //added by John

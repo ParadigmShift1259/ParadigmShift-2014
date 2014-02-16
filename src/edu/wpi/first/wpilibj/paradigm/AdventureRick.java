@@ -106,17 +106,17 @@ public class AdventureRick extends IterativeRobot {
         Picker.KD_MEDIUM = prefs.getDouble("KD_MEDIUM", Picker.KD_MEDIUM);
         Picker.KD_SOFT = prefs.getDouble("KD_SOFT", Picker.KD_SOFT);
         /*
-        PickerPID.Kp = prefs.getDouble("Kp", PickerPID.Kp);
-        PickerPID.Ki = prefs.getDouble("Ki", PickerPID.Ki);
-        PickerPID.Kd = prefs.getDouble("Kd", PickerPID.Kd);
-        pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
-        PickerPID.position = prefs.getDouble("Position", PickerPID.position);
-        pickerPID.setSetpoint(PickerPID.position);
-        PickerPID.TOLERANCE = prefs.getDouble("Tolerance", PickerPID.TOLERANCE);
-        pickerPID.setAbsoluteTolerance(PickerPID.TOLERANCE);
-        PickerPID.outputBounds = prefs.getDouble("output_bound", PickerPID.outputBounds);
-        pickerPID.getPIDController().setOutputRange(-PickerPID.outputBounds, PickerPID.outputBounds);
-        */
+         PickerPID.Kp = prefs.getDouble("Kp", PickerPID.Kp);
+         PickerPID.Ki = prefs.getDouble("Ki", PickerPID.Ki);
+         PickerPID.Kd = prefs.getDouble("Kd", PickerPID.Kd);
+         pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
+         PickerPID.position = prefs.getDouble("Position", PickerPID.position);
+         pickerPID.setSetpoint(PickerPID.position);
+         PickerPID.TOLERANCE = prefs.getDouble("Tolerance", PickerPID.TOLERANCE);
+         pickerPID.setAbsoluteTolerance(PickerPID.TOLERANCE);
+         PickerPID.outputBounds = prefs.getDouble("output_bound", PickerPID.outputBounds);
+         pickerPID.getPIDController().setOutputRange(-PickerPID.outputBounds, PickerPID.outputBounds);
+         */
         pickerPID.enable();
         pickerPID.setSetpoint(pick.kickPos);
     }
@@ -225,20 +225,22 @@ public class AdventureRick extends IterativeRobot {
     }
 
     public void testPeriodic() {
+        /*
 
-        //pickerPID.enable();
-//        System.out.println("Picker Encoder Value Is " + pick.getPickerAngle());
-//
-//        System.out.println("Shooter Encoder Value Is :" + shoot.getKickerAngle());
-        //System.out.println(pick.pickerPID.getPickerAngle());
-//
-//        shoot.manualShooterControl();
-//        shoot.quickButtonShoot(5, -.1);
-        pick.manualPickerControl();
-        SmartDashboard.putNumber("Kp", PickerPID.Kp);
-        SmartDashboard.putNumber("Ki", PickerPID.Ki);
-        SmartDashboard.putNumber("Kd", PickerPID.Kd);
-        //System.out.println("voltage " + pickerPID.getVoltage());
+         //pickerPID.enable();
+         //        System.out.println("Picker Encoder Value Is " + pick.getPickerAngle());
+         //
+         //        System.out.println("Shooter Encoder Value Is :" + shoot.getKickerAngle());
+         //System.out.println(pick.pickerPID.getPickerAngle());
+         //
+         //        shoot.manualShooterControl();
+         //        shoot.quickButtonShoot(5, -.1);
+         pick.manualPickerControl();
+         SmartDashboard.putNumber("Kp", PickerPID.Kp);
+         SmartDashboard.putNumber("Ki", PickerPID.Ki);
+         SmartDashboard.putNumber("Kd", PickerPID.Kd);
+         //System.out.println("voltage " + pickerPID.getVoltage());
+         */
     }
 
 }
