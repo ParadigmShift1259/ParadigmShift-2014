@@ -203,7 +203,7 @@ public class DriveTrain {
 
     public void shift() {//current setting is start in high gear
         boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-        if (previousTriggerPressed || childProofConfirmed) {
+        if (!isHighGear || childProofConfirmed) {
             if (triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
                 isHighGear = !isHighGear; // high gear becomes not high gear
                 gearShiftHigh.set(isHighGear); // the gear shifts

@@ -23,7 +23,7 @@ public class PickerPID extends PIDSubsystem {
     public static double outputBounds = 0.8;
 
     private double currentAngle;
-    public static double VOLTAGE_CORRECTION = 2.07;
+    public static double VOLTAGE_CORRECTION = 2.07;//2.62?
     private static final double step = .4; //aded by John
     private double desiredPos; //added by John
     private boolean posSet; //added by John
