@@ -91,6 +91,7 @@ public class AdventureRick extends IterativeRobot {
     public void autonomousInit() {
         //compressor.start();
         //shoot.shootTimer.start();
+        PickerPID.VOLTAGE_CORRECTION = prefs.getDouble("Voltage_Correction", PickerPID.VOLTAGE_CORRECTION);
     }
 
     public void teleopInit() {
