@@ -25,9 +25,11 @@ public class PickerPID extends PIDSubsystem {
     private double currentAngle;
     public static double VOLTAGE_CORRECTION = 2.07;//2.62?
     private static final double step = .4; //aded by John
+    /*
     private double desiredPos; //added by John
     private boolean posSet; //added by John
     private double nextStep; //added by John
+    */
     public static double TOLERANCE = 0.02;
     private static final int pickerChannel = 2;
     private static final AnalogChannel analogChannel = new AnalogChannel(pickerChannel);
@@ -60,7 +62,7 @@ public class PickerPID extends PIDSubsystem {
 
         return pickerMotor.get();
     }
-
+/*
     public void setNewSetpoint(double desiredPos) //added by John
     {
         this.desiredPos = desiredPos;
@@ -95,7 +97,7 @@ public class PickerPID extends PIDSubsystem {
                 }
             }
         }
-    }
+    }*/
 
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
