@@ -72,9 +72,8 @@ public class Picker {
         this.operatorInputs = _operatorInputs;
         pickerPID = pickerPid;
     }
-    
-    public double getVoltage()
-    {
+
+    public double getVoltage() {
         return pickerPID.getVoltage();
     }
 

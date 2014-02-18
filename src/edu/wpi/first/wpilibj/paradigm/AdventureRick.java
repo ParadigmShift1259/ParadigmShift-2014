@@ -74,7 +74,7 @@ public class AdventureRick extends IterativeRobot {
          SmartDashboard.putBoolean("Is Pooting", pick.isPicking);
          */
         SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
-        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
+//        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
 
         SmartDashboard.putNumber("Speed", drive.totalSpeed);
 //      SmartDashboard.putNumber("Kicker Angle", shoot.angle); -> Don't need to display, not sure what will be displayed.
@@ -91,7 +91,8 @@ public class AdventureRick extends IterativeRobot {
     public void autonomousInit() {
         //compressor.start();
         //shoot.shootTimer.start();
-        PickerPID.VOLTAGE_CORRECTION = prefs.getDouble("Voltage_Correction", PickerPID.VOLTAGE_CORRECTION);
+        PickerPID.VOLTAGE_CORRECTION = prefs.getDouble("Pick_VC", PickerPID.VOLTAGE_CORRECTION);
+        shoot.getPID().VOLTAGE_CORRECTION = prefs.getDouble("Shoot_VC", shoot.getPID().VOLTAGE_CORRECTION);
     }
 
     public void autonomousPeriodic() {
@@ -170,10 +171,10 @@ public class AdventureRick extends IterativeRobot {
 //        drive.shiftHigh();
 //        drive.shiftLow();
         //shoot.kick();
-        shoot.calibrate();
-        shoot.setKickingPosition();
+//        shoot.calibrate();
+//        shoot.setKickingPosition();
         shoot.manualShooterControl();
-        shoot.quickButtonShoot(1.0, -0.7, 0.5);
+//        shoot.quickButtonShoot(1.0, -0.7, 0.5);
         pick.spinGrabber();//works 2/12/14
         pick.spinPooter();//works 2/12/14
         compressor.start();
@@ -201,7 +202,7 @@ public class AdventureRick extends IterativeRobot {
          SmartDashboard.putBoolean("Is Pooting", pick.isPicking);
          */
         SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
-        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
+//        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
 
         SmartDashboard.putNumber("Speed", drive.totalSpeed);
         //SmartDashboard.putNumber("Kicker Angle", shoot.angle); *Don't need to display, not sure what will be displayed.
@@ -228,8 +229,8 @@ public class AdventureRick extends IterativeRobot {
 
     public void testPeriodic() {
         compressor.start();
-         SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
-         SmartDashboard.putNumber("Picker_Position", pick.getVoltage());
+        SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
+        SmartDashboard.putNumber("Picker_Position", pick.getVoltage());
         /*
          //pickerPID.enable();
          //        System.out.println("Picker Encoder Value Is " + pick.getPickerAngle());

@@ -20,10 +20,10 @@ public class ShooterPID extends PIDSubsystem {
     private static final Talon shooter = new Talon(5);
     private static final double Ki = 0.0;
     private static final double Kd = 0.0;
-    public static double VOLTAGE_CORRECTION = 0.0;
+    public double VOLTAGE_CORRECTION = 0.0;
     private static double KICKX_POS;
     private static double LOAD_POS;
-    public static double position = 0.35;
+    public static double zeroPosition = 0.35;
     private static final double OUTPUT_BOUNDS = .5;
     private static final double TOLERANCE = .025;
     private double pos;
@@ -72,9 +72,8 @@ public class ShooterPID extends PIDSubsystem {
     protected double returnPIDInput() {
         return encoder.getVoltage();
     }
-    
-    public double getVoltage()
-    {
+
+    public double getVoltage() {
         return encoder.getVoltage();
     }
 
