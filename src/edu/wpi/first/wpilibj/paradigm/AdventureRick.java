@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.Timer;
 public class AdventureRick extends IterativeRobot {
     //electromagic!
 
-    OperatorInputs inputs;
     DriveTrain drive;
     OperatorInputs operatorInputs;
     Compressor compressor;
@@ -44,7 +43,6 @@ public class AdventureRick extends IterativeRobot {
      * Initializes when the robot first starts, (only once at power-up).
      */
     public void robotInit() {
-        inputs = new OperatorInputs();
         operatorInputs = new OperatorInputs();
         drive = new DriveTrain(operatorInputs);
         prefs = Preferences.getInstance();
