@@ -22,7 +22,7 @@ public class Picker {
     OperatorInputs operatorInputs;
     private Joystick xBox = new Joystick(2);
     private double pickPos = -1.00; //change value later, position while loading
-    public double kickPos = 0.56; //change value later, position while shooting/aiming
+    public double kickPos = 0.50; //change value later, position while shooting/aiming
     private double trussPos = 0.28; //change value later, position at the beginning of the auto/match
     private double currentAngle; //the picker's current pos(ition)
     private final int RIGHT_BUMPER = 6; //this is the x butt on the controller

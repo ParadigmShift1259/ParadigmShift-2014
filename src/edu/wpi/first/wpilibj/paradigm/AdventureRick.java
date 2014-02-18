@@ -174,6 +174,7 @@ public class AdventureRick extends IterativeRobot {
 //        shoot.setKickingPosition();
         shoot.manualShooterControl();
         shoot.quickButtonShoot(1.0, -1.0, 0.2);
+        shoot.disableShooterPIDIfInPos();
         pick.spinGrabber();//works 2/12/14
         pick.spinPooter();//works 2/12/14
         //compressor.start();

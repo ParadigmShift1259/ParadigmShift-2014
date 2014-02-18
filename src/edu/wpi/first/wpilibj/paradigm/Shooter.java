@@ -139,28 +139,28 @@ public class Shooter {
         shooterPid.disableIfInPos();
     }
 
-    /*
-     public void quickButtonShoot(double time, double power, double delay) {
-     if (oi.isShooterTriggerPressed() && shooterPid.isDisabled()) {
-     kicking = true;
-     shootTimer.start();
+    public void quickButtonShoot(double time, double power, double delay) {
+        if (oi.isShooterTriggerPressed() && shooterPid.isDisabled()) {
+            kicking = true;
+            shootTimer.start();
+        }
      //shootTimer.reset();
-     //System.out.println("Loop should be starting");
-     }
-     if ((shootTimer.get() > delay) && (shootTimer.get() < time)) {
-     kickermotor.set(power);
-     }
-     //System.out.println("Motor should be going");
-     //ystem.out.println(shootTimer.get());
-     if (shootTimer.get() > time) {
-     kickermotor.set(0);
-     shootTimer.stop();
-     shootTimer.reset();
-     kicking = false;
+        //System.out.println("Loop should be starting");
 
-     }
-     }
-    
+        if ((shootTimer.get() > delay) && (shootTimer.get() < time)) {
+            kickermotor.set(power);
+        }
+     //System.out.println("Motor should be going");
+        //ystem.out.println(shootTimer.get());
+        if (shootTimer.get() > time) {
+            kickermotor.set(0);
+            shootTimer.stop();
+            shootTimer.reset();
+            kicking = false;
+
+        }
+    }
+    /*
      public void autoShoot(double time, double power) {
      double base = 0.0;
      //        shootTimer.start();
