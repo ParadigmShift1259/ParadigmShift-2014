@@ -36,22 +36,17 @@ public class Shooter {
     private final double RIGHT_TRIGGER_PRESSED_MAX_VALUE = -0.5;
     private final double RIGHT_TRIGGER_PRESSED_MIN_VALUE = -1.0;
     //private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
-    private final int BACK_BUTTON = 7;
     private final int XBOX_TRIGGERS = 3; //renamed because this is both the left trigger and the right trigger
     private double motorSpeed = 1.0;
     private final AnalogChannel analogChannel = new AnalogChannel(1);
     private final DigitalInput digitalInput = new DigitalInput(9);
     private double previousAngle = ILLEGAL_ANGLE;
-    //private double previousAngle = -1;
-    private double currentAngle;
-    //private 
-    boolean inPosition; //made protected for use in AdventureRick
     boolean kicking = false;
-    private double kickingPos = 180;
+    private double kickingPos;
     public boolean caliButtPressed = true;
-    double angle;
-    private final int MAX_ALLOWED_ANGLE = 165;
-    private final int MIN_ALLOWED_ANGLE = 145;
+    private double voltage;
+    //private final int MAX_ALLOWED_VOLTAGE;
+    //private final int MIN_ALLOWED_VOLTAGE;
     private boolean pressed;
     private boolean calibrated = false;
     private boolean settingPos = false;
@@ -62,9 +57,8 @@ public class Shooter {
     public Shooter(OperatorInputs _operatorInputs) {
         this.operatorInputs = _operatorInputs;
     }
-    
-    public double getVoltage()
-    {
+
+    public double getVoltage() {
         return shooterPid.getVoltage();
     }
 
@@ -72,17 +66,8 @@ public class Shooter {
         return kickermotor.get();
     }
 
-    public boolean isKickerStopped() {
-        //currentAngle = analogChannel.getVoltage(); //Read current voltage
-        currentAngle = getKickerAngle();
-        if (previousAngle >= currentAngle - (5) && previousAngle <= currentAngle + (5)) {
-            previousAngle = ILLEGAL_ANGLE; //Set back so it can run again 
-            return true;
-        } else {
-            previousAngle = currentAngle; //current becomes previous
-            return false;
-        }
-
+    public ShooterPID getPID() {
+        return shooterPid;
     }
 
     /*
@@ -91,63 +76,50 @@ public class Shooter {
      P.S. It has a dumb name that can go to suckySucky().
      P.P.S. Before 2/8/2014, the above (Post Scriptum) comment applies. ...Latin...
      */
-    public void kick() {
-        triggerPressed = RIGHT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS)
-                && xBox.getRawAxis(XBOX_TRIGGERS) <= RIGHT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
-        inPosition = digitalInput.get();
-        SmartDashboard.putBoolean("triggerPressed", triggerPressed);
-        SmartDashboard.putBoolean("!caliButtPressed", !caliButtPressed);
-        SmartDashboard.putBoolean("!settingPos", !settingPos);
-        SmartDashboard.putBoolean("isKickerStopped", isKickerStopped());
-        if (triggerPressed && !caliButtPressed && !settingPos) { //changed for testing on Sturday night 2/8/2014 - E A COBB
-            kicking = true;
-            buttonPressed = false;
-        }
-        if (kicking) {
-            kickermotor.set(-0.7); //negative is kicking forward - 2/8/2014 E A Cobb
-            if (inPosition) {
-                kicking = false;
-                kickermotor.set(0);
-                buttonPressed = true; //put in place for testing on Sturday night 2/8/2014 - E A COBB
-            }
-        }
-    }
+    /*
+     public void kick() {
+     triggerPressed = RIGHT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS)
+     && xBox.getRawAxis(XBOX_TRIGGERS) <= RIGHT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
+     SmartDashboard.putBoolean("triggerPressed", triggerPressed);
+     SmartDashboard.putBoolean("!caliButtPressed", !caliButtPressed);
+     SmartDashboard.putBoolean("!settingPos", !settingPos);
+     SmartDashboard.putBoolean("isKickerStopped", isKickerStopped());
+     if (triggerPressed && !caliButtPressed && !settingPos) { //changed for testing on Sturday night 2/8/2014 - E A COBB
+     kicking = true;
+     buttonPressed = false;
+     }
+     if (kicking) {
+     kickermotor.set(-0.7); //negative is kicking forward - 2/8/2014 E A Cobb
+     if (8 == 8) {
+     kicking = false;
+     kickermotor.set(0);
+     buttonPressed = true; //put in place for testing on Sturday night 2/8/2014 - E A COBB
+     }
+     }
+     }
+     */
 
-    public void calibrate() {
-        inPosition = digitalInput.get();
-        buttonPressed = xBox.getRawButton(BACK_BUTTON);
-        angle = getKickerAngle();
-        if (buttonPressed && !settingPos && isKickerStopped()) {
-            caliButtPressed = true;
-        }
-        if (caliButtPressed) {
-            try {
-                if (inPosition) {
-                    kickermotor.set(0);
-                    caliButtPressed = false;
-                    calibrated = true;
-                } else {
-                    if (angle > kickingPos && angle <= MAX_ALLOWED_ANGLE) {
-                        kickermotor.set(0.1);
-                    } else if (angle > kickingPos || angle <= MIN_ALLOWED_ANGLE) {
-                        kickermotor.set(-0.1);
-                    }
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    public double getKickerAngle() {
-        angle = analogChannel.getVoltage();
-        //This is the porportion to convert voltage into a degrees angle.
-        //There are 360 degree permax encoder voltage.
-        angle = angle * (360 / MAX_ENCODER_VOLTAGE);
-        return angle;
-
-    }
-
+    /*
+     public void calibrate() {
+     voltage = getVoltage();
+     if (caliButtPressed) {
+     try {
+     if (getVoltage() == kickingPos) {
+     kickermotor.set(0);
+     caliButtPressed = false;
+     } else {
+     if (voltage > kickingPos && voltage <= MAX_ALLOWED_VOLTAGE) {
+     kickermotor.set(0.1);
+     } else if (voltage > kickingPos || voltage <= MIN_ALLOWED_VOLTAGE) {
+     kickermotor.set(-0.1);
+     }
+     }
+     } catch (Exception ex) {
+     ex.printStackTrace();
+     }
+     }
+     }
+     */
     //Added for Saturday Night to program shooter - 2/8/2014 E A Cobb
     public void manualShooterControl() {
         if (!kicking) {
@@ -167,71 +139,69 @@ public class Shooter {
         shooterPid.disableIfInPos();
     }
 
-    public void quickButtonShoot(double time, double power, double delay) {
-        if (oi.isShooterTriggerPressed() && shooterPid.isDisabled()) {
-            kicking = true;
-            shootTimer.start();
-            //shootTimer.reset();
-            //System.out.println("Loop should be starting");
-        }
-        if ((shootTimer.get() > delay) && (shootTimer.get() < time)) {
-            kickermotor.set(power);
-        }
-            //System.out.println("Motor should be going");
-        //ystem.out.println(shootTimer.get());
-        if (shootTimer.get() > time) {
-            kickermotor.set(0);
-            shootTimer.stop();
-            shootTimer.reset();
-            kicking = false;
+    /*
+     public void quickButtonShoot(double time, double power, double delay) {
+     if (oi.isShooterTriggerPressed() && shooterPid.isDisabled()) {
+     kicking = true;
+     shootTimer.start();
+     //shootTimer.reset();
+     //System.out.println("Loop should be starting");
+     }
+     if ((shootTimer.get() > delay) && (shootTimer.get() < time)) {
+     kickermotor.set(power);
+     }
+     //System.out.println("Motor should be going");
+     //ystem.out.println(shootTimer.get());
+     if (shootTimer.get() > time) {
+     kickermotor.set(0);
+     shootTimer.stop();
+     shootTimer.reset();
+     kicking = false;
 
-        }
-    }
+     }
+     }
+    
+     public void autoShoot(double time, double power) {
+     double base = 0.0;
+     //        shootTimer.start();
+     //System.out.println("Loop should be starting");
 
-    public void autoShoot(double time, double power) {
-        double base = 0.0;
-//        shootTimer.start();
-        //System.out.println("Loop should be starting");
+     if (base + shootTimer.get() < time) {
+     kickermotor.set(power);
+     //System.out.println("Motor should be going");
+     //ystem.out.println(shootTimer.get());
+     } else {
+     shooterPid.set(0);
+     shootTimer.stop();
+     }
+     }
 
-        if (base + shootTimer.get() < time) {
-            kickermotor.set(power);
-            //System.out.println("Motor should be going");
-            //ystem.out.println(shootTimer.get());
-        } else {
-            shooterPid.set(0);
-            shootTimer.stop();
-        }
-    }
-
-    public void setKickingPosition() {
-        triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS)
-                && xBox.getRawAxis(XBOX_TRIGGERS) <= LEFT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
-        if (/*calibrated &&*/triggerPressed && !kicking && !caliButtPressed && isKickerStopped()) { //changed for testing on Sturday night 2/8/2014 - E A COBB
-            pressed = true;
-            buttonPressed = false;
-            settingPos = true;
-        }
-        if (pressed) {
-            if (getKickerAngle() == kickingPos) {
-                inPosition = true;
-            }
-            try {
-                if (inPosition) {
-                    kickermotor.set(0);
-                    pressed = false;
-                    settingPos = false;
-                } else {
-                    if (angle < kickingPos && angle >= MAX_ALLOWED_ANGLE) {
-                        kickermotor.set(-0.1);
-                    } else if (angle > kickingPos || angle <= MIN_ALLOWED_ANGLE) {
-                        kickermotor.set(0.1);
-                    }
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-   //need to figure out moveable parts on the shooting mechanism before adding buttons/functions 
+     public void setKickingPosition() {
+     triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS)
+     && xBox.getRawAxis(XBOX_TRIGGERS) <= LEFT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
+     if (calibrated &&triggerPressed && !kicking && !caliButtPressed && isKickerStopped()) { //changed for testing on Sturday night 2/8/2014 - E A COBB
+     pressed = true;
+     buttonPressed = false;
+     settingPos = true;
+     }
+     if (pressed) {
+     try {
+     if (getVoltage() == kickingPos) {
+     kickermotor.set(0);
+     settingPos = false;
+     } else {
+     if (voltage < kickingPos && voltage >= MAX_ALLOWED_VOLTAGE) {
+     kickermotor.set(-0.1);
+     } else if (voltage > kickingPos || voltage <= MIN_ALLOWED_VOLTAGE) {
+     kickermotor.set(0.1);
+     }
+     }
+     } catch (Exception ex) {
+     ex.printStackTrace();
+     }
+     }
+     */
 }
+
+   //need to figure out moveable parts on the shooting mechanism
+   //before adding buttons/functions 
