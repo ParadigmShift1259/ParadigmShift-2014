@@ -231,7 +231,6 @@ public class AdventureRick extends IterativeRobot {
          SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
          SmartDashboard.putNumber("Picker_Position", pick.getVoltage());
         /*
-
          //pickerPID.enable();
          //        System.out.println("Picker Encoder Value Is " + pick.getPickerAngle());
          //
