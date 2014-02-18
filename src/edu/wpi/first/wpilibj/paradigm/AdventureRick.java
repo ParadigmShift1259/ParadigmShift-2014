@@ -87,7 +87,7 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically (every 20-25 ms) during autonomous
      */
     public void autonomousInit() {
-        //compressor.start();
+        compressor.start();
         //shoot.shootTimer.start();
         PickerPID.VOLTAGE_CORRECTION = prefs.getDouble("Pick_VC", PickerPID.VOLTAGE_CORRECTION);
         shoot.getPID().VOLTAGE_CORRECTION = prefs.getDouble("Shoot_VC", shoot.getPID().VOLTAGE_CORRECTION);
@@ -97,7 +97,7 @@ public class AdventureRick extends IterativeRobot {
         //shoot.calibrate();
 
         final double autoDriveTime = 1;
-        shoot.manualShooterControl();
+        //shoot.manualShooterControl();
         //pickerPID.enable();//proably not going to be needed
         SmartDashboard.putNumber("Some Voltage", pickerPID.getVoltage());
 
@@ -124,7 +124,8 @@ public class AdventureRick extends IterativeRobot {
 
     public void teleopInit() {
         compressor.start();
-        PickerPID.VOLTAGE_CORRECTION = prefs.getDouble("Voltage_Correction", PickerPID.VOLTAGE_CORRECTION);
+        PickerPID.VOLTAGE_CORRECTION = prefs.getDouble("Pick_VC", PickerPID.VOLTAGE_CORRECTION);
+        shoot.getPID().VOLTAGE_CORRECTION = prefs.getDouble("Shoot_VC", shoot.getPID().VOLTAGE_CORRECTION);
 
         Picker.KP_SOFT = prefs.getDouble("KP_SOFT", Picker.KP_SOFT);
         Picker.KP_MEDIUM = prefs.getDouble("KP_MEDIUM", Picker.KP_MEDIUM);
@@ -161,7 +162,7 @@ public class AdventureRick extends IterativeRobot {
         shoot.disableShooterPIDIfInPos();
 
         //remove if not needed
-        compressor.start();
+        //compressor.start();
 //shift when the trigger is pressed
         drive.shift();
         // pickerPID.steppedSetpoint();
@@ -172,10 +173,10 @@ public class AdventureRick extends IterativeRobot {
 //        shoot.calibrate();
 //        shoot.setKickingPosition();
         shoot.manualShooterControl();
-//        shoot.quickButtonShoot(1.0, -0.7, 0.5);
+        shoot.quickButtonShoot(1.0, -1.0, 0.2);
         pick.spinGrabber();//works 2/12/14
         pick.spinPooter();//works 2/12/14
-        compressor.start();
+        //compressor.start();
         SmartDashboard.putBoolean("Compressor Trying To Come On: ", compressor.enabled());
         //all of these positions make the picker move forward, need to test the encoder value to reset values
         //pick.setPosAuto();
