@@ -5,6 +5,8 @@
  */
 package edu.wpi.first.wpilibj.paradigm;
 
+import edu.wpi.first.wpilibj.AnalogChannel;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
 /**
@@ -14,34 +16,79 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 public class ShooterPID extends PIDSubsystem {
 
     private static final double Kp = 0.0;
+    private static final AnalogChannel encoder = new AnalogChannel(0);
+    private static final Talon shooter = new Talon(5);
     private static final double Ki = 0.0;
     private static final double Kd = 0.0;
+    public static double VOLTAGE_CORRECTION = 0.0;
+    private static double KICKX_POS;
+    private static double KICK_POS;
     public static double position = 0.35;
+    private static final double OUTPUT_BOUNDS = .5;
+    private static final double TOLERANCE = .025;
+    private double pos;
 
     // Initialize your subsystem here
     public ShooterPID() {
         super("ShooterPID", Kp, Ki, Kd);
+        KICK_POS = 1.0 + VOLTAGE_CORRECTION;
+        KICKX_POS = 0.0 + VOLTAGE_CORRECTION;
+        getPIDController().setOutputRange(-OUTPUT_BOUNDS, OUTPUT_BOUNDS);
+        getPIDController().setContinuous(true);
+        setAbsoluteTolerance(TOLERANCE);
+        setSetpoint(KICKX_POS);
+        enable();
 
         // Use these to get going:
         // setSetpoint() -  Sets where the PID controller should move the system
         //                  to
         // enable() - Enables the PID controller.
     }
+
+    public void prepKickx() {
+        setSetpoint(KICK_POS);
+        enable();
+    }
+
+    public void prepPick() {
+        setSetpoint(KICKX_POS);
+        enable();
+    }
     
+    public boolean checkPos()
+    {
+        return (encoder.getVoltage() == pos);
+    }
+    
+    public void disableIfInPos()
+    {
+        if(checkPos())
+        {
+            disable();
+        }
+    }
+    
+    public boolean isDisabled()
+    {
+        return !getPIDController().isEnable();
+    }
+
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
     }
-    
+
     protected double returnPIDInput() {
-        // Return your input value for the PID loop
-        // e.g. a sensor, like a potentiometer:
-        // yourPot.getAverageVoltage() / kYourMaxVoltage;
-        return 0.0;
+        return encoder.getVoltage();
     }
-    
+
     protected void usePIDOutput(double output) {
-        // Use output to drive your system, like a motor
-        // e.g. yourMotor.set(output);
+        shooter.set(output);
+    }
+
+    public void set(double speed) {
+        if (!getPIDController().isEnable()) {
+            shooter.set(speed);
+        }
     }
 }
