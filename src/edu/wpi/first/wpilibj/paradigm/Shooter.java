@@ -57,6 +57,7 @@ public class Shooter {
     private boolean settingPos = false;
     private final double MAX_ENCODER_VOLTAGE = 5.0;
     public Timer shootTimer = new Timer();
+    public ShooterPID shooterPid = new ShooterPID();
 
     public Shooter(OperatorInputs _operatorInputs) {
         this.operatorInputs = _operatorInputs;
@@ -148,9 +149,23 @@ public class Shooter {
             kickermotor.set(operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
         }
     }
+    
+    public void moveToKickPos()
+    {
+        shooterPid.prepKickx();
+    }
+    public void moveToPickPos()
+    {
+        shooterPid.prepPick();
+    }
+    
+    public void disableShooterPIDIfInPos()
+    {
+        shooterPid.disableIfInPos();
+    }
 
     public void quickButtonShoot(double time, double power, double delay) {
-        if (oi.isShooterTriggerPressed()) {
+        if (oi.isShooterTriggerPressed() && shooterPid.isDisabled()) {
             kicking = true;
             shootTimer.start();
             //shootTimer.reset();

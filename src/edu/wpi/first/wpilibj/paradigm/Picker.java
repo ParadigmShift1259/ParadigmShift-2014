@@ -84,6 +84,7 @@ public class Picker {
             pickerPID.getPIDController().reset();
             pickerPID.enable();
             pickerPID.setSetpoint(kickPos);
+            AdventureRick.shoot.moveToKickPos();
         } else if (!buttonPressed) {
             isKickPos = false;
             //?
@@ -112,6 +113,7 @@ public class Picker {
             pickerPID.getPIDController().reset();
             pickerPID.enable();
             pickerPID.setSetpoint(trussPos);
+            AdventureRick.shoot.moveToKickPos();
         } else if (!buttonPressed) {
             isTrussPos = false;
             //?
@@ -130,6 +132,7 @@ public class Picker {
             pickerPID.getPIDController().reset();
             pickerPID.enable();
             pickerPID.setSetpoint(pickPos);
+            AdventureRick.shoot.moveToPickPos();
         } else if (!buttonPressed) {
             isPickPos = false;
             //?

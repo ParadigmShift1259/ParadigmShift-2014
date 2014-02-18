@@ -27,7 +27,7 @@ public class AdventureRick extends IterativeRobot {
     DriveTrain drive;
     OperatorInputs operatorInputs;
     Compressor compressor;
-    Shooter shoot;
+    public static Shooter shoot;
     PickerPID pickerPID;
     Timer autoTimer;
     Picker pick;
@@ -159,6 +159,7 @@ public class AdventureRick extends IterativeRobot {
         pick.kick();
         pick.pick();
         pick.truss();
+        shoot.disableShooterPIDIfInPos();
 
         //remove if not needed
         compressor.start();
