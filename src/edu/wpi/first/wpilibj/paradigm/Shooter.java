@@ -62,6 +62,11 @@ public class Shooter {
     public Shooter(OperatorInputs _operatorInputs) {
         this.operatorInputs = _operatorInputs;
     }
+    
+    public double getVoltage()
+    {
+        return shooterPid.getVoltage();
+    }
 
     public double getKickerMotorPower() {
         return kickermotor.get();
@@ -149,18 +154,16 @@ public class Shooter {
             kickermotor.set(operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
         }
     }
-    
-    public void moveToKickPos()
-    {
+
+    public void moveToKickPos() {
         shooterPid.prepKickx();
     }
-    public void moveToPickPos()
-    {
+
+    public void moveToPickPos() {
         shooterPid.prepPick();
     }
-    
-    public void disableShooterPIDIfInPos()
-    {
+
+    public void disableShooterPIDIfInPos() {
         shooterPid.disableIfInPos();
     }
 
@@ -171,13 +174,12 @@ public class Shooter {
             //shootTimer.reset();
             //System.out.println("Loop should be starting");
         }
-        if ((shootTimer.get() > delay) && (shootTimer.get()<time) )
-        {
+        if ((shootTimer.get() > delay) && (shootTimer.get() < time)) {
             kickermotor.set(power);
         }
             //System.out.println("Motor should be going");
-            //ystem.out.println(shootTimer.get());
-        if (shootTimer.get() > time) { 
+        //ystem.out.println(shootTimer.get());
+        if (shootTimer.get() > time) {
             kickermotor.set(0);
             shootTimer.stop();
             shootTimer.reset();
@@ -196,7 +198,7 @@ public class Shooter {
             //System.out.println("Motor should be going");
             //ystem.out.println(shootTimer.get());
         } else {
-            kickermotor.set(0);
+            shooterPid.set(0);
             shootTimer.stop();
         }
     }

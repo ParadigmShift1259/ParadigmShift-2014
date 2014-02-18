@@ -228,6 +228,8 @@ public class AdventureRick extends IterativeRobot {
 
     public void testPeriodic() {
         compressor.start();
+         SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
+         SmartDashboard.putNumber("Picker_Position", pick.getVoltage());
         /*
 
          //pickerPID.enable();

@@ -52,7 +52,7 @@ public class PickerPID extends PIDSubsystem {
     }
 
     public double getVoltage() {
-        return VOLTAGE_CORRECTION - analogChannel.getVoltage();
+        return analogChannel.getVoltage();
 
     }
 

@@ -73,11 +73,11 @@ public class OperatorInputs {
     public boolean isPickingAutoPositionButtonPressed() {
         return xBox.getRawButton(B_BUTTON);
     }
-    
+
     public boolean xBoxXButton() {
         return xBox.getRawButton(X_BUTTON);
     }
-    
+
     public boolean isGrabbingButtonPressed() {
         return xBox.getRawButton(RIGHT_BUMPER);
     }

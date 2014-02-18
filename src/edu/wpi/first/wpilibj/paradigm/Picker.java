@@ -43,7 +43,7 @@ public class Picker {
     public static double KD_SOFT = 4.5;
     public static double KD_MEDIUM = 12.0;
     public static double KD_HARD = 2.5;
-    
+
     private boolean isPooting = false;
     private Talon wheelSpinner = new Talon(3); //used in the SpinGrabber method...also is a Talon
     // private Talon pickerMotor = new Talon(4);
@@ -71,6 +71,11 @@ public class Picker {
     public Picker(OperatorInputs _operatorInputs, PickerPID pickerPid) {
         this.operatorInputs = _operatorInputs;
         pickerPID = pickerPid;
+    }
+    
+    public double getVoltage()
+    {
+        return pickerPID.getVoltage();
     }
 
     public void kick() {
