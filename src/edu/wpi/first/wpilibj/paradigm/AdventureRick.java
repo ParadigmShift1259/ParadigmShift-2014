@@ -35,7 +35,7 @@ public class AdventureRick extends IterativeRobot {
     Preferences prefs;
     private boolean checkForKickerStop = false;
     private boolean shootTimerBool = true;
-    ColwellContraption colwellSpecial;
+    ColwellContraption colwellContraption;
     final int PRESSURE_SWITCH_CHANNEL = 1;
     final int COMPRESSOR_RELAY_CHANNEL = 1;
 
@@ -49,7 +49,7 @@ public class AdventureRick extends IterativeRobot {
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
-        colwellSpecial = new ColwellContraption();
+        colwellContraption = new ColwellContraption();
         //shoot = new Shooter(operatorInputs);//add parameters as needed
         
         
@@ -97,14 +97,14 @@ public class AdventureRick extends IterativeRobot {
         //shoot.calibrate();
         compressor.start();
         //final double autoDriveTime = 1;
-        //colwellSpecial.pistonUp();
+        //colwellContraption.pistonUp();
         //shoot.manualShooterControl();
         pickerPID.enable();//proably not going to be needed
         SmartDashboard.putNumber("Some Voltage", pickerPID.getVoltage());
         if(operatorInputs.isReleaseButtonPressed()){
-            colwellSpecial.pistonDown();
+            colwellContraption.pistonDown();
         }else{
-            colwellSpecial.pistonUp();
+            colwellContraption.pistonUp();
         }
         SmartDashboard.putNumber("Kp", PickerPID.Kp);
         SmartDashboard.putNumber("Ki", PickerPID.Ki);

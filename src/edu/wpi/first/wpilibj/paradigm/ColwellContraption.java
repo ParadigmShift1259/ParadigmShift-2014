@@ -17,21 +17,21 @@ public class ColwellContraption {
      port needs to be changed to the actual one and not just the current placeholder value - 2/18/14 (Allison)
      */
 
-    Solenoid colwellSpecialUp;//NEED ACTUAL SOLENOID NUMBER HERE THIS IS A PLACEHOLDER - 2/18/14 (Allison
-    Solenoid colwellSpecialDown;
+    Solenoid colwellContraptionUp;//NEED ACTUAL SOLENOID NUMBER HERE THIS IS A PLACEHOLDER - 2/18/14 (Allison
+    Solenoid colwellContraptionDown;
     //4
     public ColwellContraption(){
-        colwellSpecialDown =  new Solenoid(1,4);
-        colwellSpecialUp = new Solenoid(1,3);
+        colwellContraptionDown =  new Solenoid(1,4);
+        colwellContraptionUp = new Solenoid(1,3);
     }
     
     public void pistonUp() {
-        colwellSpecialUp.set(true);
-        colwellSpecialDown.set(false);
+        colwellContraptionUp.set(true);
+        colwellContraptionDown.set(false);
     }
     public void pistonDown(){
-        colwellSpecialUp.set(false);
-        colwellSpecialDown.set(true);
+        colwellContraptionUp.set(false);
+        colwellContraptionDown.set(true);
         
     }
 }
