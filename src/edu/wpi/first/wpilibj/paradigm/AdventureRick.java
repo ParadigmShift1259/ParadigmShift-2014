@@ -263,8 +263,8 @@ public class AdventureRick extends IterativeRobot {
     }
 
     public void disabledInit() {
-        //pickerPID.getPIDController().reset();
-        //pickerPID.disable();
+        pickerPID.getPIDController().reset();
+        pickerPID.disable();
         super.disabledInit();
     }
 
