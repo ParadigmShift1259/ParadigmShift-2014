@@ -17,18 +17,21 @@ public class ColwellSpecial {
      port needs to be changed to the actual one and not just the current placeholder value - 2/18/14 (Allison)
      */
 
-    OperatorInputs operatorInputs;
-    Solenoid colwellSpecial = new Solenoid(3);//NEED ACTUAL SOLENOID NUMBER HERE THIS IS A PLACEHOLDER - 2/18/14 (Allison
-    public boolean isAutoPistonOut = false;
-
-    public void autoPiston() {
-        boolean pistonButton = operatorInputs.getStart();
-        if (pistonButton) {
-            colwellSpecial.set(true);
-            isAutoPistonOut = true;
-        } else {
-            colwellSpecial.set(!true);//double check please - 2/18/14 (Allison)
-            isAutoPistonOut = false;
-        }
+    Solenoid colwellSpecialUp;//NEED ACTUAL SOLENOID NUMBER HERE THIS IS A PLACEHOLDER - 2/18/14 (Allison
+    Solenoid colwellSpecialDown;
+    //4
+    public ColwellSpecial(){
+        colwellSpecialDown =  new Solenoid(1,4);
+        colwellSpecialUp = new Solenoid(1,3);
+    }
+    
+    public void pistonUp() {
+        colwellSpecialUp.set(true);
+        colwellSpecialDown.set(false);
+    }
+    public void pistonDown(){
+        colwellSpecialUp.set(false);
+        colwellSpecialDown.set(true);
+        
     }
 }
