@@ -20,26 +20,26 @@ public class Shooter {
 
     OperatorInputs operatorInputs;
 
-    private final int PORT_5 = 5;
+    private final int PORT_5 = 5;  // EAC.2014.02.19 - may benefit in compile-size by being static
     //the current value can not possibly be the previous value the first time through
-    private final double ILLEGAL_ANGLE = -9999.9; //can't be stopped when it hasn't started
+    private final double ILLEGAL_ANGLE = -9999.9; //can't be stopped when it hasn't started // EAC.2014.02.19 - may benefit in compile-size by being static
     OperatorInputs oi = new OperatorInputs();
-    private final Joystick xBox = new Joystick(2);
+    private final Joystick xBox = new Joystick(2); // EAC.2014.02.19 - may benefit in compile-size by being static
 
 //   private final Talon kickermotor = new Talon(PORT_5);
     private boolean buttonPressed;
     //private double triggerPressed;
     //put in place for testing on Sturday night 2/8/2014 - E A COBB
     private boolean triggerPressed; // changed for testing on Saturday night
-    private final double LEFT_TRIGGER_PRESSED_MAX_VALUE = 1.0;
-    private final double LEFT_TRIGGER_PRESSED_MIN_VALUE = 0.5;
-    private final double RIGHT_TRIGGER_PRESSED_MAX_VALUE = -0.5;
-    private final double RIGHT_TRIGGER_PRESSED_MIN_VALUE = -1.0;
+    private final double LEFT_TRIGGER_PRESSED_MAX_VALUE = 1.0; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final double LEFT_TRIGGER_PRESSED_MIN_VALUE = 0.5; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final double RIGHT_TRIGGER_PRESSED_MAX_VALUE = -0.5; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final double RIGHT_TRIGGER_PRESSED_MIN_VALUE = -1.0; // EAC.2014.02.19 - may benefit in compile-size by being static
     //private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
-    private final int XBOX_TRIGGERS = 3; //renamed because this is both the left trigger and the right trigger
+    private final int XBOX_TRIGGERS = 3; //renamed because this is both the left trigger and the right trigger // EAC.2014.02.19 - may benefit in compile-size by being static
     private double motorSpeed = 1.0;
     // private final AnalogChannel analogChannel = new AnalogChannel(1);
-    private final DigitalInput digitalInput = new DigitalInput(9);
+    private final DigitalInput digitalInput = new DigitalInput(9); // EAC.2014.02.19 - may benefit in compile-size by being static
     private double previousAngle = ILLEGAL_ANGLE;
     boolean kicking = false;
     private double kickingPos;
@@ -50,7 +50,7 @@ public class Shooter {
     private boolean pressed;
     private boolean calibrated = false;
     private boolean settingPos = false;
-    private final double MAX_ENCODER_VOLTAGE = 5.0;
+    private final double MAX_ENCODER_VOLTAGE = 5.0; // EAC.2014.02.19 - may benefit in compile-size by being static
     public Timer timer = new Timer();
     public ShooterPID shooterPid = new ShooterPID();
 
@@ -63,7 +63,7 @@ public class Shooter {
     }
 
     public void inPositionDisable() {
-        double tolerance = .05;
+        double tolerance = .05; // EAC.2014.02.19 - this should possibly be a constant at the top of the class
         if (shooterPid.getPIDController().getSetpoint() > shooterPid.getVoltage() - tolerance && shooterPid.getPIDController().getSetpoint() < shooterPid.getVoltage() + tolerance) {
             shooterPid.disable();
         }
