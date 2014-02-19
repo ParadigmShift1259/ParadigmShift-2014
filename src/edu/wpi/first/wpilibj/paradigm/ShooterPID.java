@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 public class ShooterPID extends PIDSubsystem {
 
     private static final double Kp = 0.0;
-    private static final AnalogChannel encoder = new AnalogChannel(0);
+    private static final AnalogChannel encoder = new AnalogChannel(1);
     private static final Talon shooter = new Talon(5);
     private static final double Ki = 0.0;
     private static final double Kd = 0.0;
@@ -85,5 +85,9 @@ public class ShooterPID extends PIDSubsystem {
         if (!getPIDController().isEnable()) {
             shooter.set(speed);
         }
+    }
+
+    public double get() {
+        return shooter.get();
     }
 }

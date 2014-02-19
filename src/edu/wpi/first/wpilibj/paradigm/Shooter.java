@@ -26,7 +26,7 @@ public class Shooter {
     OperatorInputs oi = new OperatorInputs();
     private final Joystick xBox = new Joystick(2);
 
-    private final Talon kickermotor = new Talon(PORT_5);
+//   private final Talon kickermotor = new Talon(PORT_5);
     private boolean buttonPressed;
     //private double triggerPressed;
     //put in place for testing on Sturday night 2/8/2014 - E A COBB
@@ -38,7 +38,7 @@ public class Shooter {
     //private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
     private final int XBOX_TRIGGERS = 3; //renamed because this is both the left trigger and the right trigger
     private double motorSpeed = 1.0;
-    private final AnalogChannel analogChannel = new AnalogChannel(1);
+    // private final AnalogChannel analogChannel = new AnalogChannel(1);
     private final DigitalInput digitalInput = new DigitalInput(9);
     private double previousAngle = ILLEGAL_ANGLE;
     boolean kicking = false;
@@ -63,7 +63,7 @@ public class Shooter {
     }
 
     public double getKickerMotorPower() {
-        return kickermotor.get();
+        return shooterPid.get();
     }
 
     public ShooterPID getPID() {
@@ -123,7 +123,7 @@ public class Shooter {
     //Added for Saturday Night to program shooter - 2/8/2014 E A Cobb
     public void manualShooterControl() {
         if (!kicking) {
-            kickermotor.set(operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
+            shooterPid.set(operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
         }
     }
 
@@ -144,16 +144,16 @@ public class Shooter {
             kicking = true;
             shootTimer.start();
         }
-     //shootTimer.reset();
+        //shootTimer.reset();
         //System.out.println("Loop should be starting");
 
         if ((shootTimer.get() > delay) && (shootTimer.get() < time)) {
-            kickermotor.set(power);
+            shooterPid.set(power);
         }
-     //System.out.println("Motor should be going");
+        //System.out.println("Motor should be going");
         //ystem.out.println(shootTimer.get());
         if (shootTimer.get() > time) {
-            kickermotor.set(0);
+            shooterPid.set(0);
             shootTimer.stop();
             shootTimer.reset();
             kicking = false;

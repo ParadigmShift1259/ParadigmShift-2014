@@ -164,4 +164,8 @@ public class OperatorInputs {
         return this.joystick.getRawButton(4);
     }
 
+    public boolean getStart() {
+        return this.xBox.getRawButton(8);
+    }
+
 }
