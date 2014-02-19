@@ -21,8 +21,8 @@ public class ShooterPID extends PIDSubsystem {
     private static final double Ki = 0.0;
     private static final double Kd = 0.0;
     public double VOLTAGE_CORRECTION = 0.0;
-    private static double KICKX_POS;
-    private static double LOAD_POS;
+    private static double KICKX_POS = 0.0; //dummy values, need to be edited
+    private static double LOAD_POS = 1.0; //dummy values, need to be edited
     public static double zeroPosition = 0.35;
     private static final double OUTPUT_BOUNDS = .5;
     private static final double TOLERANCE = .025;
