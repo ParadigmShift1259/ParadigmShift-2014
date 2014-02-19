@@ -51,7 +51,7 @@ public class Shooter {
     private boolean calibrated = false;
     private boolean settingPos = false;
     private final double MAX_ENCODER_VOLTAGE = 5.0;
-    public Timer shootTimer = new Timer();
+    public Timer timer = new Timer();
     public ShooterPID shooterPid = new ShooterPID();
 
     public Shooter(OperatorInputs _operatorInputs) {
@@ -62,12 +62,34 @@ public class Shooter {
         return shooterPid.getVoltage();
     }
 
+    public void disableToggle() {
+        double delay = 0.01;
+        double time;
+        time = .2;
+        timer.start();
+        if ((timer.get() > delay) && (timer.get() < time)) {
+            shooterPid.toggleDisable();
+        }
+        if (timer.get() > time) {
+            shooterPid.set(0);
+            timer.stop();
+            timer.reset();
+        }
+    }
+
     public double getKickerMotorPower() {
         return shooterPid.get();
     }
 
     public ShooterPID getPID() {
         return shooterPid;
+    }
+
+    public void togglePID() {
+        if (operatorInputs.backPressed()) {
+
+            shooterPid.toggleDisable();
+        }
     }
 
     /*
@@ -142,20 +164,20 @@ public class Shooter {
     public void quickButtonShoot(double time, double power, double delay) {
         if (oi.isShooterTriggerPressed() && shooterPid.isDisabled()) {
             kicking = true;
-            shootTimer.start();
+            timer.start();
         }
         //shootTimer.reset();
         //System.out.println("Loop should be starting");
 
-        if ((shootTimer.get() > delay) && (shootTimer.get() < time)) {
+        if ((timer.get() > delay) && (timer.get() < time)) {
             shooterPid.set(power);
         }
         //System.out.println("Motor should be going");
         //ystem.out.println(shootTimer.get());
-        if (shootTimer.get() > time) {
+        if (timer.get() > time) {
             shooterPid.set(0);
-            shootTimer.stop();
-            shootTimer.reset();
+            timer.stop();
+            timer.reset();
             kicking = false;
 
         }

@@ -22,6 +22,7 @@ public class OperatorInputs {
     private final int RIGHT_BUMPER = 6;
     private final int LEFT_BUMPER = 5; //this is is the poot butt
     private final int BACK_BUTTON = 7;
+    private final int START_BUTTON = 8;
     //private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
     private final int XBOX_TRIGGER = 3;
 
@@ -45,7 +46,11 @@ public class OperatorInputs {
     public void readAll() {
 
     }
-
+    
+    public boolean startPressed()
+    {
+        return xBox.getRawButton(START_BUTTON);
+    }
     public boolean isShooterTriggerPressed() {
         triggerPressed = xBox.getRawAxis(XBOX_TRIGGER);
         System.out.println("Trigger Pressed " + (RIGHT_TRIGGER_MIN <= triggerPressed && triggerPressed <= RIGHT_TRIGGER_MAX));
@@ -58,7 +63,7 @@ public class OperatorInputs {
     }
 
     //change later
-    public boolean isCaliButtonPressed() {
+    public boolean backPressed() {
         return xBox.getRawButton(BACK_BUTTON);
     }
 

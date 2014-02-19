@@ -59,6 +59,17 @@ public class ShooterPID extends PIDSubsystem {
             disable();
         }
     }
+    
+    public void toggleDisable() {
+        if(getPIDController().isEnable())
+        {
+            disable();
+        }
+        else
+        {
+            enable();
+        }
+    }
 
     public boolean isDisabled() {
         return !getPIDController().isEnable();

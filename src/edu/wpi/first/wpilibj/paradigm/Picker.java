@@ -9,9 +9,10 @@ package edu.wpi.first.wpilibj.paradigm;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 //import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.AnalogChannel;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
+//import edu.wpi.first.wpilibj.AnalogChannel;
+//import edu.wpi.first.wpilibj.PIDController;
+//import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  *
@@ -51,15 +52,16 @@ public class Picker {
 //    private final AnalogChannel analogChannel = new AnalogChannel(pickerChannel);
     private double pickerAngleVoltage;
     private double pickerAngleDegree;
-    // private double MAX_ENCODER_VOLTAGE = 5.0;
-    // private boolean settingPos1 = false;
-    // private boolean settingPos2 = false;
-    // private boolean settingPos3 = false;
+    private double MAX_ENCODER_VOLTAGE = 5.0;
+    private boolean settingPos1 = false;
+    private boolean settingPos2 = false;
+    private boolean settingPos3 = false;
     private final int A_BUTTON = 1;
     private final int B_BUTTON = 2;
     private final int Y_BUTTON = 4;
     boolean isPicking;
     private boolean isManual;
+    private static final Timer timer = new Timer();
 
     public PickerPID pickerPID;
 
@@ -75,6 +77,21 @@ public class Picker {
 
     public double getVoltage() {
         return pickerPID.getVoltage();
+    }
+
+    public void disableToggle() {
+        double delay = 0.01;
+        double time;
+        time = .2;
+        timer.start();
+        if ((timer.get() > delay) && (timer.get() < time)) {
+            pickerPID.toggleDisable();
+        }
+        if (timer.get() > time) {
+            pickerPID.set(0);
+            timer.stop();
+            timer.reset();
+        }
     }
 
     public void kick() {
@@ -220,60 +237,58 @@ public class Picker {
      }
      //System.out.println("End of method");
      }
+     */
+    public void manualPickerControl() {
 
-     public void manualPickerControl() {
+        if (!settingPos1 && !settingPos2 && !settingPos3 && Math.abs(operatorInputs.xboxLeftY()) > 0) {
+            //pickerPID.disable();
 
-     if (!settingPos1 && !settingPos2 && !settingPos3 && Math.abs(operatorInputs.xboxLeftY()) > 0) {
-     //pickerPID.disable();
+            pickerPID.set(-operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
+            //System.out.println("TALON_OUT " + pickerPID.getTalonValue());
+            //pickerPID.getPIDController().reset();
+            isManual = true;
+        } else if (isManual && operatorInputs.xboxLeftY() == 0) {
+            isManual = false;
+            pickerPID.set(0);
+        }
+        //System.out.println("controllerXboxY " + operatorInputs.xboxLeftY());
+    }
 
-     pickerPID.set(-operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
-     //System.out.println("TALON_OUT " + pickerPID.getTalonValue());
-     //pickerPID.getPIDController().reset();
-     isManual = true;
-     } else if (isManual && operatorInputs.xboxLeftY() == 0) {
-     isManual = false;
-     pickerPID.set(0);
-     }
-     //System.out.println("controllerXboxY " + operatorInputs.xboxLeftY());
-     }
-    
-     public void setPosKicking() {
-     buttonPressed = operatorInputs.isPickerKickingPositionButtonPressed();
-     currentAngle = pickerPID.getPickerAngle();
-     if (buttonPressed && !settingPos1 && !settingPos3) {
-     settingPos2 = true;
-     }
-     if (settingPos2 = true) {
-     if (currentAngle > kickPos) {
-     pickerPID.set(-0.7);
-     } else if (currentAngle < kickPos) {
-     pickerPID.set(0.7);
-     } else if (currentAngle == kickPos) {
-     pickerPID.set(0);
-     settingPos2 = false;
-     }
-     }
-     }
-     
+    public void setPosKicking() {
+        buttonPressed = operatorInputs.isPickerKickingPositionButtonPressed();
+        currentAngle = pickerPID.getPickerAngle();
+        if (buttonPressed && !settingPos1 && !settingPos3) {
+            settingPos2 = true;
+        }
+        if (settingPos2 = true) {
+            if (currentAngle > kickPos) {
+                pickerPID.set(-0.7);
+            } else if (currentAngle < kickPos) {
+                pickerPID.set(0.7);
+            } else if (currentAngle == kickPos) {
+                pickerPID.set(0);
+                settingPos2 = false;
+            }
+        }
+    }
 
-     public void setPosAuto() {
-     buttonPressed = xBox.getRawButton(Y_BUTTON);
-     currentAngle = pickerPID.getPickerAngle();
-     if (buttonPressed && !settingPos1 && !settingPos2) {
-     settingPos3 = true;
-     }
-     if (settingPos3 = true) {
-     if (currentAngle > trussPos) {
-     pickerPID.set(-0.7);
-     } else if (currentAngle < trussPos) {
-     pickerPID.set(0.7);
-     } else if (currentAngle == trussPos) {
-     pickerPID.set(0);
-     settingPos3 = false;
-     }
-     }
-     }
+    public void setPosAuto() {
+        buttonPressed = xBox.getRawButton(Y_BUTTON);
+        currentAngle = pickerPID.getPickerAngle();
+        if (buttonPressed && !settingPos1 && !settingPos2) {
+            settingPos3 = true;
+        }
+        if (settingPos3 = true) {
+            if (currentAngle > trussPos) {
+                pickerPID.set(-0.7);
+            } else if (currentAngle < trussPos) {
+                pickerPID.set(0.7);
+            } else if (currentAngle == trussPos) {
+                pickerPID.set(0);
+                settingPos3 = false;
+            }
+        }
+    }
 
      //need to figure out moveable parts on the picker in order to assign functions
-     */
 }

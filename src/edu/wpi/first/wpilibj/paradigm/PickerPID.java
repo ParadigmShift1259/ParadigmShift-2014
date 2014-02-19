@@ -26,10 +26,10 @@ public class PickerPID extends PIDSubsystem {
     public static double VOLTAGE_CORRECTION = 2.07;//2.62?
     private static final double step = .4; //aded by John
     /*
-    private double desiredPos; //added by John
-    private boolean posSet; //added by John
-    private double nextStep; //added by John
-    */
+     private double desiredPos; //added by John
+     private boolean posSet; //added by John
+     private double nextStep; //added by John
+     */
     public static double TOLERANCE = 0.02;
     private static final int pickerChannel = 2;
     private static final AnalogChannel analogChannel = new AnalogChannel(pickerChannel);
@@ -62,42 +62,50 @@ public class PickerPID extends PIDSubsystem {
 
         return pickerMotor.get();
     }
-/*
-    public void setNewSetpoint(double desiredPos) //added by John
-    {
-        this.desiredPos = desiredPos;
-        posSet = false;
-    }
 
-    public void steppedSetpoint() //added by John
-    {
-        if (!posSet) {
-            double currentPos = VOLTAGE_CORRECTION - analogChannel.getVoltage();
-            //determines to go higher or lower
-            if ((desiredPos - currentPos) > 0) {
-                //if it is out of the step do a step else set to end
-                if ((nextStep - currentPos) > TOLERANCE) {//change 0.025 to TOLERANCE variable
-
-                } else if (Math.abs(desiredPos - currentPos) > step) {
-                    nextStep = currentPos + step;
-                    setSetpoint(nextStep);
-                } else {
-                    setSetpoint(desiredPos);
-                    posSet = true;
-                }
-            } else {
-                //if it is out of the step do a step else set to end
-                if ((currentPos - nextStep) > TOLERANCE) {//change 0.025 to TOLERANCE variable
-                } else if (Math.abs(desiredPos - currentPos) > step) {
-                    nextStep = currentPos - step;
-                    setSetpoint(nextStep);
-                } else {
-                    setSetpoint(desiredPos);
-                    posSet = true;
-                }
-            }
+    public void toggleDisable() {
+        if (getPIDController().isEnable()) {
+            disable();
+        } else {
+            enable();
         }
-    }*/
+    }
+    /*
+     public void setNewSetpoint(double desiredPos) //added by John
+     {
+     this.desiredPos = desiredPos;
+     posSet = false;
+     }
+
+     public void steppedSetpoint() //added by John
+     {
+     if (!posSet) {
+     double currentPos = VOLTAGE_CORRECTION - analogChannel.getVoltage();
+     //determines to go higher or lower
+     if ((desiredPos - currentPos) > 0) {
+     //if it is out of the step do a step else set to end
+     if ((nextStep - currentPos) > TOLERANCE) {//change 0.025 to TOLERANCE variable
+
+     } else if (Math.abs(desiredPos - currentPos) > step) {
+     nextStep = currentPos + step;
+     setSetpoint(nextStep);
+     } else {
+     setSetpoint(desiredPos);
+     posSet = true;
+     }
+     } else {
+     //if it is out of the step do a step else set to end
+     if ((currentPos - nextStep) > TOLERANCE) {//change 0.025 to TOLERANCE variable
+     } else if (Math.abs(desiredPos - currentPos) > step) {
+     nextStep = currentPos - step;
+     setSetpoint(nextStep);
+     } else {
+     setSetpoint(desiredPos);
+     posSet = true;
+     }
+     }
+     }
+     }*/
 
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
