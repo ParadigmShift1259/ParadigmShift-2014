@@ -35,7 +35,7 @@ public class AdventureRick extends IterativeRobot {
     Preferences prefs;
     private boolean checkForKickerStop = false;
     private boolean shootTimerBool = true;
-    ColwellSpecial colwellSpecial;
+    ColwellContraption colwellSpecial;
     final int PRESSURE_SWITCH_CHANNEL = 1;
     final int COMPRESSOR_RELAY_CHANNEL = 1;
 
@@ -49,7 +49,7 @@ public class AdventureRick extends IterativeRobot {
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
-        colwellSpecial = new ColwellSpecial();
+        colwellSpecial = new ColwellContraption();
         //shoot = new Shooter(operatorInputs);//add parameters as needed
         
         
