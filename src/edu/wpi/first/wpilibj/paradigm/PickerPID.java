@@ -149,4 +149,8 @@ public class PickerPID extends PIDSubsystem {
         SmartDashboard.putNumber("Picker PID Output Value = ", (-output));
     }
 
+    public void disable() {
+        disable();
+    }
+
 }
