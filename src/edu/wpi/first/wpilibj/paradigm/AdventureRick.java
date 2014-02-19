@@ -158,11 +158,14 @@ public class AdventureRick extends IterativeRobot {
         //next 2 lines to add manual disable for PIDs
         shoot.disableToggle();
         pick.disableToggle();
+        //next 2 lines disable PID if in tolerance of position
+        shoot.inPositionDisable();
+        pick.inPositionDisable();
+
         drive.setPower();
         pick.kick();
         pick.pick();
-        pick.truss();
-        shoot.disableShooterPIDIfInPos();
+        pick.middle();
 
         //remove if not needed
         //compressor.start();
@@ -177,7 +180,6 @@ public class AdventureRick extends IterativeRobot {
 //        shoot.setKickingPosition();
         shoot.manualShooterControl();
         shoot.quickButtonShoot(1.0, -1.0, 0.2);
-        shoot.disableShooterPIDIfInPos();
         pick.spinGrabber();//works 2/12/14
         pick.spinPooter();//works 2/12/14
         //compressor.start();

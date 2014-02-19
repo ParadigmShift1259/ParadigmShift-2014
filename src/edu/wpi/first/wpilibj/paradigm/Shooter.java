@@ -62,6 +62,13 @@ public class Shooter {
         return shooterPid.getVoltage();
     }
 
+    public void inPositionDisable() {
+        double tolerance = .05;
+        if (shooterPid.getPIDController().getSetpoint() > shooterPid.getVoltage() - tolerance && shooterPid.getPIDController().getSetpoint() < shooterPid.getVoltage() + tolerance) {
+            shooterPid.disable();
+        }
+    }
+
     public void disableToggle() {
         double delay = 0.01;
         double time;
@@ -155,10 +162,6 @@ public class Shooter {
 
     public void moveToPickPos() {
         shooterPid.prepPick();
-    }
-
-    public void disableShooterPIDIfInPos() {
-        shooterPid.disableIfInPos();
     }
 
     public void quickButtonShoot(double time, double power, double delay) {

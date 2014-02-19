@@ -24,14 +24,14 @@ public class Picker {
     private Joystick xBox = new Joystick(2);
     private double pickPos = -1.00; //change value later, position while loading
     public double kickPos = 0.50; //change value later, position while shooting/aiming
-    private double trussPos = 0.28; //change value later, position at the beginning of the auto/match
+    private double middlePos = 0.28; //change value later, position at the beginning of the auto/match
     private double currentAngle; //the picker's current pos(ition)
     private final int RIGHT_BUMPER = 6; //this is the x butt on the controller
     private final int BUTTON_LB = 5; //this is is the poot butt
     private boolean buttonPressed = false; //used to indicate if any button is pressed
     private boolean isKickPos = false;
     private boolean isPickPos = false;
-    private boolean isTrussPos = false;
+    private boolean isMiddlePos = false;
     private boolean isGrabbing = false;
     public static double KP_SOFT = 1.0;
     public static double KP_MEDIUM = 0.4;
@@ -97,6 +97,7 @@ public class Picker {
     public void kick() {
         buttonPressed = operatorInputs.xBoxXButton();
         if (buttonPressed) {
+            pickerPID.enable();
             isKickPos = true;
             PickerPID.Kp = KP_SOFT;
             PickerPID.Ki = KI_MEDIUM;
@@ -113,17 +114,18 @@ public class Picker {
         }
     }
 
-    public void truss() {
+    public void middle() {
         buttonPressed = xBox.getRawButton(Y_BUTTON);
         if (buttonPressed) {
+            pickerPID.enable();
             //System.out.println(pickerPID.getSetpoint());
-            isTrussPos = true;
-            if (pickerPID.getPosition() > trussPos) {
+            isMiddlePos = true;
+            if (pickerPID.getPosition() > middlePos) {
                 //to move from kick
                 PickerPID.Kp = KP_HARD;
                 PickerPID.Ki = KI_HARD;
                 PickerPID.Kd = KD_HARD;
-            } else if (pickerPID.getPosition() == trussPos) {
+            } else if (pickerPID.getPosition() == middlePos) {
             } else {
                 // to move from pick
                 PickerPID.Kp = KP_SOFT;
@@ -133,18 +135,26 @@ public class Picker {
             pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
             pickerPID.getPIDController().reset();
             pickerPID.enable();
-            pickerPID.setSetpoint(trussPos);
+            pickerPID.setSetpoint(middlePos);
             AdventureRick.shoot.moveToKickPos();
         } else if (!buttonPressed) {
-            isTrussPos = false;
+            isMiddlePos = false;
             //?
 
+        }
+    }
+
+    public void inPositionDisable() {
+        double tolerance = .05;
+        if (pickerPID.getPIDController().getSetpoint() > pickerPID.getVoltage() - tolerance && pickerPID.getPIDController().getSetpoint() < pickerPID.getVoltage() + tolerance) {
+            pickerPID.disable();
         }
     }
 
     public void pick() {
         buttonPressed = xBox.getRawButton(B_BUTTON);
         if (buttonPressed) {
+            pickerPID.enable();
             isPickPos = true;
             PickerPID.Kp = KP_MEDIUM;
             PickerPID.Ki = KI_SOFT;
@@ -279,11 +289,11 @@ public class Picker {
             settingPos3 = true;
         }
         if (settingPos3 = true) {
-            if (currentAngle > trussPos) {
+            if (currentAngle > middlePos) {
                 pickerPID.set(-0.7);
-            } else if (currentAngle < trussPos) {
+            } else if (currentAngle < middlePos) {
                 pickerPID.set(0.7);
-            } else if (currentAngle == trussPos) {
+            } else if (currentAngle == middlePos) {
                 pickerPID.set(0);
                 settingPos3 = false;
             }
