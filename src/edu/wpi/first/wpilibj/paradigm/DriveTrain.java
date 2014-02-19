@@ -270,7 +270,8 @@ public class DriveTrain {
     }
 
     public void childProofing() {//needs to be tested on bot - Allison
-        if (rightChildProofSetter < .05 && leftChildProofSetter < .05) {
+        //fixed by everyone
+        if (rightChildProofSetter < .2 && leftChildProofSetter < .2) {
             childProofConfirmed = true;
         } else {
             childProofConfirmed = false;
