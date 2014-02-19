@@ -20,7 +20,7 @@ public class PickerPID extends PIDSubsystem {
     public static double Ki = 0.025; //0.03
     public static double Kd = 4.5; //1.6
     public static double position = 0.35;
-    public static double outputBounds = 0.8;
+    public static double outputBounds = 0.8; // EAC.2014.02.19 - Consider changing to 10 if you also use the suggestion in usePIDOutput()
 
     private double currentAngle;
     public static double VOLTAGE_CORRECTION = 2.07;//2.62?
@@ -30,7 +30,7 @@ public class PickerPID extends PIDSubsystem {
      private boolean posSet; //added by John
      private double nextStep; //added by John
      */
-    public static double TOLERANCE = 0.02;
+    public static double TOLERANCE = 0.02; // EAC.2014.02.19 - may benefit in compile-size by being static, consider changing to 0.05
     private static final int pickerChannel = 2;
     private static final AnalogChannel analogChannel = new AnalogChannel(pickerChannel);
     private static final Talon pickerMotor = new Talon(4);
@@ -121,7 +121,7 @@ public class PickerPID extends PIDSubsystem {
         SmartDashboard.putNumber("Picker Voltage Angle = ", VOLTAGE_CORRECTION - analogChannel.getVoltage());
         SmartDashboard.putNumber("Position", getPIDController().getSetpoint());
         return pickerAngleVoltage = VOLTAGE_CORRECTION - analogChannel.getVoltage(); //comment
-//return getPickerAngle();
+
     }
 
     public double getPickerAngle() {
@@ -144,7 +144,7 @@ public class PickerPID extends PIDSubsystem {
     protected void usePIDOutput(double output) {
         // Use output to drive your system, like a motor
         // e.g. yourMotor.set(output);
-        pickerMotor.set(-output);
+        pickerMotor.set(-output);  // EAC.2014.02.19 - Consider having the output be in the range of -10 to 10, then divide by the current battery line voltage, we'd have to test to make sure this isn't too dynamic
         System.out.println("Picker PID Output = " + (-output));
         SmartDashboard.putNumber("Picker PID Output Value = ", (-output));
     }

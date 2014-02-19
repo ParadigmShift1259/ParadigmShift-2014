@@ -19,11 +19,11 @@ public class DriveTrain {
 
     OperatorInputs operatorInputs;
 
-    final int LEFT_PORT = 1; //attributes  defining the class
-    final int RIGHT_PORT = 2;
-    final int SHIFT_PORT_LOW = 1;
-    final int SHIFT_PORT_HIGH = 2;
-    final int SHIFT_MODULE = 1;
+    final int LEFT_PORT = 1; //attributes  defining the class  // EAC.2014.02.19 - may benefit in compile-size by being static
+    final int RIGHT_PORT = 2; // EAC.2014.02.19 - may benefit in compile-size by being static
+    final int SHIFT_PORT_LOW = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
+    final int SHIFT_PORT_HIGH = 2; // EAC.2014.02.19 - may benefit in compile-size by being static
+    final int SHIFT_MODULE = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
 
     public Talon leftTalons; //has to motors and motor controllers 
     public Talon rightTalons;
@@ -56,8 +56,8 @@ public class DriveTrain {
     boolean isLeftHigher = true;
     double leftSpeed = 0;
     double rightSpeed = 0;
-    final double encoderDeadzone = 1000;
-    final double encoderWaitTime = 168; //0250 is 250 octal = 168 decimal
+    final double encoderDeadzone = 1000; // EAC.2014.02.19 - may benefit in compile-size by being static
+    final double encoderWaitTime = 168; //0250 is 250 octal = 168 decimal // EAC.2014.02.19 - may benefit in compile-size by being static
     double leftChildProofSetter;
     double rightChildProofSetter;
     boolean childProofConfirmed = false;
@@ -82,11 +82,7 @@ public class DriveTrain {
     }
 
     public double fix(double v) {
-//        if (v > 1.0) {
-//            return ((v - 1.0) * speedMult);
-//        } else if (v < -1.0) {
-//            return ((v + 1.0) * speedMult);
-//        }
+
         return v / fixNum;
     }
 
@@ -249,15 +245,6 @@ public class DriveTrain {
 //            previousTriggerPressed = !triggerPressed;
 //        }
     }
-//
-//    public void engageShifter() {
-//        if (operatorInputs.joystickTriggerPressed()) {
-//            shiftItLikeItsHot = 1;
-//        }
-//        if (operatorInputs.joystickTriggerPressedAgain()) {
-//            shiftItLikeItsHot = 0;
-//
-//        }
 
     public void setSpeedPositive() {
         totalSpeed = (leftPow + rightPow) / 2;

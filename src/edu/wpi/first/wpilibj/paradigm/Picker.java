@@ -26,8 +26,8 @@ public class Picker {
     public double kickPos = 0.50; //change value later, position while shooting/aiming
     private double middlePos = 0.28; //change value later, position at the beginning of the auto/match
     private double currentAngle; //the picker's current pos(ition)
-    private final int RIGHT_BUMPER = 6; //this is the x butt on the controller
-    private final int BUTTON_LB = 5; //this is is the poot butt
+    private final int RIGHT_BUMPER = 6; //this is the x butt on the controller  // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final int BUTTON_LB = 5; //this is is the poot butt  // EAC.2014.02.19 - may benefit in compile-size by being static
     private boolean buttonPressed = false; //used to indicate if any button is pressed
     private boolean isKickPos = false;
     private boolean isPickPos = false;
@@ -56,18 +56,16 @@ public class Picker {
     private boolean settingPos1 = false;
     private boolean settingPos2 = false;
     private boolean settingPos3 = false;
-    private final int A_BUTTON = 1;
-    private final int B_BUTTON = 2;
-    private final int Y_BUTTON = 4;
+    private final int A_BUTTON = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final int B_BUTTON = 2; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final int Y_BUTTON = 4; // EAC.2014.02.19 - may benefit in compile-size by being static
     boolean isPicking;
     private boolean isManual;
     private static final Timer timer = new Timer();
 
     public PickerPID pickerPID;
 
-//boolean isPooting; already defined
-
-    /*
+    /**
      This is the constructor for the Picker class.
      */
     public Picker(OperatorInputs _operatorInputs, PickerPID pickerPid) {

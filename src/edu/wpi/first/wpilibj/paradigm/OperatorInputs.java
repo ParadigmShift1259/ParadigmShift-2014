@@ -15,26 +15,26 @@ public class OperatorInputs {
 
     //variables
     private double triggerPressed;
-    private final int A_BUTTON = 1;
-    private final int B_BUTTON = 2;
-    private final int X_BUTTON = 3;
-    private final int Y_BUTTON = 4;
-    private final int RIGHT_BUMPER = 6;
-    private final int LEFT_BUMPER = 5; //this is is the poot butt
-    private final int BACK_BUTTON = 7;
-    private final int START_BUTTON = 8;
-    //private final Joystick.AxisType LEFT_TRIGGER = Joystick.AxisType.kZ;
-    private final int XBOX_TRIGGER = 3;
+    private final int A_BUTTON = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final int B_BUTTON = 2; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final int X_BUTTON = 3; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final int Y_BUTTON = 4; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final int RIGHT_BUMPER = 6; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final int LEFT_BUMPER = 5; //this is is the poot butt // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final int BACK_BUTTON = 7; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final int START_BUTTON = 8; // EAC.2014.02.19 - may benefit in compile-size by being static
 
-    private final double RIGHT_TRIGGER_MIN = -1.0;
-    private final double RIGHT_TRIGGER_MAX = -0.5;
-    private final double LEFT_TRIGGER_MIN = 0.5;
-    private final double LEFT_TRIGGER_MAX = 1.0;
+    private final int XBOX_TRIGGER = 3; // EAC.2014.02.19 - may benefit in compile-size by being static
+
+    private final double RIGHT_TRIGGER_MIN = -1.0; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final double RIGHT_TRIGGER_MAX = -0.5; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final double LEFT_TRIGGER_MIN = 0.5; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private final double LEFT_TRIGGER_MAX = 1.0; // EAC.2014.02.19 - may benefit in compile-size by being static
 
     private Joystick joystick = new Joystick(1); //Created and initialized the joystick controller
     private Joystick xBox = new Joystick(2); //Created and initialized the xbox controller
-    final double DEADZONE_Y = 0.05;
-    final double DEADZONE_X = 0.15;
+    final double DEADZONE_Y = 0.05; // EAC.2014.02.19 - may benefit in compile-size by being static
+    final double DEADZONE_X = 0.15; // EAC.2014.02.19 - may benefit in compile-size by being static
 
 //    public OperatorInputs() {
 //        this.shiftUp = true;
@@ -43,6 +43,7 @@ public class OperatorInputs {
 
     }
 
+    // EAC.2014.02.19 - do we want to remove this?
     public void readAll() {
 
     }
@@ -51,12 +52,15 @@ public class OperatorInputs {
     {
         return xBox.getRawButton(START_BUTTON);
     }
+    
+    // EAC.2014.02.19 - We may want to consider a more generic name
     public boolean isShooterTriggerPressed() {
         triggerPressed = xBox.getRawAxis(XBOX_TRIGGER);
         System.out.println("Trigger Pressed " + (RIGHT_TRIGGER_MIN <= triggerPressed && triggerPressed <= RIGHT_TRIGGER_MAX));
         return (RIGHT_TRIGGER_MIN <= triggerPressed && triggerPressed <= RIGHT_TRIGGER_MAX);
     }
 
+    // EAC.2014.02.19 - We may want to consider a more generic name
     public boolean isSetKickerPositionButtonPressed() {
         triggerPressed = xBox.getRawAxis(XBOX_TRIGGER);
         return (LEFT_TRIGGER_MIN <= triggerPressed && triggerPressed <= LEFT_TRIGGER_MAX);
@@ -67,14 +71,17 @@ public class OperatorInputs {
         return xBox.getRawButton(BACK_BUTTON);
     }
 
+    // EAC.2014.02.19 - We may want to consider a more generic name
     public boolean isPickerLoadingPositionButtonPressed() {
         return xBox.getRawButton(A_BUTTON);
     }
 
+    // EAC.2014.02.19 - We may want to consider a more generic name
     public boolean isPickerKickingPositionButtonPressed() {
         return xBox.getRawButton(Y_BUTTON);
     }
 
+    // EAC.2014.02.19 - We may want to consider a more generic name
     public boolean isPickingAutoPositionButtonPressed() {
         return xBox.getRawButton(B_BUTTON);
     }
@@ -83,14 +90,17 @@ public class OperatorInputs {
         return xBox.getRawButton(X_BUTTON);
     }
 
+    // EAC.2014.02.19 - We may want to consider a more generic name
     public boolean isGrabbingButtonPressed() {
         return xBox.getRawButton(RIGHT_BUMPER);
     }
 
+    // EAC.2014.02.19 - We may want to consider a more generic name
     public boolean isReleaseButtonPressed() {
         return xBox.getRawButton(LEFT_BUMPER);
     }
 
+    // EAC.2014.02.19 - We may want to consider a more generic name
     public boolean isShootButtonPressed() {
         return xBox.getRawButton(LEFT_BUMPER);
     }
