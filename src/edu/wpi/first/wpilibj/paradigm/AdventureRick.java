@@ -10,10 +10,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Solenoid;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the
@@ -236,9 +234,9 @@ public class AdventureRick extends IterativeRobot {
 
         station = station.getInstance();
 
-        //SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
-        //SmartDashboard.putNumber("Picker_Position", pick.getVoltage());
-        //SmartDashboard.putNumber("Battery Voltage: ", station.getBatteryVoltage());
+        SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
+        SmartDashboard.putNumber("Picker_Position", pick.getVoltage());
+        SmartDashboard.putNumber("Battery Voltage: ", station.getBatteryVoltage());
         System.out.println("Battery Voltage: " + station.getBatteryVoltage());
         drive.setPower();
         drive.shift();

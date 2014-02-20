@@ -36,8 +36,6 @@ public class ShooterPID extends PIDSubsystem {
         getPIDController().setOutputRange(-OUTPUT_BOUNDS, OUTPUT_BOUNDS);
         getPIDController().setContinuous(true);
         setAbsoluteTolerance(TOLERANCE);
-        setSetpoint(KICKX_POS);
-        enable();
     }
 
     public void prepKickx() {
