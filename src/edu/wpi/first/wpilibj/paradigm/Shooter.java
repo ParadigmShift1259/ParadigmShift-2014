@@ -51,6 +51,7 @@ public class Shooter {
     private boolean calibrated = false;
     private boolean settingPos = false;
     private final double MAX_ENCODER_VOLTAGE = 5.0; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final double DISABLE_TOLERANCE = .05;
     public Timer timer = new Timer();
     public ShooterPID shooterPid = new ShooterPID();
 
@@ -63,8 +64,7 @@ public class Shooter {
     }
 
     public void inPositionDisable() {
-        double tolerance = .05; // EAC.2014.02.19 - this should possibly be a constant at the top of the class
-        if (shooterPid.getPIDController().getSetpoint() > shooterPid.getVoltage() - tolerance && shooterPid.getPIDController().getSetpoint() < shooterPid.getVoltage() + tolerance) {
+        if (shooterPid.getPIDController().getSetpoint() > shooterPid.getVoltage() - DISABLE_TOLERANCE && shooterPid.getPIDController().getSetpoint() < shooterPid.getVoltage() + DISABLE_TOLERANCE) {
             shooterPid.disable();
         }
     }
@@ -157,11 +157,15 @@ public class Shooter {
     }
 
     public void moveToKickPos() {
-        shooterPid.prepKickx();
+        if (operatorInputs.xBoxXButton() || operatorInputs.xBoxYButton()) {
+            shooterPid.prepKickx();
+        }
     }
 
     public void moveToPickPos() {
-        shooterPid.prepPick();
+        if (operatorInputs.xBoxBButton()) {
+            shooterPid.prepPick();
+        }
     }
 
     public void quickButtonShoot(double time, double power, double delay) {

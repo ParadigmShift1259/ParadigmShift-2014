@@ -66,7 +66,7 @@ public class Picker {
     public PickerPID pickerPID;
 
     /**
-     This is the constructor for the Picker class.
+     * This is the constructor for the Picker class.
      */
     public Picker(OperatorInputs _operatorInputs, PickerPID pickerPid) {
         this.operatorInputs = _operatorInputs;
@@ -104,7 +104,6 @@ public class Picker {
             pickerPID.getPIDController().reset();
             pickerPID.enable();
             pickerPID.setSetpoint(kickPos);
-            AdventureRick.shoot.moveToKickPos();
         } else if (!buttonPressed) {
             isKickPos = false;
             //?
@@ -113,7 +112,7 @@ public class Picker {
     }
 
     public void middle() {
-        buttonPressed = xBox.getRawButton(Y_BUTTON);
+        buttonPressed = operatorInputs.xBoxYButton();
         if (buttonPressed) {
             pickerPID.enable();
             //System.out.println(pickerPID.getSetpoint());
@@ -134,7 +133,6 @@ public class Picker {
             pickerPID.getPIDController().reset();
             pickerPID.enable();
             pickerPID.setSetpoint(middlePos);
-            AdventureRick.shoot.moveToKickPos();
         } else if (!buttonPressed) {
             isMiddlePos = false;
             //?
@@ -150,7 +148,7 @@ public class Picker {
     }
 
     public void pick() {
-        buttonPressed = xBox.getRawButton(B_BUTTON);
+        buttonPressed = operatorInputs.xBoxBButton();
         if (buttonPressed) {
             pickerPID.enable();
             isPickPos = true;
@@ -161,7 +159,6 @@ public class Picker {
             pickerPID.getPIDController().reset();
             pickerPID.enable();
             pickerPID.setSetpoint(pickPos);
-            AdventureRick.shoot.moveToPickPos();
         } else if (!buttonPressed) {
             isPickPos = false;
             //?
@@ -263,7 +260,7 @@ public class Picker {
     }
 
     public void setPosKicking() {
-        buttonPressed = operatorInputs.isPickerKickingPositionButtonPressed();
+        buttonPressed = operatorInputs.xBoxYButton();
         currentAngle = pickerPID.getPickerAngle();
         if (buttonPressed && !settingPos1 && !settingPos3) {
             settingPos2 = true;

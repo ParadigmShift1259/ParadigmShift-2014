@@ -77,12 +77,12 @@ public class OperatorInputs {
     }
 
     // EAC.2014.02.19 - We may want to consider a more generic name
-    public boolean isPickerKickingPositionButtonPressed() {
+    public boolean xBoxYButton() {
         return xBox.getRawButton(Y_BUTTON);
     }
 
     // EAC.2014.02.19 - We may want to consider a more generic name
-    public boolean isPickingAutoPositionButtonPressed() {
+    public boolean xBoxBButton() {
         return xBox.getRawButton(B_BUTTON);
     }
 

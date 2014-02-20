@@ -175,6 +175,8 @@ public class AdventureRick extends IterativeRobot {
         pick.kick();
         pick.middle();
         pick.pick();
+        shoot.moveToKickPos();
+        shoot.moveToPickPos();
 
 //shift when the trigger is pressed
         drive.shift();
