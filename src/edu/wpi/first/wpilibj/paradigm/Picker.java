@@ -62,6 +62,7 @@ public class Picker {
     boolean isPicking;
     private boolean isManual;
     private static final Timer timer = new Timer();
+    private static final double PID_DISABLE_TOLERANCE = 0.5;
 
     public PickerPID pickerPID;
 
@@ -132,8 +133,7 @@ public class Picker {
     }
 
     public void inPositionDisable() {
-        double tolerance = .05;
-        if (pickerPID.getPIDController().getSetpoint() > pickerPID.getVoltage() - tolerance && pickerPID.getPIDController().getSetpoint() < pickerPID.getVoltage() + tolerance) {
+        if (pickerPID.getPIDController().getSetpoint() > pickerPID.getVoltage() - PID_DISABLE_TOLERANCE && pickerPID.getPIDController().getSetpoint() < pickerPID.getVoltage() + PID_DISABLE_TOLERANCE) {
             pickerPID.disable();
         }
     }
