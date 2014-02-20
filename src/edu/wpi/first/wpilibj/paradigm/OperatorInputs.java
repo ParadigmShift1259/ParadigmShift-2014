@@ -15,26 +15,23 @@ public class OperatorInputs {
 
     //variables
     private double triggerPressed;
-    private final int A_BUTTON = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final int B_BUTTON = 2; // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final int X_BUTTON = 3; // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final int Y_BUTTON = 4; // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final int RIGHT_BUMPER = 6; // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final int LEFT_BUMPER = 5; //this is is the poot butt // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final int BACK_BUTTON = 7; // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final int START_BUTTON = 8; // EAC.2014.02.19 - may benefit in compile-size by being static
-
-    private final int XBOX_TRIGGER = 3; // EAC.2014.02.19 - may benefit in compile-size by being static
-
-    private final double RIGHT_TRIGGER_MIN = -1.0; // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final double RIGHT_TRIGGER_MAX = -0.5; // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final double LEFT_TRIGGER_MIN = 0.5; // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final double LEFT_TRIGGER_MAX = 1.0; // EAC.2014.02.19 - may benefit in compile-size by being static
-
+    private static final int A_BUTTON = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final int B_BUTTON = 2; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final int X_BUTTON = 3; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final int Y_BUTTON = 4; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final int RIGHT_BUMPER = 6; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final int LEFT_BUMPER = 5; //this is is the poot butt // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final int BACK_BUTTON = 7; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final int START_BUTTON = 8; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final int XBOX_TRIGGER = 3; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final double RIGHT_TRIGGER_MIN = -1.0; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final double RIGHT_TRIGGER_MAX = -0.5; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final double LEFT_TRIGGER_MIN = 0.5; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final double LEFT_TRIGGER_MAX = 1.0; // EAC.2014.02.19 - may benefit in compile-size by being static
     private Joystick joystick = new Joystick(1); //Created and initialized the joystick controller
     private Joystick xBox = new Joystick(2); //Created and initialized the xbox controller
-    final double DEADZONE_Y = 0.05; // EAC.2014.02.19 - may benefit in compile-size by being static
-    final double DEADZONE_X = 0.15; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final double DEADZONE_Y = 0.05; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private static final double DEADZONE_X = 0.15; // EAC.2014.02.19 - may benefit in compile-size by being static
 
 //    public OperatorInputs() {
 //        this.shiftUp = true;
@@ -79,6 +76,9 @@ public class OperatorInputs {
     // EAC.2014.02.19 - We may want to consider a more generic name
     public boolean xBoxYButton() {
         return xBox.getRawButton(Y_BUTTON);
+    }
+    public boolean xBoxAButton() {
+        return xBox.getRawButton(A_BUTTON);
     }
 
     // EAC.2014.02.19 - We may want to consider a more generic name

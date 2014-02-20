@@ -164,8 +164,8 @@ public class AdventureRick extends IterativeRobot {
      */
     public void teleopPeriodic() {
         //next 2 lines to add manual disable for PIDs
-        shoot.disableToggle();
-        pick.disableToggle();
+        shoot.emergencyDisablePid();
+        pick.emergencyDisablePid();
         //next 2 lines disable PID if in tolerance of position
         shoot.inPositionDisable();
         pick.inPositionDisable();

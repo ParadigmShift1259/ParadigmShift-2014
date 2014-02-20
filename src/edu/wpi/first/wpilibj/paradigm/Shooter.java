@@ -92,10 +92,9 @@ public class Shooter {
         return shooterPid;
     }
 
-    public void togglePID() {
-        if (operatorInputs.backPressed()) {
-
-            shooterPid.toggleDisable();
+    public void emergencyDisablePid() {
+        if (operatorInputs.xBoxAButton()) {
+            shooterPid.disable();
         }
     }
 

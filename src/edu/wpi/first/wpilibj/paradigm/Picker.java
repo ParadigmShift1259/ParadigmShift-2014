@@ -77,18 +77,9 @@ public class Picker {
         return pickerPID.getVoltage();
     }
 
-    public void disableToggle() {
-        double delay = 0.01;
-        double time;
-        time = .2;
-        timer.start();
-        if ((timer.get() > delay) && (timer.get() < time)) {
-            pickerPID.toggleDisable();
-        }
-        if (timer.get() > time) {
-            pickerPID.set(0);
-            timer.stop();
-            timer.reset();
+    public void emergencyDisablePid() {
+        if (operatorInputs.xBoxAButton()) {
+            pickerPID.disable();
         }
     }
 
