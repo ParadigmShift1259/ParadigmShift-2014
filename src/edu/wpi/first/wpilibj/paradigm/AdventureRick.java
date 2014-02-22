@@ -25,7 +25,7 @@ public class AdventureRick extends IterativeRobot {
     DriveTrain drive;
     OperatorInputs operatorInputs;
     Compressor compressor;
-    public static Shooter shoot;
+    Shooter shoot;
     PickerPID pickerPID;
     Timer autoTimer;
     Picker pick;
@@ -51,7 +51,7 @@ public class AdventureRick extends IterativeRobot {
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
         colwellContraption = new ColwellContraption();
         //shoot = new Shooter(operatorInputs);//add parameters as needed
-        
+        shoot = new Shooter(operatorInputs);
         
         this.autoTimer = new Timer();
         drive.leftEncoder.start();  // EAC.2014.02.19 - we may want to move this initialization into the DriveTrain constructor
@@ -237,7 +237,11 @@ public class AdventureRick extends IterativeRobot {
     public void testPeriodic() {
 
         //station = station.getInstance();
-
+        shoot.emergencyDisablePid();
+        shoot.inPositionDisable();
+        shoot.moveToKickPos();
+        shoot.moveToPickPos();
+        shoot.quickButtonShoot(1.0,-1.0,0.2);
 //        SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
 //        SmartDashboard.putNumber("Picker_Position", pick.getVoltage());
 //        SmartDashboard.putNumber("Battery Voltage: ", station.getBatteryVoltage());

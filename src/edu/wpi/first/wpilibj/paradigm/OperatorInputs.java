@@ -45,7 +45,7 @@ public class OperatorInputs {
 
     }
     
-    public boolean startPressed()
+    public boolean xBoxStartButton()
     {
         return xBox.getRawButton(START_BUTTON);
     }
@@ -64,7 +64,7 @@ public class OperatorInputs {
     }
 
     //change later
-    public boolean backPressed() {
+    public boolean xBoxBackButton() {
         return xBox.getRawButton(BACK_BUTTON);
     }
 

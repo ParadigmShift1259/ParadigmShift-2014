@@ -24,7 +24,7 @@ public class Shooter {
     //the current value can not possibly be the previous value the first time through
     private final double ILLEGAL_ANGLE = -9999.9; //can't be stopped when it hasn't started // EAC.2014.02.19 - may benefit in compile-size by being static
     OperatorInputs oi = new OperatorInputs();
-    private final Joystick xBox = new Joystick(2); // EAC.2014.02.19 - may benefit in compile-size by being static
+    //private final Joystick xBox = new Joystick(2); // EAC.2014.02.19 - may benefit in compile-size by being static
 
 //   private final Talon kickermotor = new Talon(PORT_5);
     private boolean buttonPressed;
@@ -36,7 +36,7 @@ public class Shooter {
     private final double RIGHT_TRIGGER_PRESSED_MAX_VALUE = -0.5; // EAC.2014.02.19 - may benefit in compile-size by being static
     private final double RIGHT_TRIGGER_PRESSED_MIN_VALUE = -1.0; // EAC.2014.02.19 - may benefit in compile-size by being static
     //private final Joystick.AxisType RIGHT_TRIGGER = Joystick.AxisType.kZ;
-    private final int XBOX_TRIGGERS = 3; //renamed because this is both the left trigger and the right trigger // EAC.2014.02.19 - may benefit in compile-size by being static
+    //private final int XBOX_TRIGGERS = 3; //renamed because this is both the left trigger and the right trigger // EAC.2014.02.19 - may benefit in compile-size by being static
     private double motorSpeed = 1.0;
     // private final AnalogChannel analogChannel = new AnalogChannel(1);
     private final DigitalInput digitalInput = new DigitalInput(9); // EAC.2014.02.19 - may benefit in compile-size by being static
@@ -156,13 +156,13 @@ public class Shooter {
     }
 
     public void moveToKickPos() {
-        if (operatorInputs.xBoxXButton() || operatorInputs.xBoxYButton()) {
+        if (operatorInputs.xBoxBackButton() || operatorInputs.xBoxYButton()) {
             shooterPid.prepKickx();
         }
     }
 
     public void moveToPickPos() {
-        if (operatorInputs.xBoxBButton()) {
+        if (operatorInputs.xBoxStartButton()) {
             shooterPid.prepPick();
         }
     }
