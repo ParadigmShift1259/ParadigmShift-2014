@@ -45,6 +45,7 @@ public class AdventureRick extends IterativeRobot {
         drive = new DriveTrain(operatorInputs);
         prefs = Preferences.getInstance();
         pickerPID = new PickerPID();
+        pick = new Picker(operatorInputs,pickerPID);
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
@@ -96,7 +97,7 @@ public class AdventureRick extends IterativeRobot {
         //colwellContraption.pistonUp();
         pickerPID.enable();//proably not going to be needed
         SmartDashboard.putNumber("Some Voltage", pickerPID.getVoltage());
-        if(operatorInputs.isReleaseButtonPressed()){
+        if(operatorInputs.xBoxLeftBumper()){
             colwellContraption.pistonDown();
         }else{
             colwellContraption.pistonUp();
@@ -224,6 +225,8 @@ public class AdventureRick extends IterativeRobot {
         super.testInit();
 //        pickerPID.disable();
         compressor.start();
+        //pickerPID.enable();
+        //pickerPID.setSetpoint(pick.kickPos);
 
     }
 
@@ -233,19 +236,22 @@ public class AdventureRick extends IterativeRobot {
      */
     public void testPeriodic() {
 
-        station = station.getInstance();
+        //station = station.getInstance();
 
-        SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
-        SmartDashboard.putNumber("Picker_Position", pick.getVoltage());
-        SmartDashboard.putNumber("Battery Voltage: ", station.getBatteryVoltage());
-        System.out.println("Battery Voltage: " + station.getBatteryVoltage());
+//        SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
+//        SmartDashboard.putNumber("Picker_Position", pick.getVoltage());
+//        SmartDashboard.putNumber("Battery Voltage: ", station.getBatteryVoltage());
+//        System.out.println("Battery Voltage: " + station.getBatteryVoltage());
         drive.setPower();
         drive.shift();
         drive.childProofing();
         
-        System.out.println("Is High Gear " + drive.isHighGear);
-        System.out.println("Left Power Is "+ drive.leftPow);
-        System.out.println("Right Power Is " + drive.rightPow);
+        System.out.println("Picker Encoder Value Is " + pickerPID.getVoltage());
+        System.out.println("Picker Voltage Correction Is " + PickerPID.VOLTAGE_CORRECTION);
+        
+        //System.out.println("Is High Gear " + drive.isHighGear);
+//        System.out.println("Left Power Is "+ drive.leftPow);
+//        System.out.println("Right Power Is " + drive.rightPow);
         /*
          //pickerPID.enable();
          //        System.out.println("Picker Encoder Value Is " + pick.getPickerAngle());
@@ -261,6 +267,14 @@ public class AdventureRick extends IterativeRobot {
          SmartDashboard.putNumber("Kd", PickerPID.Kd);
          //System.out.println("voltage " + pickerPID.getVoltage());
          */
+        pick.emergencyDisablePid();
+        pick.pick();
+        pick.setPosKicking();
+        //pickerPID.disable();
+        //System.out.println(pickerPID.getPIDController().isEnable());
+        pick.lockKick();
+        pick.spinGrabber();
+        pick.spinPooter();
     }
 
     public void disabledInit() {

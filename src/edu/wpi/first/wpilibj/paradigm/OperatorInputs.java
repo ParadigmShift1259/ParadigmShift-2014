@@ -91,12 +91,12 @@ public class OperatorInputs {
     }
 
     // EAC.2014.02.19 - We may want to consider a more generic name
-    public boolean isGrabbingButtonPressed() {
+    public boolean xBoxRightBumper() {
         return xBox.getRawButton(RIGHT_BUMPER);
     }
 
     // EAC.2014.02.19 - We may want to consider a more generic name
-    public boolean isReleaseButtonPressed() {
+    public boolean xBoxLeftBumper() {
         return xBox.getRawButton(LEFT_BUMPER);
     }
 

@@ -6,7 +6,7 @@
  */
 package edu.wpi.first.wpilibj.paradigm;
 
-import edu.wpi.first.wpilibj.Joystick;
+//import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 //import edu.wpi.first.wpilibj.Encoder;
 //import edu.wpi.first.wpilibj.AnalogChannel;
@@ -21,13 +21,13 @@ import edu.wpi.first.wpilibj.Timer;
 public class Picker {
 
     OperatorInputs operatorInputs;
-    private Joystick xBox = new Joystick(2);
+    //private Joystick xBox = new Joystick(2);
+    private boolean wasKick = false;
+    private static final double LOCK_COEF  = 1.0;
     private double pickPos = -1.00; //change value later, position while loading
-    public double kickPos = 0.50; //change value later, position while shooting/aiming
+    public double kickPos = 0.52; //change value later, position while shooting/aiming
     private double middlePos = 0.28; //change value later, position at the beginning of the auto/match
     private double currentAngle; //the picker's current pos(ition)
-    private final int RIGHT_BUMPER = 6; //this is the x butt on the controller  // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final int BUTTON_LB = 5; //this is is the poot butt  // EAC.2014.02.19 - may benefit in compile-size by being static
     private boolean buttonPressed = false; //used to indicate if any button is pressed
     private boolean isKickPos = false;
     private boolean isPickPos = false;
@@ -41,7 +41,7 @@ public class Picker {
     public static double KI_MEDIUM = 0.03;
     public static double KI_HARD = 0.025;
 
-    public static double KD_SOFT = 4.5;
+    public static double KD_SOFT = 6.0;
     public static double KD_MEDIUM = 12.0;
     public static double KD_HARD = 2.5;
 
@@ -62,8 +62,8 @@ public class Picker {
     boolean isPicking;
     private boolean isManual;
     private static final Timer timer = new Timer();
-    private static final double PID_DISABLE_TOLERANCE = 0.2;
-    private static final double STEP = 0.7;
+    private static final double PID_DISABLE_TOLERANCE = 0.4;
+    private static final double STEP = 0.9;
 
     public PickerPID pickerPID;
 
@@ -83,7 +83,7 @@ public class Picker {
         if (operatorInputs.xBoxAButton()) {
             pickerPID.disable();
         }
-    } 
+    }
 
     public void kick() {
         buttonPressed = operatorInputs.xBoxXButton();
@@ -141,11 +141,12 @@ public class Picker {
 
     public void pick() {
         buttonPressed = operatorInputs.xBoxBButton();
-        if(settingPos1 && pickerPID.getPIDController().onTarget()){
+        if (settingPos1 && pickerPID.getPIDController().onTarget()) {
             settingPos1 = false;
             pickerPID.disable();
         }
         if (buttonPressed) {
+            wasKick = false;
             pickerPID.enable();
             settingPos1 = true;
             isPickPos = true;
@@ -171,7 +172,7 @@ public class Picker {
      BELOW STUFF WORKS NOW
      */
     public void spinGrabber() { //Aka suckySucky();
-        buttonPressed = xBox.getRawButton(RIGHT_BUMPER);
+        buttonPressed = operatorInputs.xBoxRightBumper();
         if (buttonPressed && !isPooting) { //Cannot commence when it is pooting(releasing)
             isGrabbing = true; //Boolean so it cannot Grab and Poot at the same time
             wheelSpinner.set(1);
@@ -188,7 +189,7 @@ public class Picker {
      Possible: May be used for a (weak) pass.
      */
     public void spinPooter() {
-        buttonPressed = xBox.getRawButton(BUTTON_LB);
+        buttonPressed = operatorInputs.xBoxLeftBumper();
         if (buttonPressed && !isGrabbing) { //Cannot poot and grab at the same time
             isPooting = true; //Boolean for so it can not poot and grab at the same time
             wheelSpinner.set(-1);
@@ -258,31 +259,45 @@ public class Picker {
 
     public void setPosKicking() {
         buttonPressed = operatorInputs.xBoxXButton();
-       // currentAngle = pickerPID.getPickerAngle();
+        // currentAngle = pickerPID.getPickerAngle();
         if (buttonPressed && !settingPos1 && !settingPos3) {
+            wasKick = false;
             settingPos2 = true;
             pickerPID.disable();
         }
-        if (settingPos2 == true) {
+        if (settingPos2) {
             if (getVoltage() - STEP > kickPos) {
                 pickerPID.set(0.7);
             } else if (getVoltage() + STEP < kickPos) {
                 pickerPID.set(-0.7);
-            }
-            else if (getVoltage() - PID_DISABLE_TOLERANCE > kickPos) {
+            } else if (getVoltage() - PID_DISABLE_TOLERANCE > kickPos) {
                 pickerPID.set(-0.1);
             } else if (getVoltage() + PID_DISABLE_TOLERANCE < kickPos) {
                 pickerPID.set(0.1);
             } else {
                 pickerPID.set(0);
                 settingPos2 = false;
+                wasKick = true;
             }
         }
     }
 
+    public void lockKick() {
+        if (wasKick) {
+            double error = getVoltage() - kickPos;
+            double setSpeed = error * LOCK_COEF;
+            if (setSpeed > 0.3) {
+                setSpeed = 0.3;
+            } else if (setSpeed < -0.3) {
+                setSpeed = -0.3;
+            }
+            pickerPID.set(setSpeed);
+        }
+    }
+
     public void setPosAuto() {
-        buttonPressed = xBox.getRawButton(Y_BUTTON);
-       // currentAngle = pickerPID.getPickerAngle();
+        buttonPressed = operatorInputs.xBoxYButton();
+        // currentAngle = pickerPID.getPickerAngle();
         if (buttonPressed && !settingPos1 && !settingPos2) {
             settingPos3 = true;
         }

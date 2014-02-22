@@ -105,7 +105,7 @@ public class DriveTrain {
                 fixLeftPow = ratio * fixLeftPow;
 
             }
-            leftChildProofSetter = fixLeftPow;
+            leftChildProofSetter = Math.abs(fixLeftPow);
         }
         //System.out.println("Left Speed = " + leftSpeed);
         //System.out.println("Left Power = " + leftPow);
@@ -130,7 +130,7 @@ public class DriveTrain {
                 fixRightPow = ratio * fixRightPow;
 
             }
-            rightChildProofSetter = fixRightPow;
+            rightChildProofSetter = Math.abs(fixRightPow);
         }
 
         //System.out.println("Right Speed = " + rightSpeed);
@@ -205,9 +205,9 @@ public class DriveTrain {
                 gearShiftHigh.set(isHighGear); // the gear shifts
                 gearShiftLow.set(!isHighGear);
             }
-            previousTriggerPressed = triggerPressed;
+            
 
-        }
+        }previousTriggerPressed = triggerPressed;
     }
 
     public void shiftHigh() {
