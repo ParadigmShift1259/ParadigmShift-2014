@@ -37,7 +37,7 @@ public class Picker {
     public static double KP_MEDIUM = 0.4;
     public static double KP_HARD = 1.3;
 
-    public static double KI_SOFT = 0.005;
+    public static double KI_SOFT = 0.01;
     public static double KI_MEDIUM = 0.03;
     public static double KI_HARD = 0.025;
 
@@ -62,7 +62,8 @@ public class Picker {
     boolean isPicking;
     private boolean isManual;
     private static final Timer timer = new Timer();
-    private static final double PID_DISABLE_TOLERANCE = 0.5;
+    private static final double PID_DISABLE_TOLERANCE = 0.2;
+    private static final double STEP = 0.7;
 
     public PickerPID pickerPID;
 
@@ -140,8 +141,13 @@ public class Picker {
 
     public void pick() {
         buttonPressed = operatorInputs.xBoxBButton();
+        if(settingPos1 && pickerPID.getPIDController().onTarget()){
+            settingPos1 = false;
+            pickerPID.disable();
+        }
         if (buttonPressed) {
             pickerPID.enable();
+            settingPos1 = true;
             isPickPos = true;
             PickerPID.Kp = KP_MEDIUM;
             PickerPID.Ki = KI_SOFT;
@@ -251,17 +257,23 @@ public class Picker {
     }
 
     public void setPosKicking() {
-        buttonPressed = operatorInputs.xBoxYButton();
+        buttonPressed = operatorInputs.xBoxXButton();
        // currentAngle = pickerPID.getPickerAngle();
         if (buttonPressed && !settingPos1 && !settingPos3) {
             settingPos2 = true;
+            pickerPID.disable();
         }
-        if (settingPos2 = true) {
-            if (currentAngle > kickPos) {
-                pickerPID.set(-0.7);
-            } else if (currentAngle < kickPos) {
+        if (settingPos2 == true) {
+            if (getVoltage() - STEP > kickPos) {
                 pickerPID.set(0.7);
-            } else if (currentAngle == kickPos) {
+            } else if (getVoltage() + STEP < kickPos) {
+                pickerPID.set(-0.7);
+            }
+            else if (getVoltage() - PID_DISABLE_TOLERANCE > kickPos) {
+                pickerPID.set(-0.1);
+            } else if (getVoltage() + PID_DISABLE_TOLERANCE < kickPos) {
+                pickerPID.set(0.1);
+            } else {
                 pickerPID.set(0);
                 settingPos2 = false;
             }
