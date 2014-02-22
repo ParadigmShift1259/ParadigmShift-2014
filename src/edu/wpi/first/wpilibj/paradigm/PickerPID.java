@@ -124,12 +124,12 @@ public class PickerPID extends PIDSubsystem {
 
     }
 
-    public double getPickerAngle() {
-        pickerAngleVoltage = analogChannel.getVoltage(); //comment
-        pickerAngleDegree = pickerAngleVoltage * (360 / MAX_ENCODER_VOLTAGE); //Converts Voltage to degrees
-        //System.out.println("Picker Angle = " + pickerAngleDegree);
-        return pickerAngleDegree;
-    }
+//    public double getPickerAngle() {
+//        pickerAngleVoltage = analogChannel.getVoltage(); //comment
+//        pickerAngleDegree = pickerAngleVoltage * (360 / MAX_ENCODER_VOLTAGE); //Converts Voltage to degrees
+//        //System.out.println("Picker Angle = " + pickerAngleDegree);
+//        return pickerAngleDegree;
+//    }
 
     public void set(double input) {
         //System.out.println("Input :" + input);
@@ -150,7 +150,7 @@ public class PickerPID extends PIDSubsystem {
     }
 
     public void disable() {
-        disable();
+        super.disable();
     }
 
 }

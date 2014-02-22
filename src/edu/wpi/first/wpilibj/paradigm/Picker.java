@@ -82,7 +82,7 @@ public class Picker {
         if (operatorInputs.xBoxAButton()) {
             pickerPID.disable();
         }
-    }
+    } 
 
     public void kick() {
         buttonPressed = operatorInputs.xBoxXButton();
@@ -252,7 +252,7 @@ public class Picker {
 
     public void setPosKicking() {
         buttonPressed = operatorInputs.xBoxYButton();
-        currentAngle = pickerPID.getPickerAngle();
+       // currentAngle = pickerPID.getPickerAngle();
         if (buttonPressed && !settingPos1 && !settingPos3) {
             settingPos2 = true;
         }
@@ -270,7 +270,7 @@ public class Picker {
 
     public void setPosAuto() {
         buttonPressed = xBox.getRawButton(Y_BUTTON);
-        currentAngle = pickerPID.getPickerAngle();
+       // currentAngle = pickerPID.getPickerAngle();
         if (buttonPressed && !settingPos1 && !settingPos2) {
             settingPos3 = true;
         }

@@ -44,6 +44,7 @@ public class AdventureRick extends IterativeRobot {
         operatorInputs = new OperatorInputs();
         drive = new DriveTrain(operatorInputs);
         prefs = Preferences.getInstance();
+        pickerPID = new PickerPID();
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
