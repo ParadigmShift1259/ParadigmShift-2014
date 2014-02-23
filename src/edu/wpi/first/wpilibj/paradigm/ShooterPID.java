@@ -15,13 +15,13 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
  */
 public class ShooterPID extends PIDSubsystem {
 
-    private static final double Kp = 0.2;//previous value 0.0
+    private static final double Kp = 0.03;//previous value 0.0
     private static final AnalogChannel encoder = new AnalogChannel(1);
     private static final Talon shooter = new Talon(5);
-    private static final double Ki = 0.0;
-    private static final double Kd = 0.0;
+    private static final double Ki = 0.001;
+    private static final double Kd = 0.01;
     public double VOLTAGE_CORRECTION = 0.0;
-    private static double KICKX_POS = 0.0; //dummy values, need to be edited
+    private static double KICKX_POS = 3.5; //dummy values, need to be edited
     private static double LOAD_POS = 1.0; //dummy values, need to be edited
     public static double zeroPosition = 0.35;
     private static final double OUTPUT_BOUNDS = 1.0;
@@ -35,7 +35,8 @@ public class ShooterPID extends PIDSubsystem {
         LOAD_POS = 1.0 + VOLTAGE_CORRECTION;
         KICKX_POS = 0.0 + VOLTAGE_CORRECTION;
         getPIDController().setOutputRange(-OUTPUT_BOUNDS, OUTPUT_BOUNDS);
-        getPIDController().setContinuous(true);
+        getPIDController().setInputRange(0.0,5.0);
+        getPIDController().setContinuous(false);
         setAbsoluteTolerance(TOLERANCE);
     }
 
@@ -89,7 +90,7 @@ public class ShooterPID extends PIDSubsystem {
     }
 
     protected void usePIDOutput(double output) {
-        shooter.set(output);
+        shooter.set(-output);
     }
 
     public void set(double speed) {

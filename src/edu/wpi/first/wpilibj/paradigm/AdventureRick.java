@@ -237,8 +237,10 @@ public class AdventureRick extends IterativeRobot {
     public void testPeriodic() {
 
         //station = station.getInstance();
+        System.out.println("Kicker Set Speed: " + shoot.get());
+        System.out.println("Kicker Encoder Voltage: " + shoot.getVoltage());
         shoot.emergencyDisablePid();
-        shoot.inPositionDisable();
+        //shoot.inPositionDisable();
         shoot.moveToKickPos();
         shoot.moveToPickPos();
         shoot.quickButtonShoot(1.0,-1.0,0.2);
@@ -251,7 +253,7 @@ public class AdventureRick extends IterativeRobot {
         drive.childProofing();
         
         System.out.println("Picker Encoder Value Is " + pickerPID.getVoltage());
-        System.out.println("Picker Voltage Correction Is " + PickerPID.VOLTAGE_CORRECTION);
+        //System.out.println("Picker Voltage Correction Is " + PickerPID.VOLTAGE_CORRECTION);
         
         //System.out.println("Is High Gear " + drive.isHighGear);
 //        System.out.println("Left Power Is "+ drive.leftPow);
@@ -284,6 +286,7 @@ public class AdventureRick extends IterativeRobot {
     public void disabledInit() {
         pickerPID.getPIDController().reset();
         pickerPID.disable();
+        shoot.disablePID();
         super.disabledInit();
     }
 

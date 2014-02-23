@@ -62,6 +62,10 @@ public class Shooter {
     public double getVoltage() {
         return shooterPid.getVoltage();
     }
+    
+    public double get() {
+        return shooterPid.get();
+    }
 
     public void inPositionDisable() {
         if (shooterPid.getPIDController().getSetpoint() > shooterPid.getVoltage() - DISABLE_TOLERANCE && shooterPid.getPIDController().getSetpoint() < shooterPid.getVoltage() + DISABLE_TOLERANCE) {
@@ -165,6 +169,10 @@ public class Shooter {
         if (operatorInputs.xBoxStartButton()) {
             shooterPid.prepPick();
         }
+    }
+    
+    public void disablePID(){
+        shooterPid.disable();
     }
 
     public void quickButtonShoot(double time, double power, double delay) {

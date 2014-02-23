@@ -145,7 +145,7 @@ public class PickerPID extends PIDSubsystem {
         // Use output to drive your system, like a motor
         // e.g. yourMotor.set(output);
         pickerMotor.set(-output);  // EAC.2014.02.19 - Consider having the output be in the range of -10 to 10, then divide by the current battery line voltage, we'd have to test to make sure this isn't too dynamic
-        System.out.println("Picker PID Output = " + (-output));
+        //System.out.println("Picker PID Output = " + (-output));
         SmartDashboard.putNumber("Picker PID Output Value = ", (-output));
     }
 
