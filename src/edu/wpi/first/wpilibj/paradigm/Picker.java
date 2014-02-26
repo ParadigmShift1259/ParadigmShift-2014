@@ -29,6 +29,7 @@ public class Picker {
     private double middlePos = 0.28; //change value later, position at the beginning of the auto/match
     private double currentAngle; //the picker's current pos(ition)
     private boolean buttonPressed = false; //used to indicate if any button is pressed
+    private boolean buttonPreviouslyPressed = false;
     private boolean isKickPos = false;
     private boolean isPickPos = false;
     private boolean isMiddlePos = false;
@@ -64,6 +65,7 @@ public class Picker {
     private static final Timer timer = new Timer();
     private static final double PID_DISABLE_TOLERANCE = 0.4;
     private static final double STEP = 0.9;
+    private boolean grabberOverride = false;
 
     public PickerPID pickerPID;
 
@@ -171,16 +173,30 @@ public class Picker {
     /*
      BELOW STUFF WORKS NOW
      */
-    public void spinGrabber() { //Aka suckySucky();
+//    public void spinGrabber() { //Aka suckySucky();
+//        buttonPressed = operatorInputs.xBoxRightBumper();
+//        if (buttonPressed && !isPooting) { //Cannot commence when it is pooting(releasing)
+//            isGrabbing = true; //Boolean so it cannot Grab and Poot at the same time
+//            wheelSpinner.set(1);
+//        } else if (!buttonPressed && !isPooting && !grabberOverride) { //We don't want the motor stopping when it is pooting
+//            wheelSpinner.set(0);
+//            isGrabbing = false;
+//        }
+//    }
+     public void spinGrabber() { //Aka suckySucky();
         buttonPressed = operatorInputs.xBoxRightBumper();
-        if (buttonPressed && !isPooting) { //Cannot commence when it is pooting(releasing)
-            isGrabbing = true; //Boolean so it cannot Grab and Poot at the same time
-            wheelSpinner.set(1);
-        } else if (!buttonPressed && !isPooting) { //We don't want the motor stopping when it is pooting
-            wheelSpinner.set(0);
-            isGrabbing = false;
+        if (buttonPressed && !buttonPreviouslyPressed) { //Cannot commence when it is pooting(releasing)
+            if (!isGrabbing) {
+                isGrabbing = true; //Boolean so it cannot Grab and Poot at the same time
+                wheelSpinner.set(1);
+            } else {
+                isGrabbing = false;
+                wheelSpinner.set(0);
+            }
         }
+        buttonPreviouslyPressed = buttonPressed;
     }
+    
 
     /*
      This method controls the "pooter". The pooter will make the wheels 
@@ -263,6 +279,8 @@ public class Picker {
         if (buttonPressed && !settingPos1 && !settingPos3) {
             wasKick = false;
             settingPos2 = true;
+        //    grabberOverride = true;
+         //   wheelSpinner.set(1);
             pickerPID.disable();
         }
         if (settingPos2) {
@@ -277,6 +295,8 @@ public class Picker {
             } else {
                 pickerPID.set(0);
                 settingPos2 = false;
+                isGrabbing = false;
+                wheelSpinner.set(0);
                 wasKick = true;
             }
         }
