@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
  */
 public class ShooterPID extends PIDSubsystem {
 
-    private static final double Kp = 0.03;//previous value 0.0
+    private static final double Kp = 0.15;//previous value 0.0
     private static final AnalogChannel encoder = new AnalogChannel(1);
     private static final Talon shooter = new Talon(5);
     private static final double Ki = 0.0001;
@@ -24,7 +24,7 @@ public class ShooterPID extends PIDSubsystem {
     private static double KICKX_POS = 0.13; //dummy values, need to be edited(3.5)
     private static double LOAD_POS = 1.4; //dummy values, need to be edited (1.0)
     public static double zeroPosition = 0.35;
-    private static final double OUTPUT_BOUNDS = 1.0;
+    private static final double OUTPUT_BOUNDS = 0.1;
     private static final double TOLERANCE = .025;
     private double pos;
     private static final double TOLERANCE_DISABLE = 0.1;
@@ -33,7 +33,7 @@ public class ShooterPID extends PIDSubsystem {
     public ShooterPID() {
         super("ShooterPID", Kp, Ki, Kd);
         LOAD_POS = 1.0 + VOLTAGE_CORRECTION;
-        KICKX_POS = 0.0 + VOLTAGE_CORRECTION;
+        KICKX_POS = 3.5 + VOLTAGE_CORRECTION;
         getPIDController().setOutputRange(-OUTPUT_BOUNDS, OUTPUT_BOUNDS);
         getPIDController().setInputRange(0.0,5.0);
         getPIDController().setContinuous(false);
@@ -57,7 +57,7 @@ public class ShooterPID extends PIDSubsystem {
 
     public void disableIfInPos() {
         if (checkPos()) {
-            disable();
+           // disable();
         }
     }
     

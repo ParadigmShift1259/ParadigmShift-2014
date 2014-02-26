@@ -37,6 +37,7 @@ public class Picker {
     public static double KP_SOFT = 1.0;
     public static double KP_MEDIUM = 0.4;
     public static double KP_HARD = 1.3;
+    
 
     public static double KI_SOFT = 0.01;
     public static double KI_MEDIUM = 0.03;
@@ -68,6 +69,7 @@ public class Picker {
     private boolean grabberOverride = false;
 
     public PickerPID pickerPID;
+    public ShooterPID shooterPID;
 
     /**
      * This is the constructor for the Picker class.
@@ -298,6 +300,7 @@ public class Picker {
                 isGrabbing = false;
                 wheelSpinner.set(0);
                 wasKick = true;
+                shooterPID.prepPick();
             }
         }
     }
