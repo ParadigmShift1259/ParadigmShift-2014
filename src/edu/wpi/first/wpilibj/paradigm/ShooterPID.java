@@ -18,11 +18,11 @@ public class ShooterPID extends PIDSubsystem {
     private static final double Kp = 0.03;//previous value 0.0
     private static final AnalogChannel encoder = new AnalogChannel(1);
     private static final Talon shooter = new Talon(5);
-    private static final double Ki = 0.001;
+    private static final double Ki = 0.0001;
     private static final double Kd = 0.01;
     public double VOLTAGE_CORRECTION = 0.0;
-    private static double KICKX_POS = 3.5; //dummy values, need to be edited
-    private static double LOAD_POS = 1.0; //dummy values, need to be edited
+    private static double KICKX_POS = 0.13; //dummy values, need to be edited(3.5)
+    private static double LOAD_POS = 1.4; //dummy values, need to be edited (1.0)
     public static double zeroPosition = 0.35;
     private static final double OUTPUT_BOUNDS = 1.0;
     private static final double TOLERANCE = .025;
@@ -90,7 +90,7 @@ public class ShooterPID extends PIDSubsystem {
     }
 
     protected void usePIDOutput(double output) {
-        shooter.set(-output);
+        shooter.set(output);
     }
 
     public void set(double speed) {
