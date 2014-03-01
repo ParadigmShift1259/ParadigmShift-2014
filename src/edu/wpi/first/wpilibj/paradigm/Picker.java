@@ -24,7 +24,7 @@ public class Picker {
     //Shooter shooter;
     //private Joystick xBox = new Joystick(2);
     private boolean wasKick = false;
-    private static final double LOCK_COEF  = 1.0;
+    private static final double LOCK_COEF = 1.0;
     private double pickPos = -1.00; //change value later, position while loading
     public double kickPos = 0.45; //change value later, position while shooting/aiming
     private double middlePos = 0.28; //change value later, position at the beginning of the auto/match
@@ -35,10 +35,10 @@ public class Picker {
     private boolean isPickPos = false;
     private boolean isMiddlePos = false;
     private boolean isGrabbing = false;
+    public boolean isKickingNow = false;
     public static double KP_SOFT = 1.0;
     public static double KP_MEDIUM = 0.4;
     public static double KP_HARD = 1.3;
-    
 
     public static double KI_SOFT = 0.01;
     public static double KI_MEDIUM = 0.03;
@@ -50,7 +50,7 @@ public class Picker {
 
     private boolean isPooting = false;
     private Talon wheelSpinner = new Talon(3); //used in the SpinGrabber method...also is a Talon
-   
+
     // private Talon pickerMotor = new Talon(4);
 //    private final int pickerChannel = 2;
 //    private final AnalogChannel analogChannel = new AnalogChannel(pickerChannel);
@@ -72,7 +72,6 @@ public class Picker {
 
     public PickerPID pickerPID;
     public ShooterPID shooterPID;
-    
 
     /**
      * This is the constructor for the Picker class.
@@ -81,7 +80,7 @@ public class Picker {
         this.operatorInputs = _operatorInputs;
         pickerPID = _pickerPid;
         shooterPID = _shooterPid;
-       //shooter = new Shooter(_operatorInputs);
+        //shooter = new Shooter(_operatorInputs);
     }
 
     public double getVoltage() {
@@ -96,50 +95,55 @@ public class Picker {
 
     public void kick() {
         buttonPressed = operatorInputs.xBoxXButton();
-        if (buttonPressed) {
-            pickerPID.enable();
-            isKickPos = true;
-            PickerPID.Kp = KP_SOFT;
-            PickerPID.Ki = KI_MEDIUM;
-            PickerPID.Kd = KD_MEDIUM;
-            pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
-            pickerPID.getPIDController().reset();
-            pickerPID.enable();
-            pickerPID.setSetpoint(kickPos);
-        } else if (!buttonPressed) {
-            isKickPos = false;
-            //?
-
-        }
-    }
-
-    public void middle() {
-        buttonPressed = operatorInputs.xBoxYButton();
-        if (buttonPressed) {
-            pickerPID.enable();
-            //System.out.println(pickerPID.getSetpoint());
-            isMiddlePos = true;
-            if (pickerPID.getPosition() > middlePos) {
-                //to move from kick
-                PickerPID.Kp = KP_HARD;
-                PickerPID.Ki = KI_HARD;
-                PickerPID.Kd = KD_HARD;
-            } else if (pickerPID.getPosition() == middlePos) {
-            } else {
-                // to move from pick
+        if (settingPos2 && pickerPID.getPIDController().onTarget()) {
+            settingPos2 = false;
+            pickerPID.disable();
+            if (buttonPressed) {
+                pickerPID.enable();
+                isKickPos = true;
                 PickerPID.Kp = KP_SOFT;
                 PickerPID.Ki = KI_MEDIUM;
                 PickerPID.Kd = KD_MEDIUM;
-            }
-            pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
-            pickerPID.getPIDController().reset();
-            pickerPID.enable();
-            pickerPID.setSetpoint(middlePos);
-        } else if (!buttonPressed) {
-            isMiddlePos = false;
-            //?
+                pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
+                pickerPID.getPIDController().reset();
+                pickerPID.enable();
+                pickerPID.setSetpoint(kickPos);
+            } else if (!buttonPressed) {
+                isKickPos = false;
+                //?
 
+            }
         }
+
+        /*
+         public void middle() {
+         buttonPressed = operatorInputs.xBoxYButton();
+         if (buttonPressed) {
+         pickerPID.enable();
+         //System.out.println(pickerPID.getSetpoint());
+         isMiddlePos = true;
+         if (pickerPID.getPosition() > middlePos) {
+         //to move from kick
+         PickerPID.Kp = KP_HARD;
+         PickerPID.Ki = KI_HARD;
+         PickerPID.Kd = KD_HARD;
+         } else if (pickerPID.getPosition() == middlePos) {
+         } else {
+         // to move from pick
+         PickerPID.Kp = KP_SOFT;
+         PickerPID.Ki = KI_MEDIUM;
+         PickerPID.Kd = KD_MEDIUM;
+         }
+         pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
+         pickerPID.getPIDController().reset();
+         pickerPID.enable();
+         pickerPID.setSetpoint(middlePos);
+         } else if (!buttonPressed) {
+         isMiddlePos = false;
+         //?
+
+         }
+         */
     }
 
     public void inPositionDisable() {
@@ -148,14 +152,13 @@ public class Picker {
         }
     }
 
-    public void pick(Shooter shoot) {
+    public void pick() {
         buttonPressed = operatorInputs.xBoxBButton();
         if (settingPos1 && pickerPID.getPIDController().onTarget()) {
             settingPos1 = false;
             pickerPID.disable();
         }
         if (buttonPressed) {
-            shoot.moveToPickPos();
             wasKick = false;
             pickerPID.enable();
             settingPos1 = true;
@@ -167,6 +170,7 @@ public class Picker {
             pickerPID.getPIDController().reset();
             pickerPID.enable();
             pickerPID.setSetpoint(pickPos);
+            //shooterPID.prepKickx();
         } else if (!buttonPressed) {
             isPickPos = false;
             //?
@@ -191,7 +195,7 @@ public class Picker {
 //            isGrabbing = false;
 //        }
 //    }
-     public void spinGrabber() { //Aka suckySucky();
+    public void spinGrabber() { //Aka suckySucky();
         buttonPressed = operatorInputs.xBoxRightBumper();
         if (buttonPressed && !buttonPreviouslyPressed) { //Cannot commence when it is pooting(releasing)
             if (!isGrabbing) {
@@ -204,7 +208,7 @@ public class Picker {
         }
         buttonPreviouslyPressed = buttonPressed;
     }
-    
+
 
     /*
      This method controls the "pooter". The pooter will make the wheels 
@@ -222,17 +226,24 @@ public class Picker {
             isPooting = false;
         }
     }
+
+    public void justKeepSpinning() {
+        if (isKickingNow = true && isPickPos == true) {
+            wheelSpinner.set(-1);
+        } else {
+            wheelSpinner.set(0);
+        }
+    }
     /*
      ABOVE STUFF WORKS
      */
-
-//    public double getPickerAngle() {
-//        pickerAngleVoltage = analogChannel.getVoltage(); //comment
-//        pickerAngleDegree = pickerAngleVoltage * (360 / MAX_ENCODER_VOLTAGE); //Converts Voltage to degrees
-//        return pickerAngleDegree;
-//        //return pickerAngleVoltage;
-//    }
-    /*
+        //    public double getPickerAngle() {
+    //        pickerAngleVoltage = analogChannel.getVoltage(); //comment
+    //        pickerAngleDegree = pickerAngleVoltage * (360 / MAX_ENCODER_VOLTAGE); //Converts Voltage to degrees
+    //        return pickerAngleDegree;
+    //        //return pickerAngleVoltage;
+    //    }
+        /*
      public void setPosLoading() { //loadPos = 346
      //System.out.println("Beginning of method");
      buttonPressed = xBox.getRawButton(5);
@@ -291,8 +302,8 @@ public class Picker {
             //shooterPID.prepKickx();
             //shoot.moveToKickPos();
             System.out.println("picker kick set called");
-        //    grabberOverride = true;
-         //   wheelSpinner.set(1);
+            //    grabberOverride = true;
+            //   wheelSpinner.set(1);
             pickerPID.disable();
         }
         if (settingPos2) {

@@ -19,11 +19,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Shooter {
 
     OperatorInputs operatorInputs;
+    Picker picker;
 
     private final int PORT_5 = 5;  // EAC.2014.02.19 - may benefit in compile-size by being static
     //the current value can not possibly be the previous value the first time through
     private final double ILLEGAL_ANGLE = -9999.9; //can't be stopped when it hasn't started // EAC.2014.02.19 - may benefit in compile-size by being static
     OperatorInputs oi = new OperatorInputs();
+    public ShooterPID shooterPid = new ShooterPID();
     //private final Joystick xBox = new Joystick(2); // EAC.2014.02.19 - may benefit in compile-size by being static
 
 //   private final Talon kickermotor = new Talon(PORT_5);
@@ -53,16 +55,16 @@ public class Shooter {
     private final double MAX_ENCODER_VOLTAGE = 5.0; // EAC.2014.02.19 - may benefit in compile-size by being static
     private static final double DISABLE_TOLERANCE = .05;
     public Timer timer = new Timer();
-    public ShooterPID shooterPid = new ShooterPID();
 
-    public Shooter(OperatorInputs _operatorInputs) {
+    public Shooter(OperatorInputs _operatorInputs, Picker _picker) {
         this.operatorInputs = _operatorInputs;
+        this.picker = _picker;
     }
 
     public double getVoltage() {
         return shooterPid.getVoltage();
     }
-    
+
     public double get() {
         return shooterPid.get();
     }
@@ -155,6 +157,7 @@ public class Shooter {
     //Added for Saturday Night to program shooter - 2/8/2014 E A Cobb
     public void manualShooterControl() {
         if (!kicking) {
+            //shooterPid.disable();
             shooterPid.set(operatorInputs.xboxLeftY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
         }
     }
@@ -170,14 +173,13 @@ public class Shooter {
             shooterPid.prepPick();
         }
     }
-    
-    public void disablePID(){
+
+    public void disablePID() {
         shooterPid.disable();
     }
-    
 
     public void quickButtonShoot(double time, double power, double delay) {
-        
+
         if (oi.isShooterTriggerPressed() /*&& shooterPid.isDisabled()*/) {
             shooterPid.disable();
             kicking = true;
@@ -185,10 +187,15 @@ public class Shooter {
         }
         //shootTimer.reset();
         //System.out.println("Loop should be starting");
+        if ((timer.get() < delay) && (timer.get() < time)) {
+            picker.isKickingNow = true;
+        }
 
         if ((timer.get() > delay) && (timer.get() < time)) {
             shooterPid.set(power);
+            picker.isKickingNow = false;
         }
+
         //System.out.println("Motor should be going");
         //ystem.out.println(shootTimer.get());
         if (timer.get() > time) {
@@ -200,11 +207,12 @@ public class Shooter {
 
         }
     }
-    
+
     public void quickLeftButtonShoot(double time, double power, double delay) {
-        
+
         if (oi.isLeftShooterTriggerPressed() /*&& shooterPid.isDisabled()*/) {
-            shooterPid.disable();
+            //shooterPid.disable();
+            shooterPid.set(power);
             kicking = true;
             timer.start();
         }
@@ -217,6 +225,7 @@ public class Shooter {
         //System.out.println("Motor should be going");
         //ystem.out.println(shootTimer.get());
         if (timer.get() > time) {
+            //shooterPid.set(0);
             shooterPid.set(0);
             timer.stop();
             timer.reset();

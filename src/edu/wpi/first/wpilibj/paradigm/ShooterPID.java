@@ -15,14 +15,14 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
  */
 public class ShooterPID extends PIDSubsystem {
 
-    private static final double Kp = 0.15;//previous value 0.0
+    public static final double Kp = 0.15;//previous value 0.0
     private static final AnalogChannel encoder = new AnalogChannel(1);
-    private static final Talon shooter = new Talon(5);
-    private static final double Ki = 0.0001;
-    private static final double Kd = 0.01;
+    public static final Talon shooter = new Talon(5);
+    public static final double Ki = 0.0001;
+    public static final double Kd = 0.01;
     public double VOLTAGE_CORRECTION = 0.0;
     private static double KICKX_POS = 0.13; //dummy values, need to be edited(3.5)
-    private static double LOAD_POS = 1.4; //dummy values, need to be edited (1.0)
+    public static double LOAD_POS = .535; //dummy values, need to be edited (1.0)
     public static double zeroPosition = 0.35;
     private static final double OUTPUT_BOUNDS = 0.1;
     private static final double TOLERANCE = .025;
@@ -35,13 +35,13 @@ public class ShooterPID extends PIDSubsystem {
         LOAD_POS = 1.0 + VOLTAGE_CORRECTION;
         KICKX_POS = 3.65 + VOLTAGE_CORRECTION;
         getPIDController().setOutputRange(-OUTPUT_BOUNDS, OUTPUT_BOUNDS);
-        getPIDController().setInputRange(0.0,5.0);
+        getPIDController().setInputRange(0.0, 5.0);
         getPIDController().setContinuous(false);
         setAbsoluteTolerance(TOLERANCE);
     }
 
     public void prepKickx() {
-        System.out.println("prerpKickx called");
+        System.out.println("prepKickx called");
         setSetpoint(LOAD_POS);
         System.out.println("kick setpoint set");
         enable();
@@ -66,14 +66,11 @@ public class ShooterPID extends PIDSubsystem {
 //           // disable();
 //        }
 //    }
-    
+
     public void toggleDisable() {
-        if(getPIDController().isEnable())
-        {
+        if (getPIDController().isEnable()) {
             disable();
-        }
-        else
-        {
+        } else {
             enable();
         }
     }
