@@ -34,7 +34,6 @@ public class AdventureRick extends IterativeRobot {
     Preferences prefs;
     private boolean checkForKickerStop = false;
     private boolean shootTimerBool = true;
-    ColwellContraption colwellContraption;
     final int PRESSURE_SWITCH_CHANNEL = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
     final int COMPRESSOR_RELAY_CHANNEL = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
 
@@ -46,11 +45,10 @@ public class AdventureRick extends IterativeRobot {
         drive = new DriveTrain(operatorInputs);
         prefs = Preferences.getInstance();
         pickerPID = new PickerPID();
-        pick = new Picker(operatorInputs,pickerPID);
+        pick = new Picker(operatorInputs,pickerPID, shooterPID);
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
-        colwellContraption = new ColwellContraption();
         //shoot = new Shooter(operatorInputs);//add parameters as needed
         shoot = new Shooter(operatorInputs);
         shooterPID = new ShooterPID();
@@ -99,11 +97,6 @@ public class AdventureRick extends IterativeRobot {
         //colwellContraption.pistonUp();
         pickerPID.enable();//proably not going to be needed
         SmartDashboard.putNumber("Some Voltage", pickerPID.getVoltage());
-        if(operatorInputs.xBoxLeftBumper()){
-            colwellContraption.pistonDown();
-        }else{
-            colwellContraption.pistonUp();
-        }
         SmartDashboard.putNumber("Kp", PickerPID.Kp);
         SmartDashboard.putNumber("Ki", PickerPID.Ki);
         SmartDashboard.putNumber("Kd", PickerPID.Kd);
@@ -124,10 +117,10 @@ public class AdventureRick extends IterativeRobot {
          */
     }
 
-    public void teleopInit() {
+    public void testInit() {//orginally teleop
         pickerPID = new PickerPID();
         //shoot.caliButtPressed = true;
-        pick = new Picker(operatorInputs, pickerPID);//add parameters as needed
+        pick = new Picker(operatorInputs, pickerPID, shooterPID);//add parameters as needed
         compressor.start();
         PickerPID.VOLTAGE_CORRECTION = prefs.getDouble("Pick_VC", PickerPID.VOLTAGE_CORRECTION);
         shoot.getPID().VOLTAGE_CORRECTION = prefs.getDouble("Shoot_VC", shoot.getPID().VOLTAGE_CORRECTION);
@@ -164,7 +157,7 @@ public class AdventureRick extends IterativeRobot {
     /**
      * This function is called periodically during operator control
      */
-    public void teleopPeriodic() {
+    public void testPeriodic() {//originally teleopPeriodic
         //next 2 lines to add manual disable for PIDs
         shoot.emergencyDisablePid();
         pick.emergencyDisablePid();
@@ -176,7 +169,7 @@ public class AdventureRick extends IterativeRobot {
 
         pick.kick();
         pick.middle();
-        pick.pick();
+        pick.pick(shoot);
         shoot.moveToKickPos();
         shoot.moveToPickPos();
 
@@ -223,10 +216,10 @@ public class AdventureRick extends IterativeRobot {
         SmartDashboard.putNumber("Kd", PickerPID.Kd);
     }
 
-    public void testInit() {
+    public void teleopInit() {//originally test
         super.testInit();
 //        pickerPID.disable();
-        //compressor.start();
+        compressor.start();
         //pickerPID.enable();
         //pickerPID.setSetpoint(pick.kickPos);
 
@@ -236,7 +229,7 @@ public class AdventureRick extends IterativeRobot {
      *
      * This function is called periodically during test mode
      */
-    public void testPeriodic() {
+    public void teleopPeriodic() {//Orginally testPeriodic
 
         //station = station.getInstance();
         System.out.println("Kicker Set Speed: " + shoot.get());
@@ -246,7 +239,8 @@ public class AdventureRick extends IterativeRobot {
         
         shoot.moveToKickPos();
         shoot.moveToPickPos();
-        shoot.quickButtonShoot(1.0,-1.0,0.2);
+        shoot.quickButtonShoot(1.0,-1.0,0.1);
+        shoot.quickLeftButtonShoot(1.0, -0.75,0.1);
 
 //        SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
 //        SmartDashboard.putNumber("Picker_Position", pick.getVoltage());
@@ -280,8 +274,10 @@ public class AdventureRick extends IterativeRobot {
          //System.out.println("voltage " + pickerPID.getVoltage());
          */
         pick.emergencyDisablePid();
-        pick.pick();
+        pick.pick(shoot);
+        //System.out.println("Calling pick.setPosKicking();");
         pick.setPosKicking();
+        //System.out.println("Called pick.setPosKicking();");
         //pickerPID.disable();
         //System.out.println(pickerPID.getPIDController().isEnable());
         pick.lockKick();

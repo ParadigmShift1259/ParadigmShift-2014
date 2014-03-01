@@ -174,9 +174,12 @@ public class Shooter {
     public void disablePID(){
         shooterPid.disable();
     }
+    
 
     public void quickButtonShoot(double time, double power, double delay) {
-        if (oi.isShooterTriggerPressed() && shooterPid.isDisabled()) {
+        
+        if (oi.isShooterTriggerPressed() /*&& shooterPid.isDisabled()*/) {
+            shooterPid.disable();
             kicking = true;
             timer.start();
         }
@@ -193,6 +196,32 @@ public class Shooter {
             timer.stop();
             timer.reset();
             kicking = false;
+            //shooterPid.enable();
+
+        }
+    }
+    
+    public void quickLeftButtonShoot(double time, double power, double delay) {
+        
+        if (oi.isLeftShooterTriggerPressed() /*&& shooterPid.isDisabled()*/) {
+            shooterPid.disable();
+            kicking = true;
+            timer.start();
+        }
+        //shootTimer.reset();
+        //System.out.println("Loop should be starting");
+
+        if ((timer.get() > delay) && (timer.get() < time)) {
+            shooterPid.set(power);
+        }
+        //System.out.println("Motor should be going");
+        //ystem.out.println(shootTimer.get());
+        if (timer.get() > time) {
+            shooterPid.set(0);
+            timer.stop();
+            timer.reset();
+            kicking = false;
+            //shooterPid.enable();
 
         }
     }

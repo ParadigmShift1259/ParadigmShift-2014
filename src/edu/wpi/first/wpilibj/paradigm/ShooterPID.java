@@ -33,7 +33,7 @@ public class ShooterPID extends PIDSubsystem {
     public ShooterPID() {
         super("ShooterPID", Kp, Ki, Kd);
         LOAD_POS = 1.0 + VOLTAGE_CORRECTION;
-        KICKX_POS = 3.5 + VOLTAGE_CORRECTION;
+        KICKX_POS = 3.65 + VOLTAGE_CORRECTION;
         getPIDController().setOutputRange(-OUTPUT_BOUNDS, OUTPUT_BOUNDS);
         getPIDController().setInputRange(0.0,5.0);
         getPIDController().setContinuous(false);
@@ -41,25 +41,31 @@ public class ShooterPID extends PIDSubsystem {
     }
 
     public void prepKickx() {
+        System.out.println("prerpKickx called");
         setSetpoint(LOAD_POS);
+        System.out.println("kick setpoint set");
         enable();
+        //getPIDController().reset();
     }
 
     public void prepPick() {
+        System.out.println("prepPick called");
         setSetpoint(KICKX_POS);
+        System.out.println("pick setpoint set");
         enable();
+        //getPIDController().reset();
     }
-
-    public boolean checkPos() {
-        return (encoder.getVoltage() - TOLERANCE_DISABLE < pos
-                && encoder.getVoltage() + TOLERANCE_DISABLE > pos);
-    }
-
-    public void disableIfInPos() {
-        if (checkPos()) {
-           // disable();
-        }
-    }
+//pos is not being assigned a 
+//    public boolean checkPos() {
+//        return (encoder.getVoltage() - TOLERANCE_DISABLE < pos
+//                && encoder.getVoltage() + TOLERANCE_DISABLE > pos);
+//    }
+//
+//    public void disableIfInPos() {
+//        if (checkPos()) {
+//           // disable();
+//        }
+//    }
     
     public void toggleDisable() {
         if(getPIDController().isEnable())

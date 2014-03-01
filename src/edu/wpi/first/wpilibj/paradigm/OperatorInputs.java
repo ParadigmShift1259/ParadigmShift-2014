@@ -57,6 +57,11 @@ public class OperatorInputs {
         return (RIGHT_TRIGGER_MIN <= triggerPressed && triggerPressed <= RIGHT_TRIGGER_MAX);
     }
 
+    public boolean isLeftShooterTriggerPressed(){
+        triggerPressed = xBox.getRawAxis(XBOX_TRIGGER);
+        return (LEFT_TRIGGER_MIN <= triggerPressed && triggerPressed <= LEFT_TRIGGER_MAX);
+        
+    }
     // EAC.2014.02.19 - We may want to consider a more generic name
     public boolean isSetKickerPositionButtonPressed() {
         triggerPressed = xBox.getRawAxis(XBOX_TRIGGER);

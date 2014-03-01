@@ -21,11 +21,12 @@ import edu.wpi.first.wpilibj.Timer;
 public class Picker {
 
     OperatorInputs operatorInputs;
+    //Shooter shooter;
     //private Joystick xBox = new Joystick(2);
     private boolean wasKick = false;
     private static final double LOCK_COEF  = 1.0;
     private double pickPos = -1.00; //change value later, position while loading
-    public double kickPos = 0.52; //change value later, position while shooting/aiming
+    public double kickPos = 0.45; //change value later, position while shooting/aiming
     private double middlePos = 0.28; //change value later, position at the beginning of the auto/match
     private double currentAngle; //the picker's current pos(ition)
     private boolean buttonPressed = false; //used to indicate if any button is pressed
@@ -49,6 +50,7 @@ public class Picker {
 
     private boolean isPooting = false;
     private Talon wheelSpinner = new Talon(3); //used in the SpinGrabber method...also is a Talon
+   
     // private Talon pickerMotor = new Talon(4);
 //    private final int pickerChannel = 2;
 //    private final AnalogChannel analogChannel = new AnalogChannel(pickerChannel);
@@ -70,13 +72,16 @@ public class Picker {
 
     public PickerPID pickerPID;
     public ShooterPID shooterPID;
+    
 
     /**
      * This is the constructor for the Picker class.
      */
-    public Picker(OperatorInputs _operatorInputs, PickerPID pickerPid) {
+    public Picker(OperatorInputs _operatorInputs, PickerPID _pickerPid, ShooterPID _shooterPid) {
         this.operatorInputs = _operatorInputs;
-        pickerPID = pickerPid;
+        pickerPID = _pickerPid;
+        shooterPID = _shooterPid;
+       //shooter = new Shooter(_operatorInputs);
     }
 
     public double getVoltage() {
@@ -143,13 +148,14 @@ public class Picker {
         }
     }
 
-    public void pick() {
+    public void pick(Shooter shoot) {
         buttonPressed = operatorInputs.xBoxBButton();
         if (settingPos1 && pickerPID.getPIDController().onTarget()) {
             settingPos1 = false;
             pickerPID.disable();
         }
         if (buttonPressed) {
+            shoot.moveToPickPos();
             wasKick = false;
             pickerPID.enable();
             settingPos1 = true;
@@ -276,20 +282,24 @@ public class Picker {
     }
 
     public void setPosKicking() {
+        System.out.println("setPosKicking called");
         buttonPressed = operatorInputs.xBoxXButton();
         // currentAngle = pickerPID.getPickerAngle();
         if (buttonPressed && !settingPos1 && !settingPos3) {
             wasKick = false;
             settingPos2 = true;
+            //shooterPID.prepKickx();
+            //shoot.moveToKickPos();
+            System.out.println("picker kick set called");
         //    grabberOverride = true;
          //   wheelSpinner.set(1);
             pickerPID.disable();
         }
         if (settingPos2) {
             if (getVoltage() - STEP > kickPos) {
-                pickerPID.set(0.7);
+                pickerPID.set(0.8);
             } else if (getVoltage() + STEP < kickPos) {
-                pickerPID.set(-0.7);
+                pickerPID.set(-0.8);
             } else if (getVoltage() - PID_DISABLE_TOLERANCE > kickPos) {
                 pickerPID.set(-0.1);
             } else if (getVoltage() + PID_DISABLE_TOLERANCE < kickPos) {
@@ -300,7 +310,8 @@ public class Picker {
                 isGrabbing = false;
                 wheelSpinner.set(0);
                 wasKick = true;
-                shooterPID.prepPick();
+                //shooterPID.prepPick();
+                System.out.println("picker pick set called");
             }
         }
     }
