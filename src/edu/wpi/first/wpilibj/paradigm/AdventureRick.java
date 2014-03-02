@@ -46,13 +46,12 @@ public class AdventureRick extends IterativeRobot {
         drive = new DriveTrain(operatorInputs);
         prefs = Preferences.getInstance();
         pickerPID = new PickerPID();
+        shoot = new Shooter(operatorInputs);
         pick = new Picker(operatorInputs, pickerPID, shoot);
         //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
         //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
         //shoot = new Shooter(operatorInputs);//add parameters as needed
-        shoot = new Shooter(operatorInputs, pick);
-        shooterPID = new ShooterPID();
 
         this.autoTimer = new Timer();
         drive.leftEncoder.start();  // EAC.2014.02.19 - we may want to move this initialization into the DriveTrain constructor

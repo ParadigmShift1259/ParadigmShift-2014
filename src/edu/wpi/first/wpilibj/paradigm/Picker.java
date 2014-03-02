@@ -35,7 +35,7 @@ public class Picker {
     private boolean isPickPos = false;
     private boolean isMiddlePos = false;
     private boolean isGrabbing = false;
-    public boolean isKickingNow = false;
+    public static boolean isKickingNow = false;
     public static double KP_SOFT = 1.0;
     public static double KP_MEDIUM = 0.4;
     public static double KP_HARD = 1.3;
@@ -159,6 +159,7 @@ public class Picker {
             pickerPID.disable();
         }
         if (buttonPressed) {
+            shoot.getPID().prepPick();
             wasKick = false;
             pickerPID.enable();
             settingPos1 = true;
@@ -321,6 +322,7 @@ public class Picker {
                 isGrabbing = false;
                 wheelSpinner.set(0);
                 wasKick = true;
+                shoot.getPID().prepKickx();
                 //shooterPID.prepPick();
                 System.out.println("picker pick set called");
             }

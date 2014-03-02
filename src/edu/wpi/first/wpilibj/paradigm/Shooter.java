@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Shooter {
 
     OperatorInputs operatorInputs;
-    Picker picker;
 
     private final int PORT_5 = 5;  // EAC.2014.02.19 - may benefit in compile-size by being static
     //the current value can not possibly be the previous value the first time through
@@ -55,9 +54,8 @@ public class Shooter {
     public Timer timer = new Timer();
     public Timer shootTimer = new Timer();
 
-    public Shooter(OperatorInputs _operatorInputs, Picker _picker) {
+    public Shooter(OperatorInputs _operatorInputs) {
         this.operatorInputs = _operatorInputs;
-        this.picker = _picker;
     }
 
     public double getVoltage() {
@@ -186,12 +184,12 @@ public class Shooter {
         }
         //shootTimer.reset();
         if ((timer.get() < delay) && (timer.get() < time)) {
-            picker.isKickingNow = true;
+            Picker.isKickingNow = true;
         }
 
         if ((timer.get() > delay) && (timer.get() < time)) {
             shooterPid.set(-power);
-            picker.isKickingNow = false;
+            Picker.isKickingNow = false;
             System.out.println("Motor should be going");
         }
 
@@ -217,12 +215,12 @@ public class Shooter {
         //shootTimer.reset();
         //System.out.println("Loop should be starting");
         if ((timer.get() < delay) && (timer.get() < time)) {
-            picker.isKickingNow = true;
+            Picker.isKickingNow = true;
         }
 
         if ((timer.get() > delay) && (timer.get() < time)) {
             shooterPid.set(power);
-            picker.isKickingNow = false;
+            Picker.isKickingNow = false;
         }
 
         //System.out.println("Motor should be going");
