@@ -53,6 +53,7 @@ public class Shooter {
     private final double MAX_ENCODER_VOLTAGE = 5.0; // EAC.2014.02.19 - may benefit in compile-size by being static
     private static final double DISABLE_TOLERANCE = .05;
     public Timer timer = new Timer();
+    public Timer shootTimer = new Timer();
 
     public Shooter(OperatorInputs _operatorInputs, Picker _picker) {
         this.operatorInputs = _operatorInputs;
@@ -176,6 +177,36 @@ public class Shooter {
         shooterPid.disable();
     }
 
+    public void quickShoot(double time, double power, double delay, boolean needsShoot) {
+        if (needsShoot) {
+            shooterPid.disable();
+            kicking = true;
+            timer.start();
+            System.out.println("Loop should be starting");
+        }
+        //shootTimer.reset();
+        if ((timer.get() < delay) && (timer.get() < time)) {
+            picker.isKickingNow = true;
+        }
+
+        if ((timer.get() > delay) && (timer.get() < time)) {
+            shooterPid.set(-power);
+            picker.isKickingNow = false;
+            System.out.println("Motor should be going");
+        }
+
+        System.out.println(shootTimer.get());
+        if (timer.get() > time) {
+            System.out.println("Motor should be stopping");
+            shooterPid.set(0);
+            timer.stop();
+            timer.reset();
+            kicking = false;
+            //shooterPid.enable();
+
+        }
+    }
+
     public void quickButtonShoot(double time, double power, double delay) {
 
         if (oi.isShooterTriggerPressed() /*&& shooterPid.isDisabled()*/) {
@@ -232,22 +263,22 @@ public class Shooter {
 
         }
     }
+
+    public void autoShoot(double time, double power) {
+        double base = 0.0;
+        //        shootTimer.start();
+        //System.out.println("Loop should be starting");
+
+        if (base + shootTimer.get() < time) {
+            shooterPid.set(power);
+            //System.out.println("Motor should be going");
+            //ystem.out.println(shootTimer.get());
+        } else {
+            shooterPid.set(0);
+            shootTimer.stop();
+        }
+    }
     /*
-     public void autoShoot(double time, double power) {
-     double base = 0.0;
-     //        shootTimer.start();
-     //System.out.println("Loop should be starting");
-
-     if (base + shootTimer.get() < time) {
-     kickermotor.set(power);
-     //System.out.println("Motor should be going");
-     //ystem.out.println(shootTimer.get());
-     } else {
-     shooterPid.set(0);
-     shootTimer.stop();
-     }
-     }
-
      public void setKickingPosition() {
      triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS)
      && xBox.getRawAxis(XBOX_TRIGGERS) <= LEFT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB

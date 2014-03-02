@@ -71,15 +71,15 @@ public class Picker {
     private boolean grabberOverride = false;
 
     public PickerPID pickerPID;
-    public ShooterPID shooterPID;
+    public Shooter shoot;
 
     /**
      * This is the constructor for the Picker class.
      */
-    public Picker(OperatorInputs _operatorInputs, PickerPID _pickerPid, ShooterPID _shooterPid) {
+    public Picker(OperatorInputs _operatorInputs, PickerPID _pickerPid, Shooter shoot) {
         this.operatorInputs = _operatorInputs;
         pickerPID = _pickerPid;
-        shooterPID = _shooterPid;
+        this.shoot = shoot;
         //shooter = new Shooter(_operatorInputs);
     }
 

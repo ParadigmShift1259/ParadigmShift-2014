@@ -24,7 +24,7 @@ public class DriveTrain {
     final int SHIFT_PORT_LOW = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
     final int SHIFT_PORT_HIGH = 2; // EAC.2014.02.19 - may benefit in compile-size by being static
     final int SHIFT_MODULE = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
-
+    boolean needsShoot = false;
     public Talon leftTalons; //has to motors and motor controllers 
     public Talon rightTalons;
     private Solenoid gearShiftLow; // and a gear shifter
@@ -61,7 +61,7 @@ public class DriveTrain {
     double leftChildProofSetter;
     double rightChildProofSetter;
     boolean childProofConfirmed = false;
-
+    private static final double DISTANCE_PER_PULSE = 0.0008945;
     boolean previousTriggerPressed; //what the trigger was before it changed
 
     public DriveTrain(OperatorInputs _operatorInputs) {
@@ -78,7 +78,46 @@ public class DriveTrain {
         rightTalons.set(0); //Make sure motor is off
         gearShiftLow.set(isHighGear);
         gearShiftHigh.set(!isHighGear);
+        leftEncoder.setDistancePerPulse(-DISTANCE_PER_PULSE);
+        rightEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
 
+    }
+
+    public double getLeftPulses() {
+        return leftEncoder.getRaw();
+    }
+
+    public void resetEncoders() {
+        leftEncoder.reset();
+        rightEncoder.reset();
+    }
+
+    public void driveStraight(double distance, double firingDistance, double speed, Shooter shoot) {
+        if (rightEncoder.getDistance() < distance) {
+            leftTalons.set(-speed);
+            rightTalons.set(speed);
+            needsShoot = true;
+        } else if (rightEncoder.getDistance() < firingDistance) {
+            shoot.quickShoot(1.0, 0.82372, 0.01, needsShoot);
+            needsShoot = false;
+        } else {
+            leftTalons.set(0);
+            rightTalons.set(0);
+            shoot.quickShoot(1.0, 0.82372, 0.01, needsShoot);
+            needsShoot = false;
+        }
+    }
+
+    public double getRightPulses() {
+        return rightEncoder.getRaw();
+    }
+
+    public double getRightEncoderDistance() {
+        return rightEncoder.getDistance();
+    }
+
+    public double getLeftEncoderDistance() {
+        return leftEncoder.getDistance();
     }
 
     public double fix(double v) {
@@ -143,7 +182,7 @@ public class DriveTrain {
     public void compareEncoders() {
         if (maxRightEncoderRate > maxLeftEncoderRate) {
             ratio = maxLeftEncoderRate / maxRightEncoderRate;
-            leftEncoderFix = maxRightEncoderRate * ratio + .1;
+            leftEncoderFix = maxRightEncoderRate * ratio;
             isLeftHigher = false;
 
         } else if (maxLeftEncoderRate > maxRightEncoderRate) {
@@ -152,8 +191,8 @@ public class DriveTrain {
             isLeftHigher = true;
         } else {
             ratio = 1;
-        }
 
+        }
     }
 
     public void breakTime() {
@@ -205,9 +244,9 @@ public class DriveTrain {
                 gearShiftHigh.set(isHighGear); // the gear shifts
                 gearShiftLow.set(!isHighGear);
             }
-            
 
-        }previousTriggerPressed = triggerPressed;
+        }
+        previousTriggerPressed = triggerPressed;
     }
 
     public void shiftHigh() {
