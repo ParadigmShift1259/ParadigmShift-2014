@@ -93,6 +93,9 @@ public class DriveTrain {
     }
 
     public void driveStraight(double distance, double firingDistance, double speed, Shooter shoot) {
+        
+        //on the test bot the left encoder doesn't work at all... as a result only right is used
+        //adding left would be good for the production bot
         if (rightEncoder.getDistance() < distance) {
             leftTalons.set(-speed);
             rightTalons.set(speed);

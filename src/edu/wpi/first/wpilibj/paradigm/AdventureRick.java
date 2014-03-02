@@ -21,22 +21,18 @@ import edu.wpi.first.wpilibj.DriverStation;
  * file in the resource directory.
  */
 public class AdventureRick extends IterativeRobot {
-    //electromagic!
-    private final double autoDriveTime = 1.0;
-    DriveTrain drive;
-    OperatorInputs operatorInputs;
-    Compressor compressor;
-    Shooter shoot;
-    ShooterPID shooterPID;
-    PickerPID pickerPID;
-    Timer autoTimer;
-    Picker pick;
-    DriverStation station;
-    Preferences prefs;
-    private boolean checkForKickerStop = false;
-    private boolean shootTimerBool = true;
-    final int PRESSURE_SWITCH_CHANNEL = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
-    final int COMPRESSOR_RELAY_CHANNEL = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
+    private DriveTrain drive;
+    private OperatorInputs operatorInputs;
+    private Compressor compressor;
+    private Shooter shoot;
+    private ShooterPID shooterPID;
+    private PickerPID pickerPID;
+    private Timer autoTimer;
+    private Picker pick;
+    private DriverStation station;
+    private Preferences prefs;
+    private final int PRESSURE_SWITCH_CHANNEL = 1;
+    private final int COMPRESSOR_RELAY_CHANNEL = 1;
 
     /**
      * Initializes when the robot first starts, (only once at power-up).
@@ -48,10 +44,7 @@ public class AdventureRick extends IterativeRobot {
         pickerPID = new PickerPID();
         shoot = new Shooter(operatorInputs);
         pick = new Picker(operatorInputs, pickerPID, shoot);
-        //pressureSwitchChannel - The GPIO channel that the pressure switch is attached to.
-        //compressorRelayChannel - The relay channel that the compressor relay is attached to.
         compressor = new Compressor(PRESSURE_SWITCH_CHANNEL, COMPRESSOR_RELAY_CHANNEL);
-        //shoot = new Shooter(operatorInputs);//add parameters as needed
 
         this.autoTimer = new Timer();
         drive.leftEncoder.start();  // EAC.2014.02.19 - we may want to move this initialization into the DriveTrain constructor
@@ -64,22 +57,7 @@ public class AdventureRick extends IterativeRobot {
         SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
-        //SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
-        //SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
-        /*
-         SmartDashboard.putBoolean("Is Picking", picker.isPicking);
-         SmartDashboard.putBoolean("Is Pooting", picker.isPicking);
-         */
-        //SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
-//        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
-
         SmartDashboard.putNumber("Speed", drive.totalSpeed);
-//      SmartDashboard.putNumber("Kicker Angle", shoot.angle); -> Don't need to display, not sure what will be displayed.
-        //autonomousCommand = (Command) testChooser.getSelected();
-        //autonomousCommand.start();
-        //drive.leftPow = prefs.getDouble("TestingCoolThings", 1.0);
-
-        //operatorInputs.shiftHigh = false;
     }
 
     /**
@@ -110,7 +88,6 @@ public class AdventureRick extends IterativeRobot {
 
     public void testInit() {//orginally teleop
         pickerPID = new PickerPID();
-        //shoot.caliButtPressed = true;
         pick = new Picker(operatorInputs, pickerPID, shoot);//add parameters as needed
         compressor.start();
         PickerPID.VOLTAGE_CORRECTION = prefs.getDouble("Pick_VC", PickerPID.VOLTAGE_CORRECTION);
@@ -130,19 +107,6 @@ public class AdventureRick extends IterativeRobot {
 
         pickerPID.enable();
         pickerPID.setSetpoint(pick.kickPos);
-
-        /*
-         PickerPID.Kp = prefs.getDouble("Kp", PickerPID.Kp);
-         PickerPID.Ki = prefs.getDouble("Ki", PickerPID.Ki);
-         PickerPID.Kd = prefs.getDouble("Kd", PickerPID.Kd);
-         pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
-         PickerPID.position = prefs.getDouble("Position", PickerPID.position);
-         pickerPID.setSetpoint(PickerPID.position);
-         PickerPID.TOLERANCE = prefs.getDouble("Tolerance", PickerPID.TOLERANCE);
-         pickerPID.setAbsoluteTolerance(PickerPID.TOLERANCE);
-         PickerPID.outputBounds = prefs.getDouble("output_bound", PickerPID.outputBounds);
-         pickerPID.getPIDController().setOutputRange(-PickerPID.outputBounds, PickerPID.outputBounds);
-         */
     }
 
     /**
@@ -159,7 +123,6 @@ public class AdventureRick extends IterativeRobot {
         drive.setPower();
 
         pick.kick();
-       // picker.middle();
         pick.pick();
         shoot.moveToKickPos();
         shoot.moveToPickPos();
@@ -167,38 +130,18 @@ public class AdventureRick extends IterativeRobot {
 //shift when the trigger is pressed
         drive.shift();
 
-        //drive.childProofing();
         shoot.manualShooterControl();
 
-        //shoot.quickButtonShoot(1.0, -1.0, 0.2);
         pick.spinGrabber();//works 2/12/14
         pick.spinPooter();//works 2/12/14
 
         SmartDashboard.putBoolean("Compressor Trying To Come On: ", compressor.enabled());
-
-        //all of these positions make the picker move forward, need to test the encoder value to reset values
-        //pick.setPosAuto();
-        //pick.setPosKicking();
-        //pick.setPosLoading();
         SmartDashboard.putNumber("kicker Motor Power", shoot.getKickerMotorPower());
-
-        //System.out.println("Trigger " + operatorInputs.joystickTriggerPressed());
         SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
-        //SmartDashboard.putNumber("Left Encoder Value Is", drive.leftEncoderFix);
-        //SmartDashboard.putNumber("Right Encoder Value Is", drive.rightEncoderFix);
-
-        /*
-         SmartDashboard.putBoolean("Is Picking", picker.isPicking);
-         SmartDashboard.putBoolean("Is Pooting", picker.isPicking);
-         */
         SmartDashboard.putBoolean("Is Kicking", shoot.kicking);
-//        SmartDashboard.putBoolean("Is Ready To Kick", shoot.inPosition);
-
         SmartDashboard.putNumber("Speed", drive.totalSpeed);
-        //SmartDashboard.putNumber("Kicker Angle", shoot.angle); *Don't need to display, not sure what will be displayed.
-
         SmartDashboard.putNumber("Kp", PickerPID.Kp);
         SmartDashboard.putNumber("Ki", PickerPID.Ki);
         SmartDashboard.putNumber("Kd", PickerPID.Kd);
@@ -206,10 +149,8 @@ public class AdventureRick extends IterativeRobot {
 
     public void teleopInit() {//originally test
         super.testInit();
-//        pickerPID.disable();
         compressor.start();
-        //pickerPID.enable();
-        //pickerPID.setSetpoint(picker.kickPos);
+        drive.resetEncoders();
 
     }
 
@@ -223,54 +164,19 @@ public class AdventureRick extends IterativeRobot {
         System.out.println("Right Encoder Distance: " + drive.getRightEncoderDistance());
         System.out.println("Right Encoder Pulses: " + drive.getRightPulses());
         System.out.println("Left Encoder Pulses: " + drive.getLeftPulses());
-        //station = station.getInstance();
-        //System.out.println("Kicker Set Speed: " + shoot.get());
-        //System.out.println("Kicker Encoder Voltage: " + shoot.getVoltage());
         shoot.emergencyDisablePid();
-        //shoot.inPositionDisable();
-
         shoot.moveToKickPos();
         shoot.moveToPickPos();
         shoot.quickButtonShoot(1.0, -1.0, 0.1);
         shoot.quickLeftButtonShoot(1.0, -0.75, 0.1);
 
         SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
-//        SmartDashboard.putNumber("Picker_Position", picker.getVoltage());
-//        SmartDashboard.putNumber("Battery Voltage: ", station.getBatteryVoltage());
-//        System.out.println("Battery Voltage: " + station.getBatteryVoltage());
         drive.setPower();
         drive.shift();
         drive.childProofing();
-        //compressor.start();
-
-        //System.out.println("Picker Encoder Value Is " + pickerPID.getVoltage());
-        //System.out.println("Picker Voltage Correction Is " + PickerPID.VOLTAGE_CORRECTION);
-
-        //System.out.println("Is High Gear " + drive.isHighGear);
-//        System.out.println("Left Power Is "+ drive.leftPow);
-//        System.out.println("Right Power Is " + drive.rightPow);
-         //pickerPID.enable();
-        //        System.out.println("Picker Encoder Value Is " + picker.getPickerAngle());
-        //
-        //System.out.println("Shooter Encoder Value Is :" + shooterPID.getVoltage());
-                         //System.out.println(picker.pickerPID.getPickerAngle());
-        //
-        //        shoot.manualShooterControl();
-        //        shoot.quickButtonShoot(5, -.1);
-                 /*
-         picker.manualPickerControl();
-         SmartDashboard.putNumber("Kp", PickerPID.Kp);
-         SmartDashboard.putNumber("Ki", PickerPID.Ki);
-         SmartDashboard.putNumber("Kd", PickerPID.Kd);
-         //System.out.println("voltage " + pickerPID.getVoltage());
-         */
         pick.emergencyDisablePid();
         pick.pick();
-        //System.out.println("Calling picker.setPosKicking();");
         pick.setPosKicking();
-        //System.out.println("Called picker.setPosKicking();");
-        //pickerPID.disable();
-        //System.out.println(pickerPID.getPIDController().isEnable());
         pick.lockKick();
         pick.spinGrabber();
         pick.spinPooter();
