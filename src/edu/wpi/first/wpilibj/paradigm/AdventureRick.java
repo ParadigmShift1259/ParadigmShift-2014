@@ -121,8 +121,6 @@ public class AdventureRick extends IterativeRobot {
         pick.inPositionDisable();
 
         drive.setPower();
-
-        pick.kick();
         pick.pick();
         shoot.moveToKickPos();
         shoot.moveToPickPos();
@@ -133,7 +131,7 @@ public class AdventureRick extends IterativeRobot {
         shoot.manualShooterControl();
 
         pick.spinGrabber();//works 2/12/14
-        pick.spinPooter();//works 2/12/14
+        pick.spinReleaser();//works 2/12/14
 
         SmartDashboard.putBoolean("Compressor Trying To Come On: ", compressor.enabled());
         SmartDashboard.putNumber("kicker Motor Power", shoot.getKickerMotorPower());
@@ -167,6 +165,7 @@ public class AdventureRick extends IterativeRobot {
         shoot.emergencyDisablePid();
         shoot.moveToKickPos();
         shoot.moveToPickPos();
+        shoot.passKick();
         shoot.quickButtonShoot(1.0, -1.0, 0.1);
         shoot.quickLeftButtonShoot(1.0, -0.75, 0.1);
 
@@ -179,7 +178,7 @@ public class AdventureRick extends IterativeRobot {
         pick.setPosKicking();
         pick.lockKick();
         pick.spinGrabber();
-        pick.spinPooter();
+        pick.spinReleaser();
         shoot.manualShooterControl();
     }
 

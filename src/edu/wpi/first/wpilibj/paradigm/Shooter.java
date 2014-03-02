@@ -72,21 +72,6 @@ public class Shooter {
         }
     }
 
-    public void disableToggle() {
-        double delay = 0.01;
-        double time;
-        time = .2;
-        timer.start();
-        if ((timer.get() > delay) && (timer.get() < time)) {
-            shooterPid.toggleDisable();
-        }
-        if (timer.get() > time) {
-            shooterPid.set(0);
-            timer.stop();
-            timer.reset();
-        }
-    }
-
     public double getKickerMotorPower() {
         return shooterPid.get();
     }
@@ -160,9 +145,13 @@ public class Shooter {
     }
 
     public void moveToKickPos() {
-        if (operatorInputs.xBoxBackButton() || operatorInputs.xBoxYButton()) {
+        if (operatorInputs.xBoxBackButton()) {
             shooterPid.prepKickx();
         }
+    }
+
+    public void passKick() {
+        quickShoot(2.0, 0.05, 0.01, operatorInputs.xBoxYButton());
     }
 
     public void moveToPickPos() {

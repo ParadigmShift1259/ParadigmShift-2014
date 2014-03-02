@@ -22,6 +22,7 @@ public class ShooterPID extends PIDSubsystem {
     public static double Kd = 1.5;
     public double VOLTAGE_CORRECTION = 0.0;
     private static double kickPos; //dummy values, need to be edited(3.5)
+    private static double passPos;
     public static double pickPos; //dummy values, need to be edited (1.0)
     public static double zeroPosition = 0.35;
     private static final double OUTPUT_BOUNDS = 0.1;
@@ -34,6 +35,7 @@ public class ShooterPID extends PIDSubsystem {
         super("ShooterPID", Kp, Ki, Kd);
         pickPos = 1.0 + VOLTAGE_CORRECTION;
         kickPos = 3.65 + VOLTAGE_CORRECTION;
+        passPos = 0.3 + VOLTAGE_CORRECTION;
         getPIDController().setOutputRange(-OUTPUT_BOUNDS, OUTPUT_BOUNDS);
         getPIDController().setInputRange(0.0, 5.0);
         getPIDController().setContinuous(false);
@@ -47,7 +49,15 @@ public class ShooterPID extends PIDSubsystem {
         setSetpoint(kickPos);
         System.out.println("kick setpoint set");
         enable();
-        //getPIDController().reset();
+    }
+    
+    public void prepPass() {
+        Ki = 0.001;
+        getPIDController().setPID(Kp, Ki, Kd);
+        System.out.println("prepPass called");
+        setSetpoint(passPos);
+        System.out.println("pass setpoint set");
+        enable();
     }
 
     public void prepPick() {
@@ -57,19 +67,7 @@ public class ShooterPID extends PIDSubsystem {
         setSetpoint(pickPos);
         System.out.println("pick setpoint set");
         enable();
-        //getPIDController().reset();
     }
-//pos is not being assigned a 
-//    public boolean checkPos() {
-//        return (encoder.getVoltage() - TOLERANCE_DISABLE < pos
-//                && encoder.getVoltage() + TOLERANCE_DISABLE > pos);
-//    }
-//
-//    public void disableIfInPos() {
-//        if (checkPos()) {
-//           // disable();
-//        }
-//    }
 
     public void toggleDisable() {
         if (getPIDController().isEnable()) {
@@ -84,8 +82,7 @@ public class ShooterPID extends PIDSubsystem {
     }
 
     public void initDefaultCommand() {
-        // Set the default command for a subsystem here.
-        //setDefaultCommand(new MySpecialCommand());
+        // needs to be overridden
     }
 
     protected double returnPIDInput() {
