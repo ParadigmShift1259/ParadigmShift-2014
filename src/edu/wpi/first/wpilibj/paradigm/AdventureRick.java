@@ -219,6 +219,7 @@ public class AdventureRick extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void teleopPeriodic() {//Orginally testPeriodic
+        
         System.out.println("Left Encoder Distance: " + drive.getLeftEncoderDistance());
         System.out.println("Right Encoder Distance: " + drive.getRightEncoderDistance());
         System.out.println("Right Encoder Pulses: " + drive.getRightPulses());
@@ -234,7 +235,7 @@ public class AdventureRick extends IterativeRobot {
         shoot.quickButtonShoot(1.0, -1.0, 0.1);
         shoot.quickLeftButtonShoot(1.0, -0.75, 0.1);
 
-//        SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
+        SmartDashboard.putNumber("Shooter_Position", shoot.getVoltage());
 //        SmartDashboard.putNumber("Picker_Position", picker.getVoltage());
 //        SmartDashboard.putNumber("Battery Voltage: ", station.getBatteryVoltage());
 //        System.out.println("Battery Voltage: " + station.getBatteryVoltage());
