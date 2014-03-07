@@ -51,7 +51,7 @@ public class DriveTrain {
     //double currentLeftRate;
     long sleepTime = 0100;
     //high gear = high speed (and low torque)
-    boolean isHighGear = true; //will start in high gear (low torque)
+    boolean isHighGear = false; //will start in high gear (low torque)
     boolean nemo = false;
     boolean isLeftHigher = true;
     double leftSpeed = 0;
@@ -61,7 +61,7 @@ public class DriveTrain {
     double leftChildProofSetter;
     double rightChildProofSetter;
     boolean childProofConfirmed = false;
-    private static final double DISTANCE_PER_PULSE = 0.0008945;
+    private static final double DISTANCE_PER_PULSE = 0.0006708;
     boolean previousTriggerPressed; //what the trigger was before it changed
 
     public DriveTrain(OperatorInputs _operatorInputs) {
@@ -241,7 +241,7 @@ public class DriveTrain {
 
     public void shift() {//current setting is start in high gear
         boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-        if (!isHighGear || childProofConfirmed) {
+        if (isHighGear || childProofConfirmed) {
             if (triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
                 isHighGear = !isHighGear; // high gear becomes not high gear
                 gearShiftHigh.set(isHighGear); // the gear shifts
@@ -252,42 +252,7 @@ public class DriveTrain {
         previousTriggerPressed = triggerPressed;
     }
 
-    public void shiftHigh() {
-        // boolean pressed = operatorInputs.shiftHigh();
-        boolean pressed = operatorInputs.shifter();
-
-        if (nemo == true && pressed) {
-            gearShiftLow.set(!isHighGear);
-            gearShiftHigh.set(isHighGear);
-            nemo = false;
-
-        }
-//        boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-//        if(!isHighGear && triggerPressed ){
-//            isHighGear = !isHighGear; // high gear becomes not high gear
-//            gearShift.set(!isHighGear); // the gear shifts
-//            gearShift2.set(isHighGear);
-//            previousTriggerPressed = !triggerPressed;
-//        }
-    }
-
-    public void shiftLow() {
-        boolean pressed = operatorInputs.shifter();
-        if (nemo == false && pressed) {
-            gearShiftLow.set(isHighGear);
-            gearShiftHigh.set(!isHighGear);
-            nemo = true;
-
-        }
-//        boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-//        if(isHighGear && triggerPressed){
-//            isHighGear = !isHighGear; // high gear becomes not high gear
-//            gearShift.set(isHighGear); // the gear shifts
-//            gearShift2.set(!isHighGear);
-//            previousTriggerPressed = !triggerPressed;
-//        }
-    }
-
+    
     public void setSpeedPositive() {
         totalSpeed = (leftPow + rightPow) / 2;
         if (isHighGear = true) {

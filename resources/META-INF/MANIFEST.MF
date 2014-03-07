@@ -1,6 +1,6 @@
 MIDlet-Name: cRIO-2014
 MIDlet-Version: 1.0.0
 MIDlet-Vendor: FIRST
-MIDlet-1: AdventureRick, , edu.wpi.first.wpilibj.paradigm.AdventureRick
+MIDlet-1: Rafiki_Atlas, , edu.wpi.first.wpilibj.paradigm.Rafiki_Atlas
 MicroEdition-Profile: IMP-1.0
 MicroEdition-Configuration: CLDC-1.1

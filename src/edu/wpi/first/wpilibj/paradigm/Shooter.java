@@ -216,8 +216,8 @@ public class Shooter {
         //ystem.out.println(shootTimer.get());
         if (timer.get() > time) {
             shooterPid.set(0);
-            timer.stop();
             timer.reset();
+            timer.stop();
             kicking = false;
             //shooterPid.enable();
 
@@ -227,44 +227,30 @@ public class Shooter {
     public void quickLeftButtonShoot(double time, double power, double delay) {
 
         if (oi.isLeftShooterTriggerPressed() /*&& shooterPid.isDisabled()*/) {
-            //shooterPid.disable();
-            shooterPid.set(power);
+            shooterPid.disable();
             kicking = true;
-            timer.start();
+            shootTimer.start();
         }
         //shootTimer.reset();
         //System.out.println("Loop should be starting");
 
-        if ((timer.get() > delay) && (timer.get() < time)) {
+        if ((shootTimer.get() > delay) && (shootTimer.get() < time)) {
             shooterPid.set(power);
         }
         //System.out.println("Motor should be going");
         //ystem.out.println(shootTimer.get());
-        if (timer.get() > time) {
+        if (shootTimer.get() > time) {
             //shooterPid.set(0);
             shooterPid.set(0);
-            timer.stop();
-            timer.reset();
+            shootTimer.reset();
+            shootTimer.stop();
             kicking = false;
             //shooterPid.enable();
 
         }
     }
 
-    public void autoShoot(double time, double power) {
-        double base = 0.0;
-        //        shootTimer.start();
-        //System.out.println("Loop should be starting");
-
-        if (base + shootTimer.get() < time) {
-            shooterPid.set(power);
-            //System.out.println("Motor should be going");
-            //ystem.out.println(shootTimer.get());
-        } else {
-            shooterPid.set(0);
-            shootTimer.stop();
-        }
-    }
+    
     /*
      public void setKickingPosition() {
      triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS)

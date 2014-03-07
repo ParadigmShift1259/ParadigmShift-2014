@@ -72,6 +72,10 @@ public class OperatorInputs {
     public boolean xBoxBackButton() {
         return xBox.getRawButton(BACK_BUTTON);
     }
+    
+    public boolean button7(){
+        return joystick.getRawButton(7);
+    }
 
     // EAC.2014.02.19 - We may want to consider a more generic name
     public boolean isPickerLoadingPositionButtonPressed() {

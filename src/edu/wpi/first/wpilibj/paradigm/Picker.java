@@ -18,9 +18,9 @@ public class Picker {
     OperatorInputs operatorInputs;
     private boolean wasKick = false;
     private static final double LOCK_COEF = 1.0;
-    private final double pickPos = -1.00; //change value later, position while loading
-    public double kickPos = 0.45; //change value later, position while shooting/aiming
-    private final double middlePos = 0.28; //change value later, position at the beginning of the auto/match
+    private final double pickPos = -0.75; //change value later, position while loading
+    public double kickPos = 0.4; //change value later, position while shooting/aiming
+    //private final double middlePos = 0.28; //change value later, position at the beginning of the auto/match
     private double currentAngle; //the picker's current pos(ition)
     private boolean buttonPressed = false; //used to indicate if any button is pressed
     private boolean buttonPreviouslyPressed = false;
@@ -56,8 +56,8 @@ public class Picker {
     boolean isPicking;
     private boolean isManual;
     private static final Timer timer = new Timer();
-    private static final double PID_DISABLE_TOLERANCE = 0.4;
-    private static final double STEP = 0.9;
+    private static final double PID_DISABLE_TOLERANCE = 0.35;
+    private static final double STEP = 0.55;
     private boolean grabberOverride = false;
 
     public PickerPID pickerPID;
@@ -115,6 +115,7 @@ public class Picker {
 
     public void pick() {
         buttonPressed = operatorInputs.xBoxBButton();
+        
         if (settingPos1 && pickerPID.getPIDController().onTarget()) {
             settingPos1 = false;
             pickerPID.disable();
@@ -136,6 +137,8 @@ public class Picker {
             isPickPos = false;
 
         }
+        
+        
     }
 
     public void spinGrabber() {
