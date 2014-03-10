@@ -19,12 +19,9 @@ public class Picker {
     private boolean wasKick = false;
     private static final double LOCK_COEF = 1.0;
     private final double pickPos = -0.75; //change value later, position while loading
-    public double kickPos = 0.4; //change value later, position while shooting/aiming
-    //private final double middlePos = 0.28; //change value later, position at the beginning of the auto/match
-    private double currentAngle; //the picker's current pos(ition)
+    public double kickPos = 0.45; //change value later, position while shooting/aiming
     private boolean buttonPressed = false; //used to indicate if any button is pressed
     private boolean buttonPreviouslyPressed = false;
-    //private boolean isKickPos = false;
     private boolean isPickPos = false;
     private boolean isGrabbing = false;
     public static boolean isKickingNow = false;
@@ -39,29 +36,18 @@ public class Picker {
     public static double KD_SOFT = 6.0;
     public static double KD_MEDIUM = 12.0;
     public static double KD_HARD = 2.5;
-    private Talon wheelSpinner = new Talon(3); //used in the SpinGrabber method...also is a Talon
-
-    // private Talon pickerMotor = new Talon(4);
-//    private final int pickerChannel = 2;
-//    private final AnalogChannel analogChannel = new AnalogChannel(pickerChannel);
-    private double pickerAngleVoltage;
-    private double pickerAngleDegree;
-    private double MAX_ENCODER_VOLTAGE = 5.0;
     private boolean settingPos1 = false;
     private boolean settingPos2 = false;
     private boolean settingPos3 = false;
-    private final int A_BUTTON = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final int B_BUTTON = 2; // EAC.2014.02.19 - may benefit in compile-size by being static
-    private final int Y_BUTTON = 4; // EAC.2014.02.19 - may benefit in compile-size by being static
     boolean isPicking;
     private boolean isManual;
-    private static final Timer timer = new Timer();
     private static final double PID_DISABLE_TOLERANCE = 0.35;
     private static final double STEP = 0.55;
     private boolean grabberOverride = false;
 
     public PickerPID pickerPID;
     public Shooter shoot;
+    public Talon wheelSpinner = new Talon(3);
 
     /**
      * This is the constructor for the Picker class.
@@ -70,7 +56,10 @@ public class Picker {
         this.operatorInputs = _operatorInputs;
         pickerPID = _pickerPid;
         this.shoot = shoot;
-        //shooter = new Shooter(_operatorInputs);
+    }
+
+    public Talon returnSpinner() {
+        return wheelSpinner;
     }
 
     public double getVoltage() {
@@ -82,30 +71,6 @@ public class Picker {
             pickerPID.disable();
         }
     }
-/*
-    public void kick() {
-        buttonPressed = operatorInputs.xBoxXButton();
-        if (settingPos2 && pickerPID.getPIDController().onTarget()) {
-            settingPos2 = false;
-            pickerPID.disable();
-            if (buttonPressed) {
-                pickerPID.enable();
-                isKickPos = true;
-                PickerPID.Kp = KP_SOFT;
-                PickerPID.Ki = KI_MEDIUM;
-                PickerPID.Kd = KD_MEDIUM;
-                pickerPID.getPIDController().setPID(PickerPID.Kp, PickerPID.Ki, PickerPID.Kd);
-                pickerPID.getPIDController().reset();
-                pickerPID.enable();
-                pickerPID.setSetpoint(kickPos);
-            } else if (!buttonPressed) {
-                isKickPos = false;
-                //?
-
-            }
-        }
-    }
-*/
 
     public void inPositionDisable() {
         if (pickerPID.getPIDController().getSetpoint() > pickerPID.getVoltage() - PID_DISABLE_TOLERANCE && pickerPID.getPIDController().getSetpoint() < pickerPID.getVoltage() + PID_DISABLE_TOLERANCE) {
@@ -115,7 +80,7 @@ public class Picker {
 
     public void pick() {
         buttonPressed = operatorInputs.xBoxBButton();
-        
+
         if (settingPos1 && pickerPID.getPIDController().onTarget()) {
             settingPos1 = false;
             pickerPID.disable();
@@ -137,8 +102,7 @@ public class Picker {
             isPickPos = false;
 
         }
-        
-        
+
     }
 
     public void spinGrabber() {
@@ -171,10 +135,11 @@ public class Picker {
             wheelSpinner.set(0);
         }
     }
-    /*
-    public void manualPickerControl() {
 
+    public void manualPickerControl() {
+        //check pos's - duluth
         if (!settingPos1 && !settingPos2 && !settingPos3 && Math.abs(operatorInputs.xboxRightY()) > 0) {
+            pickerPID.disable();
             pickerPID.set(-operatorInputs.xboxRightY()); //Y-axis is up negative, down positive; Map Y-axis up to green, Y-axis down to red
             isManual = true;
         } else if (isManual && operatorInputs.xboxRightY() == 0) {
@@ -182,15 +147,12 @@ public class Picker {
             pickerPID.set(0);
         }
     }
-    */
 
     public void setPosKicking() {
-        System.out.println("setPosKicking called");
         buttonPressed = operatorInputs.xBoxXButton();
         if (buttonPressed && !settingPos1 && !settingPos3) {
             wasKick = false;
             settingPos2 = true;
-            System.out.println("picker kick set called");
             pickerPID.disable();
         }
         if (settingPos2) {
@@ -201,7 +163,7 @@ public class Picker {
             } else if (getVoltage() - PID_DISABLE_TOLERANCE > kickPos) {
                 pickerPID.set(-0.1);
             } else if (getVoltage() + PID_DISABLE_TOLERANCE < kickPos) {
-                pickerPID.set(0.1);
+                pickerPID.set(-0.3);
             } else {
                 pickerPID.set(0);
                 settingPos2 = false;
@@ -209,7 +171,6 @@ public class Picker {
                 wheelSpinner.set(0);
                 wasKick = true;
                 shoot.getPID().prepKickx();
-                System.out.println("picker pick set called");
             }
         }
     }
@@ -226,5 +187,5 @@ public class Picker {
             pickerPID.set(setSpeed);
         }
     }
-     //need to figure out moveable parts on the picker in order to assign functions
+
 }

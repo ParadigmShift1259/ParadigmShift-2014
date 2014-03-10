@@ -19,11 +19,11 @@ public class PickerPID extends PIDSubsystem {
     public static double Kp = 1.0; 
     public static double Ki = 0.025; //0.03
     public static double Kd = 4.5; //1.6
-    public static double position = 0.35;
+    public static double position = 0.0;
     public static double outputBounds = 0.8; // EAC.2014.02.19 - Consider changing to 10 if you also use the suggestion in usePIDOutput()
 
     private double currentAngle;
-    public static double VOLTAGE_CORRECTION = 2.21;//2.62?
+    public static double VOLTAGE_CORRECTION = 0.0;//2.62?, 3.64
     private static final double step = .4; //aded by John
     /*
      private double desiredPos; //added by John

@@ -5,10 +5,9 @@
  */
 package edu.wpi.first.wpilibj.paradigm;
 
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -169,7 +168,7 @@ public class Shooter {
             shooterPid.disable();
             kicking = true;
             timer.start();
-            System.out.println("Loop should be starting");
+            //System.out.println("Loop should be starting");
         }
         //shootTimer.reset();
         if ((timer.get() < delay) && (timer.get() < time)) {
@@ -179,12 +178,12 @@ public class Shooter {
         if ((timer.get() > delay) && (timer.get() < time)) {
             shooterPid.set(-power);
             Picker.isKickingNow = false;
-            System.out.println("Motor should be going");
+            //System.out.println("Motor should be going");
         }
 
         System.out.println(shootTimer.get());
         if (timer.get() > time) {
-            System.out.println("Motor should be stopping");
+            //System.out.println("Motor should be stopping");
             shooterPid.set(0);
             timer.stop();
             timer.reset();
@@ -195,7 +194,8 @@ public class Shooter {
     }
 
     public void quickButtonShoot(double time, double power, double delay) {
-
+        //pickerPID.disable();
+        
         if (oi.isShooterTriggerPressed() /*&& shooterPid.isDisabled()*/) {
             shooterPid.disable();
             kicking = true;
@@ -206,8 +206,9 @@ public class Shooter {
         if ((timer.get() < delay) && (timer.get() < time)) {
             Picker.isKickingNow = true;
         }
-
+        
         if ((timer.get() > delay) && (timer.get() < time)) {
+            System.out.println("Before quickShoot: " + DriverStation.getInstance().getBatteryVoltage());
             shooterPid.set(power);
             Picker.isKickingNow = false;
         }
@@ -215,12 +216,13 @@ public class Shooter {
         //System.out.println("Motor should be going");
         //ystem.out.println(shootTimer.get());
         if (timer.get() > time) {
+            System.out.println("After quickShoot: " + DriverStation.getInstance().getBatteryVoltage());
             shooterPid.set(0);
             timer.reset();
             timer.stop();
             kicking = false;
             //shooterPid.enable();
-
+            
         }
     }
 
@@ -246,7 +248,7 @@ public class Shooter {
             shootTimer.stop();
             kicking = false;
             //shooterPid.enable();
-
+            System.out.println(DriverStation.getInstance().getBatteryVoltage());
         }
     }
 

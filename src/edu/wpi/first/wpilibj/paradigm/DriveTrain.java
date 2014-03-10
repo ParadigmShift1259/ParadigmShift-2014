@@ -5,6 +5,7 @@
  */
 package edu.wpi.first.wpilibj.paradigm;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Encoder;
@@ -17,23 +18,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DriveTrain {
 
-    OperatorInputs operatorInputs;
-
-    final int LEFT_PORT = 1; //attributes  defining the class  // EAC.2014.02.19 - may benefit in compile-size by being static
-    final int RIGHT_PORT = 2; // EAC.2014.02.19 - may benefit in compile-size by being static
-    final int SHIFT_PORT_LOW = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
-    final int SHIFT_PORT_HIGH = 2; // EAC.2014.02.19 - may benefit in compile-size by being static
-    final int SHIFT_MODULE = 1; // EAC.2014.02.19 - may benefit in compile-size by being static
+    //static variables can benefit compile size
+    final int LEFT_PORT = 1;
+    final int RIGHT_PORT = 2;
+    final int SHIFT_PORT_LOW = 1;
+    final int SHIFT_PORT_HIGH = 2;
+    final int SHIFT_MODULE = 1;
     boolean needsShoot = false;
-    public Talon leftTalons; //has to motors and motor controllers 
-    public Talon rightTalons;
-    private Solenoid gearShiftLow; // and a gear shifter
-    private Solenoid gearShiftHigh;
-    Encoder leftEncoder;
-    Encoder rightEncoder;
-    Timer time;
 
-    double joyStickX; //controlled with a joystick on the x and y axis
+    double joyStickX;
     double joyStickY;
 
     double leftPow;
@@ -48,34 +41,43 @@ public class DriveTrain {
     double ratio = 1;
     double rightEncoderFix;
     double leftEncoderFix;
-    //double currentLeftRate;
     long sleepTime = 0100;
-    //high gear = high speed (and low torque)
-    boolean isHighGear = false; //will start in high gear (low torque)
+    boolean isHighGear = false; //Robot starts in high gear
     boolean nemo = false;
     boolean isLeftHigher = true;
     double leftSpeed = 0;
     double rightSpeed = 0;
-    final double encoderDeadzone = 1000; // EAC.2014.02.19 - may benefit in compile-size by being static
-    final double encoderWaitTime = 168; //0250 is 250 octal = 168 decimal // EAC.2014.02.19 - may benefit in compile-size by being static
+    final double encoderDeadzone = 1000;
+    final double encoderWaitTime = 168;
     double leftChildProofSetter;
     double rightChildProofSetter;
     boolean childProofConfirmed = false;
     private static final double DISTANCE_PER_PULSE = 0.0006708;
-    boolean previousTriggerPressed; //what the trigger was before it changed
+    boolean previousTriggerPressed; //what the trigger value was before the current press, allows for trigger to stay pressed w/o flipping
+    double previousPow = 0;
+
+    public Talon leftTalons;
+    public Talon rightTalons;
+    private Solenoid gearShiftLow;
+    private Solenoid gearShiftHigh;
+    Encoder leftEncoder;
+    Encoder rightEncoder;
+    Timer timer;
+    OperatorInputs operatorInputs;
 
     public DriveTrain(OperatorInputs _operatorInputs) {
         this.operatorInputs = _operatorInputs;
-        //this.previousTriggerPressed = this.operatorInputs.joystickTriggerPressed();
         this.leftTalons = new Talon(LEFT_PORT);
         this.rightTalons = new Talon(RIGHT_PORT);
         this.gearShiftLow = new Solenoid(SHIFT_MODULE, SHIFT_PORT_LOW);
         this.gearShiftHigh = new Solenoid(SHIFT_MODULE, SHIFT_PORT_HIGH);
         this.leftEncoder = new Encoder(3, 4);
         this.rightEncoder = new Encoder(5, 6);
-        this.time = new Timer();
-        leftTalons.set(0);  //Make sure motor is off
-        rightTalons.set(0); //Make sure motor is off
+        this.timer = new Timer();
+        //Start all wheels off
+        leftTalons.set(0);
+        rightTalons.set(0);
+        //Starts in high gear
         gearShiftLow.set(isHighGear);
         gearShiftHigh.set(!isHighGear);
         leftEncoder.setDistancePerPulse(-DISTANCE_PER_PULSE);
@@ -83,75 +85,76 @@ public class DriveTrain {
 
     }
 
-    public double getLeftPulses() {
-        return leftEncoder.getRaw();
+    public void rampPower(double desiredPow) { //Makes it so that robot can't go stop to full
+        if (previousPow < desiredPow) {
+            previousPow += 0.1;
+        }
+        if (previousPow > desiredPow) {
+            previousPow = desiredPow;
+        }
+        leftTalons.set(-previousPow);
+        rightTalons.set(previousPow);
+
     }
 
-    public void resetEncoders() {
+    public void resetEncoders() { //Resets current raw encoder value to 0
         leftEncoder.reset();
         rightEncoder.reset();
     }
 
-    public void driveStraight(double distance, double firingDistance, double speed, Shooter shoot) {
-        
-        //on the test bot the left encoder doesn't work at all... as a result only right is used
-        //adding left would be good for the production bot
+    public void driveStraight(double distance, double firingDistance, double speed, Shooter shoot) { //Controls robot during autonomous
+
+        double batteryVoltage = DriverStation.getInstance().getBatteryVoltage();
         if (rightEncoder.getDistance() < distance) {
-            leftTalons.set(-speed);
-            rightTalons.set(speed);
+            rampPower(speed);
             needsShoot = true;
         } else if (rightEncoder.getDistance() < firingDistance) {
-            shoot.quickShoot(1.0, 0.82372, 0.01, needsShoot);
+            shoot.quickShoot(1.0, (10.0 / batteryVoltage) > 1 ? 1.0 : (10.0 / batteryVoltage), 0.01, needsShoot);
             needsShoot = false;
         } else {
             leftTalons.set(0);
             rightTalons.set(0);
-            shoot.quickShoot(1.0, 0.82372, 0.01, needsShoot);
+            shoot.quickShoot(1.0, (10.0 / batteryVoltage) > 1 ? 1.0 : (10.0 / batteryVoltage), 0.01, needsShoot);
             needsShoot = false;
         }
     }
 
-    public double getRightPulses() {
+    public double getRightPulses() { //Returns raw value of right talon encoder
         return rightEncoder.getRaw();
     }
 
-    public double getRightEncoderDistance() {
+    public double getLeftPulses() { //Returns raw value of left talon encoder
+        return leftEncoder.getRaw();
+    }
+
+    public double getRightEncoderDistance() { //Returns the distance per pulse of the right encoder
         return rightEncoder.getDistance();
     }
 
-    public double getLeftEncoderDistance() {
+    public double getLeftEncoderDistance() { //Returns the distance per pulse of the left encoder
         return leftEncoder.getDistance();
     }
 
     public double fix(double v) {
-
         return v / fixNum;
     }
 
-    //see below
     public double LeftMotor() {
         //moved leftSpeed to class scope, it is being set in setPower()
         double fixLeftPow = fix(leftPow);
         //moved rightSpeed to class scope, it is being set in setPower()
         double fixRightPow = fix(rightPow);
 
-//they see me rollin', and dey hatin'
         if (leftPow != 0 && rightPow != 0) {
             maxLeftEncoderRate = Math.abs(leftSpeed / leftPow);
-            //maxRightEncoderRate = rightSpeed / rightPow;
             if (Math.min(Math.abs(leftSpeed), Math.abs(rightSpeed)) > encoderDeadzone) {
                 breakTime();
             }
             if (isLeftHigher) {
-                //ratio = maxRightEncoderRate / maxLeftEncoderRate;
                 fixLeftPow = ratio * fixLeftPow;
-
             }
             leftChildProofSetter = Math.abs(fixLeftPow);
         }
-        //System.out.println("Left Speed = " + leftSpeed);
-        //System.out.println("Left Power = " + leftPow);
-        //System.out.println("Left Talon Value = " + leftTalons.getSpeed());
 
         return (fixLeftPow);
     }
@@ -161,28 +164,23 @@ public class DriveTrain {
         double fixLeftPow = fix(leftPow);
         //moved rightSpeed to class scope, it is being set in setPower()
         double fixRightPow = fix(rightPow);
-//they see me rollin', and dey hatin'
+
         if (leftPow != 0 && rightPow != 0) {
             maxRightEncoderRate = Math.abs(rightSpeed / rightPow);
-            //maxLeftEncoderRate = Math.abs(leftSpeed / leftPow);
             if (Math.min(Math.abs(leftSpeed), Math.abs(rightSpeed)) > encoderDeadzone) {
                 breakTime();
             }
             if (!isLeftHigher) {
                 fixRightPow = ratio * fixRightPow;
-
             }
             rightChildProofSetter = Math.abs(fixRightPow);
         }
 
-        //System.out.println("Right Speed = " + rightSpeed);
-        //System.out.println("Right Power = " + rightPow);
-        //System.out.println("Right Talon Value = " + rightTalons.getSpeed());
-        return (fixRightPow);//goes to the talon
+        return (fixRightPow);
 
     }
 
-    public void compareEncoders() {
+    public void compareEncoders() { //If left motor speed is bigger than the right motor speed return true, else false
         if (maxRightEncoderRate > maxLeftEncoderRate) {
             ratio = maxLeftEncoderRate / maxRightEncoderRate;
             leftEncoderFix = maxRightEncoderRate * ratio;
@@ -201,10 +199,10 @@ public class DriveTrain {
     public void breakTime() {
         SmartDashboard.putNumber("Ratio", ratio);
         SmartDashboard.putBoolean("Left > Right", isLeftHigher);
-        SmartDashboard.putNumber("Timer time", time.get());
-        if (time.get() > encoderWaitTime) {
+        SmartDashboard.putNumber("Timer time", timer.get());
+        if (timer.get() > encoderWaitTime) {
             compareEncoders();
-            time.reset();
+            timer.reset();
         }
     }
 
@@ -217,13 +215,13 @@ public class DriveTrain {
         } else {
             if (Math.abs(joyStickX) > Math.abs(joyStickY)) {
                 double fixNumMult = 1 / Math.abs(joyStickX);
-                fixNum = Math.abs(joyStickY) * fixNumMult + 1; //1 = math.abs(joyStickX)*fixnum 1
+                fixNum = Math.abs(joyStickY) * fixNumMult + 1;
             } else {
                 double fixNumMult = 1 / Math.abs(joyStickY);
-                fixNum = Math.abs(joyStickX) * fixNumMult + 1; //1 = math.abs(joyStickY)*fixnum 1
+                fixNum = Math.abs(joyStickX) * fixNumMult + 1;
             }
         }
-        leftPow = -joyStickY + joyStickX; // what is does when joystick is put all the way to the right or left
+        leftPow = -joyStickY + joyStickX;
         rightPow = -joyStickY - joyStickX;
         leftSpeed = leftEncoder.getRate();
         rightSpeed = rightEncoder.getRate();
@@ -242,9 +240,10 @@ public class DriveTrain {
     public void shift() {//current setting is start in high gear
         boolean triggerPressed = operatorInputs.joystickTriggerPressed();
         if (isHighGear || childProofConfirmed) {
-            if (triggerPressed == true && previousTriggerPressed == false) { //if trigger was just pressed 
-                isHighGear = !isHighGear; // high gear becomes not high gear
-                gearShiftHigh.set(isHighGear); // the gear shifts
+            if (triggerPressed && !previousTriggerPressed) {
+                isHighGear = !isHighGear;
+                //Shifts gear
+                gearShiftHigh.set(isHighGear); 
                 gearShiftLow.set(!isHighGear);
             }
 
@@ -252,7 +251,6 @@ public class DriveTrain {
         previousTriggerPressed = triggerPressed;
     }
 
-    
     public void setSpeedPositive() {
         totalSpeed = (leftPow + rightPow) / 2;
         if (isHighGear = true) {
@@ -263,12 +261,13 @@ public class DriveTrain {
         }
     }
 
-    public void childProofing() {//needs to be tested on bot - Allison
-        //fixed by everyone
+    public void childProofing() { //Low to high and speed, High to low when speed is under a certain value
+
         if (rightChildProofSetter < .2 && leftChildProofSetter < .2) {
             childProofConfirmed = true;
         } else {
             childProofConfirmed = false;
         }
     }
+
 }

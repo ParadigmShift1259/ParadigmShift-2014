@@ -20,7 +20,7 @@ public class ShooterPID extends PIDSubsystem {
     public static final Talon shooter = new Talon(5);
     public static double Ki = 0.005;
     public static double Kd = 1.0;
-    public double VOLTAGE_CORRECTION = 0.0;
+    public double VOLTAGE_CORRECTION = 0.52;
     private static double kickPos; //dummy values, need to be edited(3.5)
     private static double passPos;
     public static double pickPos; //dummy values, need to be edited (1.0)
@@ -33,7 +33,7 @@ public class ShooterPID extends PIDSubsystem {
     // Initialize your subsystem here
     public ShooterPID() {
         super("ShooterPID", Kp, Ki, Kd);
-        pickPos = 1.0 + VOLTAGE_CORRECTION;
+        pickPos = 2.57 + VOLTAGE_CORRECTION;
         kickPos = 3.72 + VOLTAGE_CORRECTION;
         passPos = 0.3 + VOLTAGE_CORRECTION;
         getPIDController().setOutputRange(-OUTPUT_BOUNDS, OUTPUT_BOUNDS);
@@ -50,7 +50,7 @@ public class ShooterPID extends PIDSubsystem {
         System.out.println("kick setpoint set");
         enable();
     }
-    
+
     public void prepPass() {
         Ki = 0.002;
         getPIDController().setPID(Kp, Ki, Kd);
