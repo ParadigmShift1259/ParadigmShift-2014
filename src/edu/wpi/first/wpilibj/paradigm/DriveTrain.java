@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  *
@@ -53,8 +54,9 @@ public class DriveTrain {
     double rightChildProofSetter;
     boolean childProofConfirmed = false;
     private static final double DISTANCE_PER_PULSE = 0.0006708;
-    boolean previousTriggerPressed; //what the trigger value was before the current press, allows for trigger to stay pressed w/o flipping
-    double previousPow = 0;
+    boolean previousTriggerPressed = false; //what the trigger value was before the current press, allows for trigger to stay pressed w/o flipping
+    double previousLeftPow = 0;
+    double previousRightPow = 0;
 
     public Talon leftTalons;
     public Talon rightTalons;
@@ -85,35 +87,50 @@ public class DriveTrain {
 
     }
 
-    public void rampPower(double desiredPow) { //Makes it so that robot can't go stop to full
-        if (previousPow < desiredPow) {
-            previousPow += 0.1;
+    public void rampLeftPower(double desiredPow) { //Makes it so that robot can't go stop to full
+        if (Math.abs(desiredPow - previousLeftPow) < 0.1) {
+            previousLeftPow = desiredPow;
+        } else if (previousLeftPow < desiredPow) {
+            previousLeftPow += 0.1;
+        } else if (previousLeftPow > desiredPow) {
+            previousLeftPow -= 0.1;
         }
-        if (previousPow > desiredPow) {
-            previousPow = desiredPow;
+        leftTalons.set(-previousLeftPow);
+
+    }
+
+    public void rampRightPower(double desiredPow) { //Makes it so that robot can't go stop to full
+        if (Math.abs(desiredPow - previousRightPow) < 0.1) {
+            previousRightPow = desiredPow;
+        } else if (previousRightPow < desiredPow) {
+            previousRightPow += 0.1;
+        } else if (previousRightPow > desiredPow) {
+            previousRightPow -= 0.1;
         }
-        leftTalons.set(-previousPow);
-        rightTalons.set(previousPow);
+        rightTalons.set(previousRightPow);
 
     }
 
     public void resetEncoders() { //Resets current raw encoder value to 0
         leftEncoder.reset();
         rightEncoder.reset();
+        gearShiftHigh.set(isHighGear);
+        gearShiftLow.set(!isHighGear);
     }
 
     public void driveStraight(double distance, double firingDistance, double speed, Shooter shoot) { //Controls robot during autonomous
 
         double batteryVoltage = DriverStation.getInstance().getBatteryVoltage();
         if (rightEncoder.getDistance() < distance) {
-            rampPower(speed);
+            rampLeftPower(speed);
+            rampRightPower(speed);
             needsShoot = true;
         } else if (rightEncoder.getDistance() < firingDistance) {
             shoot.quickShoot(1.0, (10.0 / batteryVoltage) > 1 ? 1.0 : (10.0 / batteryVoltage), 0.01, needsShoot);
             needsShoot = false;
         } else {
-            leftTalons.set(0);
-            rightTalons.set(0);
+            rampLeftPower(0);
+            rampRightPower(0);
             shoot.quickShoot(1.0, (10.0 / batteryVoltage) > 1 ? 1.0 : (10.0 / batteryVoltage), 0.01, needsShoot);
             needsShoot = false;
         }
@@ -226,12 +243,12 @@ public class DriveTrain {
         leftSpeed = leftEncoder.getRate();
         rightSpeed = rightEncoder.getRate();
 
-        leftTalons.set(-LeftMotor()); //Left Motors are forward=negative
+        rampLeftPower(LeftMotor()); //Left Motors are forward=negative
         SmartDashboard.putNumber("JoystickX", joyStickX);
         SmartDashboard.putNumber("LeftTalons", -leftTalons.get()); //Left Motors are forward=negative
         SmartDashboard.putNumber("LeftSpeed", -leftSpeed); //Left Motors are forward=negative
 
-        rightTalons.set(RightMotor()); //Right Motors are forward=positive
+        rampRightPower(RightMotor()); //Right Motors are forward=positive
         SmartDashboard.putNumber("JoystickY", joyStickY);
         SmartDashboard.putNumber("RightTalons", rightTalons.get()); //Right Motors are forward=positive
         SmartDashboard.putNumber("RightSpeed", rightSpeed); //Right Motors are forward=positive
@@ -243,7 +260,7 @@ public class DriveTrain {
             if (triggerPressed && !previousTriggerPressed) {
                 isHighGear = !isHighGear;
                 //Shifts gear
-                gearShiftHigh.set(isHighGear); 
+                gearShiftHigh.set(isHighGear);
                 gearShiftLow.set(!isHighGear);
             }
 
