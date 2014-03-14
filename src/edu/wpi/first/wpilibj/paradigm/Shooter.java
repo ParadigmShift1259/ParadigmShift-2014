@@ -7,6 +7,7 @@ package edu.wpi.first.wpilibj.paradigm;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -85,56 +86,6 @@ public class Shooter {
         }
     }
 
-    /*
-     This method is used to kick.
-    
-     P.S. It has a dumb name that can go to suckySucky().
-     P.P.S. Before 2/8/2014, the above (Post Scriptum) comment applies. ...Latin...
-     */
-    /*
-     public void kick() {
-     triggerPressed = RIGHT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS)
-     && xBox.getRawAxis(XBOX_TRIGGERS) <= RIGHT_TRIGGER_PRESSED_MAX_VALUE; //changed for testing on Sturday night 2/8/2014 - E A COBB
-     SmartDashboard.putBoolean("triggerPressed", triggerPressed);
-     SmartDashboard.putBoolean("!caliButtPressed", !caliButtPressed);
-     SmartDashboard.putBoolean("!settingPos", !settingPos);
-     SmartDashboard.putBoolean("isKickerStopped", isKickerStopped());
-     if (triggerPressed && !caliButtPressed && !settingPos) { //changed for testing on Sturday night 2/8/2014 - E A COBB
-     kicking = true;
-     buttonPressed = false;
-     }
-     if (kicking) {
-     kickermotor.set(-0.7); //negative is kicking forward - 2/8/2014 E A Cobb
-     if (8 == 8) {
-     kicking = false;
-     kickermotor.set(0);
-     buttonPressed = true; //put in place for testing on Sturday night 2/8/2014 - E A COBB
-     }
-     }
-     }
-     */
-
-    /*
-     public void calibrate() {
-     voltage = getVoltage();
-     if (caliButtPressed) {
-     try {
-     if (getVoltage() == kickingPos) {
-     kickermotor.set(0);
-     caliButtPressed = false;
-     } else {
-     if (voltage > kickingPos && voltage <= MAX_ALLOWED_VOLTAGE) {
-     kickermotor.set(0.1);
-     } else if (voltage > kickingPos || voltage <= MIN_ALLOWED_VOLTAGE) {
-     kickermotor.set(-0.1);
-     }
-     }
-     } catch (Exception ex) {
-     ex.printStackTrace();
-     }
-     }
-     }
-     */
     //Added for Saturday Night to program shooter - 2/8/2014 E A Cobb
     public void manualShooterControl() {
         if (!kicking) {
@@ -195,6 +146,9 @@ public class Shooter {
 
     public void quickButtonShoot(double time, double power, double delay) {
         //pickerPID.disable();
+//        Picker pick = new Picker(this.operatorInputs);
+//        Talon wheelSpinner = pick.wheelSpinner;
+//        wheelSpinner.set(0.5);
         
         if (oi.isShooterTriggerPressed() /*&& shooterPid.isDisabled()*/) {
             shooterPid.disable();
@@ -224,6 +178,7 @@ public class Shooter {
             //shooterPid.enable();
             
         }
+//        wheelSpinner.set(0.0);
     }
 
     public void quickLeftButtonShoot(double time, double power, double delay) {

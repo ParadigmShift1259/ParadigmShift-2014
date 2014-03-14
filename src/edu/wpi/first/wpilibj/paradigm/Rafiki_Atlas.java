@@ -86,6 +86,7 @@ public class Rafiki_Atlas extends IterativeRobot {
         colwellContraption2.set(false);
         drive.resetEncoders();
         pick.pickerPID.disable();
+        
     }
 
     public void teleopPeriodic() {
@@ -107,7 +108,7 @@ public class Rafiki_Atlas extends IterativeRobot {
         shoot.quickButtonShoot(1.0, -0.95, 0.1);
         drive.setPower();
         drive.shift();
-        drive.childProofing();
+        //drive.childProofing();
         pick.emergencyDisablePid();
 
         if ((pick.getVoltage() > -.75 && pick.getVoltage() < -.7)) {
@@ -161,12 +162,16 @@ public class Rafiki_Atlas extends IterativeRobot {
     }
 
     public void testPeriodic() {
+        /*
         boolean buttonPressed = operatorInputs.button7();
         if (buttonPressed) {
             colwellContraption1.set(!colwell1);
             colwellContraption2.set(!colwell2);
         }
         System.out.println("Picker position " + pickerPID.getVoltage());
+        */
+        System.out.println("Picker Encoder Voltage: " + pick.getVoltage());
+        System.out.println("Shooter Encoder Voltage: " + shoot.getVoltage());
     }
 
 }

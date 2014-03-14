@@ -5,12 +5,12 @@
  */
 package edu.wpi.first.wpilibj.paradigm;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  *
@@ -42,7 +42,7 @@ public class DriveTrain {
     double rightEncoderFix;
     double leftEncoderFix;
     long sleepTime = 0100;
-    boolean isHighGear = false; //Robot starts in high gear
+    boolean isHighGear = false; //Robot starts in low gear
     boolean nemo = false;
     boolean isLeftHigher = true;
     double leftSpeed = 0;
@@ -78,7 +78,7 @@ public class DriveTrain {
         //Start all wheels off
         leftTalons.set(0);
         rightTalons.set(0);
-        //Starts in high gear
+        //Starts in low gear
         gearShiftLow.set(isHighGear);
         gearShiftHigh.set(!isHighGear);
         leftEncoder.setDistancePerPulse(-DISTANCE_PER_PULSE);
@@ -251,11 +251,12 @@ public class DriveTrain {
         SmartDashboard.putNumber("JoystickY", joyStickY);
         SmartDashboard.putNumber("RightTalons", rightTalons.get()); //Right Motors are forward=positive
         SmartDashboard.putNumber("RightSpeed", rightSpeed); //Right Motors are forward=positive
+        System.out.println("High gear :" + isHighGear);
     }
 
     public void shift() {//current setting is start in high gear
         boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-        if (isHighGear || childProofConfirmed) {
+        System.out.println("Trigger Pressed :" + triggerPressed);
             if (triggerPressed && !previousTriggerPressed) {
                 isHighGear = !isHighGear;
                 //Shifts gear
@@ -263,8 +264,9 @@ public class DriveTrain {
                 gearShiftLow.set(!isHighGear);
             }
 
-        }
+        
         previousTriggerPressed = triggerPressed;
+    
     }
 
     public void setSpeedPositive() {
@@ -279,7 +281,7 @@ public class DriveTrain {
 
     public void childProofing() { //Low to high and speed, High to low when speed is under a certain value
 
-        if (rightChildProofSetter < .2 && leftChildProofSetter < .2) {
+        if (rightChildProofSetter < .75 && leftChildProofSetter < .75) {
             childProofConfirmed = true;
         } else {
             childProofConfirmed = false;

@@ -20,7 +20,7 @@ public class ShooterPID extends PIDSubsystem {
     public static final Talon shooter = new Talon(5);
     public static double Ki = 0.005;
     public static double Kd = 1.0;
-    public double VOLTAGE_CORRECTION = 0.52;
+    public double VOLTAGE_CORRECTION = 0.0;
     private static double kickPos; //dummy values, need to be edited(3.5)
     private static double passPos;
     public static double pickPos; //dummy values, need to be edited (1.0)
@@ -28,7 +28,6 @@ public class ShooterPID extends PIDSubsystem {
     private static final double OUTPUT_BOUNDS = 0.1;
     private static final double TOLERANCE = .025;
     private double pos;
-    private static final double TOLERANCE_DISABLE = 0.1;
 
     // Initialize your subsystem here
     public ShooterPID() {
@@ -90,7 +89,7 @@ public class ShooterPID extends PIDSubsystem {
     }
 
     public double getVoltage() {
-        return encoder.getVoltage();
+        return encoder.getVoltage()- VOLTAGE_CORRECTION;
     }
 
     protected void usePIDOutput(double output) {

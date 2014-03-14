@@ -57,6 +57,10 @@ public class Picker {
         pickerPID = _pickerPid;
         this.shoot = shoot;
     }
+    
+//    public Picker(OperatorInputs _operatorInputs){
+//        this.operatorInputs = _operatorInputs;
+//    }
 
     public Talon returnSpinner() {
         return wheelSpinner;
