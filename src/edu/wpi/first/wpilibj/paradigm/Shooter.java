@@ -53,6 +53,7 @@ public class Shooter {
     private static final double DISABLE_TOLERANCE = .05;
     public Timer timer = new Timer();
     public Timer shootTimer = new Timer();
+    double coasting = 1;
 
     public Shooter(OperatorInputs _operatorInputs) {
         this.operatorInputs = _operatorInputs;
@@ -154,6 +155,7 @@ public class Shooter {
             shooterPid.disable();
             kicking = true;
             timer.start();
+            
         }
         //shootTimer.reset();
         //System.out.println("Loop should be starting");
@@ -164,6 +166,7 @@ public class Shooter {
         if ((timer.get() > delay) && (timer.get() < time)) {
             System.out.println("Before quickShoot: " + DriverStation.getInstance().getBatteryVoltage());
             shooterPid.set(power);
+            coasting = .5;
             Picker.isKickingNow = false;
         }
 
@@ -172,6 +175,7 @@ public class Shooter {
         if (timer.get() > time) {
             System.out.println("After quickShoot: " + DriverStation.getInstance().getBatteryVoltage());
             shooterPid.set(0);
+            coasting = 1;
             timer.reset();
             timer.stop();
             kicking = false;
@@ -234,7 +238,11 @@ public class Shooter {
      }
      }
      */
+    public double getCoastingValue() {
+        return coasting;
+    }
 }
+
 
    //need to figure out moveable parts on the shooting mechanism
    //before adding buttons/functions 

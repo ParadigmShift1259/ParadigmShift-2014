@@ -106,6 +106,7 @@ public class Rafiki_Atlas extends IterativeRobot {
         shoot.moveToKickPos();
         shoot.moveToPickPos();
         shoot.quickButtonShoot(1.0, -0.95, 0.1);
+        drive.setCoasting(shoot.getCoastingValue());
         drive.setPower();
         drive.shift();
         //drive.childProofing();

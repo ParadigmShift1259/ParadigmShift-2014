@@ -56,6 +56,7 @@ public class DriveTrain {
     boolean previousTriggerPressed = false; //what the trigger value was before the current press, allows for trigger to stay pressed w/o flipping
     double previousLeftPow = 0;
     double previousRightPow = 0;
+    double coasting = 1;
 
     public Talon leftTalons;
     public Talon rightTalons;
@@ -242,12 +243,12 @@ public class DriveTrain {
         leftSpeed = leftEncoder.getRate();
         rightSpeed = rightEncoder.getRate();
 
-        rampLeftPower(LeftMotor()); //Left Motors are forward=negative
+        rampLeftPower(coasting*LeftMotor()); //Left Motors are forward=negative
         SmartDashboard.putNumber("JoystickX", joyStickX);
         SmartDashboard.putNumber("LeftTalons", -leftTalons.get()); //Left Motors are forward=negative
         SmartDashboard.putNumber("LeftSpeed", -leftSpeed); //Left Motors are forward=negative
 
-        rampRightPower(RightMotor()); //Right Motors are forward=positive
+        rampRightPower(coasting*RightMotor()); //Right Motors are forward=positive
         SmartDashboard.putNumber("JoystickY", joyStickY);
         SmartDashboard.putNumber("RightTalons", rightTalons.get()); //Right Motors are forward=positive
         SmartDashboard.putNumber("RightSpeed", rightSpeed); //Right Motors are forward=positive
@@ -286,6 +287,10 @@ public class DriveTrain {
         } else {
             childProofConfirmed = false;
         }
+    }
+    
+    public void setCoasting(double newCoasting) {
+        coasting = newCoasting;
     }
 
 }
