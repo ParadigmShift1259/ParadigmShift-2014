@@ -33,7 +33,7 @@ public class PickerPID extends PIDSubsystem {
     public static double TOLERANCE = 0.3; // EAC.2014.02.19 - may benefit in compile-size by being static, consider changing to 0.05
     private static final int pickerChannel = 2;
     private static final AnalogChannel analogChannel = new AnalogChannel(pickerChannel);
-    private static final Talon pickerMotor = new Talon(4);
+    public static final Talon pickerMotor = new Talon(4);
     private double pickerAngleVoltage;
     private double pickerAngleDegree;
     private static final double MAX_ENCODER_VOLTAGE = 5.0;
@@ -81,9 +81,9 @@ public class PickerPID extends PIDSubsystem {
      {
      if (!posSet) {
      double currentPos = VOLTAGE_CORRECTION - analogChannel.getVoltage();
-     //determines to go higher or lower
+     determines to go higher or lower
      if ((desiredPos - currentPos) > 0) {
-     //if it is out of the step do a step else set to end
+     if it is out of the step do a step else set to end
      if ((nextStep - currentPos) > TOLERANCE) {//change 0.025 to TOLERANCE variable
 
      } else if (Math.abs(desiredPos - currentPos) > step) {
@@ -94,7 +94,7 @@ public class PickerPID extends PIDSubsystem {
      posSet = true;
      }
      } else {
-     //if it is out of the step do a step else set to end
+     if it is out of the step do a step else set to end
      if ((currentPos - nextStep) > TOLERANCE) {//change 0.025 to TOLERANCE variable
      } else if (Math.abs(desiredPos - currentPos) > step) {
      nextStep = currentPos - step;
@@ -124,12 +124,12 @@ public class PickerPID extends PIDSubsystem {
 
     }
 
-//    public double getPickerAngle() {
-//        pickerAngleVoltage = analogChannel.getVoltage(); //comment
-//        pickerAngleDegree = pickerAngleVoltage * (360 / MAX_ENCODER_VOLTAGE); //Converts Voltage to degrees
-//        //System.out.println("Picker Angle = " + pickerAngleDegree);
-//        return pickerAngleDegree;
-//    }
+    public double getPickerAngle() {
+        pickerAngleVoltage = analogChannel.getVoltage(); //comment
+        pickerAngleDegree = pickerAngleVoltage * (360 / MAX_ENCODER_VOLTAGE); //Converts Voltage to degrees
+        //System.out.println("Picker Angle = " + pickerAngleDegree);
+        return pickerAngleDegree;
+    }
 
     public void set(double input) {
         //System.out.println("Input :" + input);

@@ -123,7 +123,7 @@ public class Shooter {
             //System.out.println("Loop should be starting");
         }
         //shootTimer.reset();
-        if ((timer.get() < delay) && (timer.get() < time)) {
+        if ((timer.get() < delay) && (timer.get() < time)&&kicking) {
             Picker.isKickingNow = true;
         }
 
@@ -159,7 +159,7 @@ public class Shooter {
         }
         //shootTimer.reset();
         //System.out.println("Loop should be starting");
-        if ((timer.get() < delay) && (timer.get() < time)) {
+        if ((timer.get() < delay) && (timer.get() < time)&&kicking) {
             Picker.isKickingNow = true;
         }
         

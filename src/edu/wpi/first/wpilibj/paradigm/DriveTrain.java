@@ -88,24 +88,24 @@ public class DriveTrain {
     }
 
     public void rampLeftPower(double desiredPow) { //Makes it so that robot can't go stop to full
-        if (Math.abs(desiredPow - previousLeftPow) < 0.1) {
+        if (Math.abs(desiredPow - previousLeftPow) < 0.5 / DriverStation.getInstance().getBatteryVoltage()) {
             previousLeftPow = desiredPow;
         } else if (previousLeftPow < desiredPow) {
-            previousLeftPow += 0.1;
+            previousLeftPow += 0.5 / DriverStation.getInstance().getBatteryVoltage();
         } else if (previousLeftPow > desiredPow) {
-            previousLeftPow -= 0.1;
+            previousLeftPow -= 0.5 / DriverStation.getInstance().getBatteryVoltage();
         }
         leftTalons.set(-previousLeftPow);
 
     }
 
     public void rampRightPower(double desiredPow) { //Makes it so that robot can't go stop to full
-        if (Math.abs(desiredPow - previousRightPow) < 0.1) {
+        if (Math.abs(desiredPow - previousRightPow) < 0.5 / DriverStation.getInstance().getBatteryVoltage()) {
             previousRightPow = desiredPow;
         } else if (previousRightPow < desiredPow) {
-            previousRightPow += 0.1;
+            previousRightPow += 0.5 / DriverStation.getInstance().getBatteryVoltage();
         } else if (previousRightPow > desiredPow) {
-            previousRightPow -= 0.1;
+            previousRightPow -= 0.5 / DriverStation.getInstance().getBatteryVoltage();
         }
         rightTalons.set(previousRightPow);
 
@@ -125,14 +125,18 @@ public class DriveTrain {
             rampLeftPower(speed);
             rampRightPower(speed);
             needsShoot = true;
-        } else if (rightEncoder.getDistance() < firingDistance) {
-            shoot.quickShoot(1.0, (10.0 / batteryVoltage) > 1 ? 1.0 : (10.0 / batteryVoltage), 0.01, needsShoot);
-            needsShoot = false;
+            timer.start();
+        } else if (previousRightPow != 0 || previousLeftPow != 0) {
+            rampLeftPower(0);
+            rampRightPower(0);
+            timer.reset();
         } else {
             rampLeftPower(0);
             rampRightPower(0);
-            shoot.quickShoot(1.0, (10.0 / batteryVoltage) > 1 ? 1.0 : (10.0 / batteryVoltage), 0.01, needsShoot);
-            needsShoot = false;
+            if (timer.get() > 1) {
+                shoot.quickShoot(1.0, (11.0 / batteryVoltage) > 0.95 ? 0.95 : (11.0 / batteryVoltage), 0.01, needsShoot);
+                needsShoot = false;
+            }
         }
     }
 
@@ -243,31 +247,30 @@ public class DriveTrain {
         leftSpeed = leftEncoder.getRate();
         rightSpeed = rightEncoder.getRate();
 
-        rampLeftPower(coasting*LeftMotor()); //Left Motors are forward=negative
+        rampLeftPower(coasting * LeftMotor()); //Left Motors are forward=negative
         SmartDashboard.putNumber("JoystickX", joyStickX);
         SmartDashboard.putNumber("LeftTalons", -leftTalons.get()); //Left Motors are forward=negative
         SmartDashboard.putNumber("LeftSpeed", -leftSpeed); //Left Motors are forward=negative
 
-        rampRightPower(coasting*RightMotor()); //Right Motors are forward=positive
+        rampRightPower(coasting * RightMotor()); //Right Motors are forward=positive
         SmartDashboard.putNumber("JoystickY", joyStickY);
         SmartDashboard.putNumber("RightTalons", rightTalons.get()); //Right Motors are forward=positive
         SmartDashboard.putNumber("RightSpeed", rightSpeed); //Right Motors are forward=positive
-        System.out.println("High gear :" + isHighGear);
+        //System.out.println("High gear :" + isHighGear);
     }
 
     public void shift() {//current setting is start in high gear
         boolean triggerPressed = operatorInputs.joystickTriggerPressed();
-        System.out.println("Trigger Pressed :" + triggerPressed);
-            if (triggerPressed && !previousTriggerPressed) {
-                isHighGear = !isHighGear;
-                //Shifts gear
-                gearShiftHigh.set(isHighGear);
-                gearShiftLow.set(!isHighGear);
-            }
+        //System.out.println("Trigger Pressed :" + triggerPressed);
+        if (triggerPressed && !previousTriggerPressed) {
+            isHighGear = !isHighGear;
+            //Shifts gear
+            gearShiftHigh.set(isHighGear);
+            gearShiftLow.set(!isHighGear);
+        }
 
-        
         previousTriggerPressed = triggerPressed;
-    
+
     }
 
     public void setSpeedPositive() {
@@ -288,7 +291,7 @@ public class DriveTrain {
             childProofConfirmed = false;
         }
     }
-    
+
     public void setCoasting(double newCoasting) {
         coasting = newCoasting;
     }

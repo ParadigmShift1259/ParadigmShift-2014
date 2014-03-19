@@ -90,7 +90,9 @@ public class Rafiki_Atlas extends IterativeRobot {
     }
 
     public void teleopPeriodic() {
-        System.out.println("Voltage :" + DriverStation.getInstance().getBatteryVoltage());
+        //System.out.println("Voltage :" + DriverStation.getInstance().getBatteryVoltage());
+        //System.out.println("Negative:"+(-6.0%5.0));
+        //System.out.println("Positive:"+(6.0%5.0));
         NetworkTable.getTable("camera").putNumber("team", 1259);
         compressor.start();
         boolean buttonPressed = operatorInputs.button7();
@@ -98,6 +100,7 @@ public class Rafiki_Atlas extends IterativeRobot {
             colwellContraption1.set(!colwell1);
             colwellContraption2.set(!colwell2);
         }
+        
         SmartDashboard.putBoolean("Is High Gear", drive.isHighGear);
         SmartDashboard.putNumber("Left Power Is", drive.leftPow);
         SmartDashboard.putNumber("Right Power Is", drive.rightPow);
@@ -111,7 +114,7 @@ public class Rafiki_Atlas extends IterativeRobot {
         drive.shift();
         //drive.childProofing();
         pick.emergencyDisablePid();
-
+        pick.getStepValues();
         if ((pick.getVoltage() > -.75 && pick.getVoltage() < -.7)) {
             pickerPID.disable();
         } else {
@@ -121,6 +124,7 @@ public class Rafiki_Atlas extends IterativeRobot {
         pick.lockKick();
         pick.spinGrabber();
         pick.spinReleaser();
+       // System.out.println(pick.getVoltage());
         shoot.manualShooterControl();
     }
 
@@ -136,6 +140,7 @@ public class Rafiki_Atlas extends IterativeRobot {
         drive.resetEncoders();
         Talon wheelSpin = pick.returnSpinner();
         wheelSpin.set(1.0);
+        timer.start();
     }
     
     /**
@@ -144,17 +149,28 @@ public class Rafiki_Atlas extends IterativeRobot {
     public void autonomousPeriodic() {
         Talon wheelSpin = pick.returnSpinner();
         wheelSpin.set(0);
-
+        boolean hotZone = NetworkTable.getTable("camera").getBoolean("hotZone", false);
+        System.out.println(hotZone);
         if (timer.get() < 10.0) {
+            if(hotZone){
             //hotZoneActive = NetworkTable.getTable("camera").getBoolean("hotZone");
             //visionDistance = NetworkTable.getTable("camera").getNumber("distance");
-            drive.driveStraight(5.0, 6.5, 0.6, shoot);
+            drive.driveStraight(5.0, 6.5, 7.2/DriverStation.getInstance().getBatteryVoltage(), shoot);
             SmartDashboard.putNumber("Some Voltage", pickerPID.getVoltage());
             SmartDashboard.putNumber("Kp", PickerPID.Kp);
             SmartDashboard.putNumber("Ki", PickerPID.Ki);
             SmartDashboard.putNumber("Kd", PickerPID.Kd);
+            System.out.println("Case 1");
+            }else{
+                if(timer.get()>2.0){
+                drive.driveStraight(5.0, 6.5, 7.2/DriverStation.getInstance().getBatteryVoltage(), shoot);
+                System.out.println("Case 2");
+                }
+            System.out.println("Case 3");
+            }
         } else {
             timer.stop();
+            System.out.println("Case 4");
         }
     }
 
@@ -171,8 +187,14 @@ public class Rafiki_Atlas extends IterativeRobot {
         }
         System.out.println("Picker position " + pickerPID.getVoltage());
         */
-        System.out.println("Picker Encoder Voltage: " + pick.getVoltage());
-        System.out.println("Shooter Encoder Voltage: " + shoot.getVoltage());
+        try {
+        hotZoneActive = NetworkTable.getTable("camera").getBoolean("hotZone");
+        } catch (Exception e) {
+            hotZoneActive = true;
+        }
+        System.out.println("hotZoneActive "+hotZoneActive);
+        //System.out.println("Picker Encoder Voltage: " + pick.getVoltage());
+        //System.out.println("Shooter Encoder Voltage: " + shoot.getVoltage());
     }
 
 }

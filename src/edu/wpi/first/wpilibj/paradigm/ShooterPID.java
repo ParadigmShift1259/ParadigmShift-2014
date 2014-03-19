@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
  */
 public class ShooterPID extends PIDSubsystem {
 
-    public static final double Kp = 0.12;//previous value 0.0
+    public static final double Kp = 0.20;//previous value 0.0
     private static final AnalogChannel encoder = new AnalogChannel(1);
     public static final Talon shooter = new Talon(5);
     public static double Ki = 0.005;
     public static double Kd = 1.0;
-    public double VOLTAGE_CORRECTION = 0.0;
+    public double VOLTAGE_CORRECTION = -0.72;
     private static double kickPos; //dummy values, need to be edited(3.5)
     private static double passPos;
     public static double pickPos; //dummy values, need to be edited (1.0)
@@ -32,11 +32,11 @@ public class ShooterPID extends PIDSubsystem {
     // Initialize your subsystem here
     public ShooterPID() {
         super("ShooterPID", Kp, Ki, Kd);
-        pickPos = 2.57 + VOLTAGE_CORRECTION;
-        kickPos = 3.72 + VOLTAGE_CORRECTION;
-        passPos = 0.3 + VOLTAGE_CORRECTION;
+        pickPos = 2.8;// + VOLTAGE_CORRECTION;
+        kickPos = 3.72;// + VOLTAGE_CORRECTION;
+        passPos = 0.3;// + VOLTAGE_CORRECTION;
         getPIDController().setOutputRange(-OUTPUT_BOUNDS, OUTPUT_BOUNDS);
-        getPIDController().setInputRange(0.0, 5.0);
+        getPIDController().setInputRange(-5.0, 5.0);
         getPIDController().setContinuous(false);
         setAbsoluteTolerance(TOLERANCE);
     }
@@ -85,7 +85,8 @@ public class ShooterPID extends PIDSubsystem {
     }
 
     protected double returnPIDInput() {
-        return encoder.getVoltage();
+        System.out.println("PickerPID"+(encoder.getVoltage()-VOLTAGE_CORRECTION)%5.0);
+        return (encoder.getVoltage()-VOLTAGE_CORRECTION)%5.0;
     }
 
     public double getVoltage() {
