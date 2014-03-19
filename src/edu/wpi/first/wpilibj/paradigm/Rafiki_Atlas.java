@@ -187,14 +187,14 @@ public class Rafiki_Atlas extends IterativeRobot {
         }
         System.out.println("Picker position " + pickerPID.getVoltage());
         */
-        try {
+        /*try {
         hotZoneActive = NetworkTable.getTable("camera").getBoolean("hotZone");
         } catch (Exception e) {
             hotZoneActive = true;
         }
-        System.out.println("hotZoneActive "+hotZoneActive);
-        //System.out.println("Picker Encoder Voltage: " + pick.getVoltage());
-        //System.out.println("Shooter Encoder Voltage: " + shoot.getVoltage());
+        System.out.println("hotZoneActive "+hotZoneActive);*/
+        System.out.println("Picker Encoder Voltage: " + pick.getVoltage());
+        System.out.println("Shooter Encoder Voltage: " + shoot.getVoltage());
     }
 
 }

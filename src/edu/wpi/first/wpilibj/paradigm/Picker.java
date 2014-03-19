@@ -43,7 +43,7 @@ public class Picker {
     boolean isPicking;
     private boolean isManual = false;
     private  double PID_DISABLE_TOLERANCE = 0.15;
-    private  double STEP = .8;
+    private  double STEP = .7;
     private boolean grabberOverride = false;
 
     public PickerPID pickerPID;
