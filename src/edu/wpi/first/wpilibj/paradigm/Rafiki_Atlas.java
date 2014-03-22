@@ -152,10 +152,11 @@ public class Rafiki_Atlas extends IterativeRobot {
         Talon wheelSpin = pick.returnSpinner();
         double batteryVoltage = DriverStation.getInstance().getBatteryVoltage();
         wheelSpin.set(0);
+        drive.driveStraight(9.40, 6.5, 11.0 / DriverStation.getInstance().getBatteryVoltage()/*, shoot*/); //7.2
         boolean hotZone = NetworkTable.getTable("camera").getBoolean("hotZone", false);
         System.out.println(hotZone);
-        if (timer.get() < 10.0) {
-            drive.driveStraight(9.40, 6.5, 11.0 / DriverStation.getInstance().getBatteryVoltage()/*, shoot*/); //7.2
+        if (timer.get() < 10.0) {//do ///i need to change this?
+            //drive.driveStraight(9.40, 6.5, 11.0 / DriverStation.getInstance().getBatteryVoltage()/*, shoot*/); //7.2
             shoot.quickShoot(1.0, (11.0 / batteryVoltage) > 0.95 ? 0.95 : (11.0 / batteryVoltage), 0.01, true);
 
             if (hotZone) {
@@ -169,7 +170,9 @@ public class Rafiki_Atlas extends IterativeRobot {
                 System.out.println("Case 1");
             } else {
                 if (timer.get() > 2.0) {
-                    drive.driveStraight(9.40, 6.5, 11.0 / DriverStation.getInstance().getBatteryVoltage()/*,shoot*/);//7.2
+                    //drive.driveStraight(9.40, 6.5, 11.0 / DriverStation.getInstance().getBatteryVoltage()/*,shoot*/);//7.2
+                    shoot.quickShoot(1.0, (11.0 / batteryVoltage) > 0.95 ? 0.95 : (11.0 / batteryVoltage), 0.01, true);
+
                     System.out.println("Case 2");
                 }
                 System.out.println("Case 3");
