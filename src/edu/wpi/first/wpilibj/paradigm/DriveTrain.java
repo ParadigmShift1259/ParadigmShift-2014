@@ -57,6 +57,7 @@ public class DriveTrain {
     double previousLeftPow = 0;
     double previousRightPow = 0;
     double coasting = 1;
+    private static final double teleopRamp = 0.08;
 
     public Talon leftTalons;
     public Talon rightTalons;
@@ -87,25 +88,25 @@ public class DriveTrain {
 
     }
 
-    public void rampLeftPower(double desiredPow) { //Makes it so that robot can't go stop to full
-        if (Math.abs(desiredPow - previousLeftPow) < 0.5 / DriverStation.getInstance().getBatteryVoltage()) {
+    public void rampLeftPower(double desiredPow, double rampSpeed) { //Makes it so that robot can't go stop to full
+        if (Math.abs(desiredPow - previousLeftPow) < rampSpeed) {
             previousLeftPow = desiredPow;
         } else if (previousLeftPow < desiredPow) {
-            previousLeftPow += 0.5 / DriverStation.getInstance().getBatteryVoltage();
+            previousLeftPow += rampSpeed;
         } else if (previousLeftPow > desiredPow) {
-            previousLeftPow -= 0.5 / DriverStation.getInstance().getBatteryVoltage();
+            previousLeftPow -= rampSpeed;
         }
         leftTalons.set(-previousLeftPow);
 
     }
 
-    public void rampRightPower(double desiredPow) { //Makes it so that robot can't go stop to full
-        if (Math.abs(desiredPow - previousRightPow) < 0.5 / DriverStation.getInstance().getBatteryVoltage()) {
+    public void rampRightPower(double desiredPow, double rampSpeed) { //Makes it so that robot can't go stop to full
+        if (Math.abs(desiredPow - previousRightPow) < rampSpeed) {
             previousRightPow = desiredPow;
         } else if (previousRightPow < desiredPow) {
-            previousRightPow += 0.5 / DriverStation.getInstance().getBatteryVoltage();
+            previousRightPow += rampSpeed;
         } else if (previousRightPow > desiredPow) {
-            previousRightPow -= 0.5 / DriverStation.getInstance().getBatteryVoltage();
+            previousRightPow -= rampSpeed;
         }
         rightTalons.set(previousRightPow);
 
@@ -118,25 +119,27 @@ public class DriveTrain {
         gearShiftLow.set(!isHighGear);
     }
 
-    public void driveStraight(double distance, double firingDistance, double speed, Shooter shoot) { //Controls robot during autonomous
+    public void driveStraight(double distance, double firingDistance, double speed/*, Shooter shoot*/) { //Controls robot during autonomous
 
         double batteryVoltage = DriverStation.getInstance().getBatteryVoltage();
         if (rightEncoder.getDistance() < distance) {
-            rampLeftPower(speed);
-            rampRightPower(speed);
+            rampLeftPower(speed, 0.5 / DriverStation.getInstance().getBatteryVoltage());
+            rampRightPower(speed, 0.5 / DriverStation.getInstance().getBatteryVoltage());
             needsShoot = true;
             timer.start();
         } else if (previousRightPow != 0 || previousLeftPow != 0) {
-            rampLeftPower(0);
-            rampRightPower(0);
+            rampLeftPower(0, 0.5 / DriverStation.getInstance().getBatteryVoltage());
+            rampRightPower(0, 0.5 / DriverStation.getInstance().getBatteryVoltage());
             timer.reset();
         } else {
-            rampLeftPower(0);
-            rampRightPower(0);
+            rampLeftPower(0, 0.5 / DriverStation.getInstance().getBatteryVoltage());
+            rampRightPower(0, 0.5 / DriverStation.getInstance().getBatteryVoltage());
+            /*
             if (timer.get() > 1) {
                 shoot.quickShoot(1.0, (11.0 / batteryVoltage) > 0.95 ? 0.95 : (11.0 / batteryVoltage), 0.01, needsShoot);
                 needsShoot = false;
             }
+                    */
         }
     }
 
@@ -247,12 +250,12 @@ public class DriveTrain {
         leftSpeed = leftEncoder.getRate();
         rightSpeed = rightEncoder.getRate();
 
-        rampLeftPower(coasting * LeftMotor()); //Left Motors are forward=negative
+        rampLeftPower(coasting * LeftMotor(), 0.5 / DriverStation.getInstance().getBatteryVoltage()); //Left Motors are forward=negative
         SmartDashboard.putNumber("JoystickX", joyStickX);
         SmartDashboard.putNumber("LeftTalons", -leftTalons.get()); //Left Motors are forward=negative
         SmartDashboard.putNumber("LeftSpeed", -leftSpeed); //Left Motors are forward=negative
 
-        rampRightPower(coasting * RightMotor()); //Right Motors are forward=positive
+        rampRightPower(coasting * RightMotor(), 0.5 / DriverStation.getInstance().getBatteryVoltage()); //Right Motors are forward=positive
         SmartDashboard.putNumber("JoystickY", joyStickY);
         SmartDashboard.putNumber("RightTalons", rightTalons.get()); //Right Motors are forward=positive
         SmartDashboard.putNumber("RightSpeed", rightSpeed); //Right Motors are forward=positive

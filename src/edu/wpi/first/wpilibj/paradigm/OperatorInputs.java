@@ -28,8 +28,8 @@ public class OperatorInputs {
     private static final double RIGHT_TRIGGER_MAX = -0.5;
     private static final double LEFT_TRIGGER_MIN = 0.5;
     private static final double LEFT_TRIGGER_MAX = 1.0;
-    private static final double DEADZONE_Y = 0.2;
-    private static final double DEADZONE_X = 0.2;
+    private static final double DEADZONE_Y = 0.1;
+    private static final double DEADZONE_X = 0.15;
     private Joystick joystick = new Joystick(1);
     private Joystick xBox = new Joystick(2);
 
@@ -141,7 +141,7 @@ public class OperatorInputs {
             return 0;
         }
         double sub = joyStickValue/Math.abs(joyStickValue);
-        return (joyStickValue-sub*0.2)/0.8;
+        return (joyStickValue-sub*DEADZONE_Y)/0.8;
 
     }
 
@@ -150,7 +150,7 @@ public class OperatorInputs {
             return 0;
         }
         double sub = joyStickValue/Math.abs(joyStickValue);
-        return (joyStickValue-sub*0.2)/0.8;
+        return (joyStickValue-sub*DEADZONE_X)/0.8;
     }
 
     public boolean shifter() {

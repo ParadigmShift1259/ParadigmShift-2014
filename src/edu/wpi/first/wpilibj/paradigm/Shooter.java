@@ -123,7 +123,7 @@ public class Shooter {
             //System.out.println("Loop should be starting");
         }
         //shootTimer.reset();
-        if ((timer.get() < delay) && (timer.get() < time)&&kicking) {
+        if ((timer.get() < delay) && (timer.get() < time) && kicking) {
             Picker.isKickingNow = true;
         }
 
@@ -145,24 +145,30 @@ public class Shooter {
         }
     }
 
+    public void shootAuto(double distance, double firingDistance, double speed, Shooter shoot, boolean needsShoot) { //not used currently(beginning of day 3 wi - Allison)
+        double batteryVoltage = DriverStation.getInstance().getBatteryVoltage();
+        shoot.quickShoot(1.0, (11.0 / batteryVoltage) > 0.95 ? 0.95 : (11.0 / batteryVoltage), 0.01, needsShoot);
+
+    }
+
     public void quickButtonShoot(double time, double power, double delay) {
         //pickerPID.disable();
 //        Picker pick = new Picker(this.operatorInputs);
 //        Talon wheelSpinner = pick.wheelSpinner;
 //        wheelSpinner.set(0.5);
-        
+
         if (oi.isShooterTriggerPressed() /*&& shooterPid.isDisabled()*/) {
             shooterPid.disable();
             kicking = true;
             timer.start();
-            
+
         }
         //shootTimer.reset();
         //System.out.println("Loop should be starting");
-        if ((timer.get() < delay) && (timer.get() < time)&&kicking) {
+        if ((timer.get() < delay) && (timer.get() < time) && kicking) {
             Picker.isKickingNow = true;
         }
-        
+
         if ((timer.get() > delay) && (timer.get() < time)) {
             System.out.println("Before quickShoot: " + DriverStation.getInstance().getBatteryVoltage());
             shooterPid.set(power);
@@ -180,7 +186,7 @@ public class Shooter {
             timer.stop();
             kicking = false;
             //shooterPid.enable();
-            
+
         }
 //        wheelSpinner.set(0.0);
     }
@@ -211,7 +217,6 @@ public class Shooter {
         }
     }
 
-    
     /*
      public void setKickingPosition() {
      triggerPressed = LEFT_TRIGGER_PRESSED_MIN_VALUE <= xBox.getRawAxis(XBOX_TRIGGERS)
@@ -242,7 +247,6 @@ public class Shooter {
         return coasting;
     }
 }
-
 
    //need to figure out moveable parts on the shooting mechanism
    //before adding buttons/functions 

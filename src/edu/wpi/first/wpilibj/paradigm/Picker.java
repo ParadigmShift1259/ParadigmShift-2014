@@ -19,8 +19,8 @@ public class Picker {
     OperatorInputs operatorInputs;
     private boolean wasKick = false;
     private static final double LOCK_COEF = 1.0;
-    private final double pickPos = -0.75; //change value later, position while loading
-    public double kickPos = 0.45; //change value later, position while shooting/aiming
+    private final double pickPos = -0.84; //change value later, position while loading
+    public double kickPos = 0.62; //change value later, position while shooting/aiming
     private boolean buttonPressed = false; //used to indicate if any button is pressed
     private boolean buttonPreviouslyPressed = false;
     private boolean isPickPos = false;
@@ -43,7 +43,7 @@ public class Picker {
     boolean isPicking;
     private boolean isManual = false;
     private  double PID_DISABLE_TOLERANCE = 0.15;
-    private  double STEP = .7;
+    private  double STEP = .6;
     private boolean grabberOverride = false;
 
     public PickerPID pickerPID;
