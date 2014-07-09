@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class PickerPID extends PIDSubsystem {
 
-    public static double Kp = 1.0; 
-    public static double Ki = 0.025; //0.03
-    public static double Kd = 4.5; //1.6
+    public static double Kp = 0.5; 
+    public static double Ki = 0.001; //0.03
+    public static double Kd = 8.0; //1.6, 4.8
     public static double position = 0.0;
     public static double outputBounds = 0.8; // EAC.2014.02.19 - Consider changing to 10 if you also use the suggestion in usePIDOutput()
 

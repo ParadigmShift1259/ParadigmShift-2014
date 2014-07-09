@@ -19,8 +19,8 @@ public class Picker {
     OperatorInputs operatorInputs;
     private boolean wasKick = false;
     private static final double LOCK_COEF = 1.0;
-    private final double pickPos = -0.84; //change value later, position while loading
-    public double kickPos = 0.62; //change value later, position while shooting/aiming
+    private final double pickPos = -0.86; //change value later, position while loading
+    public double kickPos = 0.55; //change value later, position while shooting/aiming
     private boolean buttonPressed = false; //used to indicate if any button is pressed
     private boolean buttonPreviouslyPressed = false;
     private boolean isPickPos = false;
@@ -51,7 +51,7 @@ public class Picker {
     public Talon wheelSpinner = new Talon(3);
     Preferences prefs = Preferences.getInstance();
     //public double setPosKickingCase1 = 0.8;
-    public double setPosKickingCase2 = -0.8;
+    public double setPosKickingCase2 = -0.9;
     public double setPosKickingCase3 = 0.3;
     public double setPosKickingCase4 = 0.3;
     public int cycleCount = 0;

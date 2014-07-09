@@ -119,7 +119,7 @@ public class DriveTrain {
         gearShiftLow.set(!isHighGear);
     }
 
-    public void driveStraight(double distance, double firingDistance, double speed/*, Shooter shoot*/) { //Controls robot during autonomous
+    public boolean driveStraight(double distance, double firingDistance, double speed/*, Shooter shoot*/) { //Controls robot during autonomous
 
         double batteryVoltage = DriverStation.getInstance().getBatteryVoltage();
         if (rightEncoder.getDistance() < distance) {
@@ -127,13 +127,16 @@ public class DriveTrain {
             rampRightPower(speed, 0.5 / DriverStation.getInstance().getBatteryVoltage());
             needsShoot = true;
             timer.start();
+            return true;
         } else if (previousRightPow != 0 || previousLeftPow != 0) {
             rampLeftPower(0, 0.5 / DriverStation.getInstance().getBatteryVoltage());
             rampRightPower(0, 0.5 / DriverStation.getInstance().getBatteryVoltage());
             timer.reset();
+            return true;
         } else {
             rampLeftPower(0, 0.5 / DriverStation.getInstance().getBatteryVoltage());
             rampRightPower(0, 0.5 / DriverStation.getInstance().getBatteryVoltage());
+            return false;
             /*
             if (timer.get() > 1) {
                 shoot.quickShoot(1.0, (11.0 / batteryVoltage) > 0.95 ? 0.95 : (11.0 / batteryVoltage), 0.01, needsShoot);
